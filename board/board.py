@@ -7,17 +7,62 @@ class Piece:
         self.value = value
         self.color = color
 
+    def get_legal_moves(self):
+        pass
+
 class Pawn(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Pawn', 1, color)
+
+    def get_legal_moves(self, boardstate, start_square):
+
+        moves = []
+        row, col = start_square
+
+        if self.color == 'w':  
+            if row > 0 and boardstate[row-1, col] == 0:
+                moves.append((row-1, col))
+        else:
+            if row < 7 and boardstate[row+1, col] == 0:
+                moves.append((row+1, col))
+        return moves 
+
 
 class Knight(Piece):
     def __init__(self,color):
         Piece.__init__(self, 'Knight', 3, color)
 
+    def get_legal_moves(self, start_square):
+        
+        moves = []
+        row, col = start_square
+
+        offsets = [(-2, 1), (-2, -1), (-1, -2), (1,-2), (2,-1), (2,1), (1,2), (-1, 2)]
+
+        for x, y in offsets:
+            new_row, new_col = row + x, col + y
+            if 0 <= new_row and 0 <= new_col:
+                moves.append((new_row, new_col))
+        return moves
+         
+
 class Bishop(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Bishop', 3, color)
+
+    def get_legal_moves(self, start_square):
+        
+        moves = []
+        row, col = start_square
+
+        limit1 = min(row, col) #oben links
+        limit2 = min(7-row, 7-col) #unten rechts
+        limit3 = min(7-row, col) #unten links
+        limit4 = min(row, 7-col) #oben rechts
+
+        limit = [limit1, limit2, limit3, limit4]
+
+        offset = [x for x in limit]
 
 
 class Rook(Piece):
