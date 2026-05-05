@@ -113,5 +113,6 @@ class Board:
                     print(f"{value}", end = ' ')
             print()
 
-brett = Board()
-brett.display('color')
+if __name__ == '__main__':
+    brett = Board()
+    brett.display('color')
