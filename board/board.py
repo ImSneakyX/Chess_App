@@ -103,6 +103,9 @@ class Board:
         self.start[0, 4] = self.king_b
         self.start[-1,4] = self.king_w
 
+        return self.start
+
+
     def display(self, attribute):
         for rows, i in enumerate(self.start):
             for cols, j in enumerate(i):
@@ -113,6 +116,12 @@ class Board:
                     print(f"{value}", end = ' ')
             print()
 
+    def getposition(self, position):
+        return self.start[position]
+    
+    
+
 if __name__ == '__main__':
     brett = Board()
-    brett.display('color')
+    brett.display('name')
+    print(brett.start_position())
