@@ -1,4 +1,5 @@
-from board import Board, Pawn, Rook, Knight, Queen, King, Bishop
+from board import Board
+from pieces import Pawn, Rook, Knight, Queen, King, Bishop
 import numpy as np
 
 
