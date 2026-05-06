@@ -19,12 +19,23 @@ class Pawn(Piece):
         moves = []
         row, col = start_square
 
-        if self.color == 'w':  
-            if row > 0 and boardstate[row-1, col] == 0:
-                moves.append((row-1, col))
+        if self.color == 'w':
+            if row == 6: 
+                if boardstate[(row - 1, col)] == 0:
+                    moves.append((row - 1, col))  
+                    if boardstate[(row - 2, col)] == 0:
+                        moves.append((row - 2, col)) 
+            elif row > 0 and boardstate[row-1, col] == 0:
+                    moves.append((row-1, col))
         else:
-            if row < 7 and boardstate[row+1, col] == 0:
-                moves.append((row+1, col))
+            if row == 1:
+                if boardstate[(row + 1, col)] == 0:
+                    moves.append((row - 1, col))
+                    if boardstate [(row + 2, col)]:
+                        moves.append((row + 2, col)) 
+
+            elif row < 7 and boardstate[row+1, col] == 0:
+                    moves.append((row+1, col))
         return moves 
 
 
