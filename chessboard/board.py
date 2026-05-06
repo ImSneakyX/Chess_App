@@ -1,5 +1,5 @@
 import numpy as np
-from pieces import Pawn, Rook, Knight, Queen, King, Bishop
+from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop
 
 class Board:
     def __init__(self):
@@ -20,8 +20,7 @@ class Board:
         self.rook_b = Rook('b')
         self.queen_b = Queen('b')
         self.king_b = King('b')
-        
-        self.start_position()
+    
 
         
     def start_position(self):

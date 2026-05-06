@@ -1,5 +1,8 @@
-from board import Board
-from pieces import Pawn, Rook, Knight, Queen, King, Bishop
+import sys
+import os 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from chessboard.board import Board
+from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop
 import numpy as np
 
 
@@ -44,11 +47,10 @@ class Move(Board):
 
     
     
-    
-    
-brett = Board()
-brett1 = Move(brett.start, (6, 4), (4, 4))
-print(brett1.get_legal_move_mask())
+if __name__ == '__main__':
+    brett = Board()
+    brett1 = Move(brett.start, (6, 4), (4, 4))
+    print(brett1.get_legal_move_mask())
 
 
 
