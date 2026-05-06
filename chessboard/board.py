@@ -114,7 +114,5 @@ class Board:
 if __name__ == '__main__':
     brett = Board()
     brett.start_position()
-    brett.chessboard_notation()
     brett.display('name')
-    print(brett.start)
-    print(brett.chessboard_notation())
+  
