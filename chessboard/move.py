@@ -49,6 +49,7 @@ class Move(Board):
     
 if __name__ == '__main__':
     brett = Board()
+    brett.start_position()
     brett1 = Move(brett.start, (6, 4), (4, 4))
     print(brett1.get_legal_move_mask())
 

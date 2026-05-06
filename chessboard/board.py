@@ -1,3 +1,7 @@
+import sys
+import os 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import numpy as np
 from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop
 
@@ -87,5 +91,6 @@ class Board:
 
 if __name__ == '__main__':
     brett = Board()
+    brett.start_position()
     brett.display('name')
     print(brett.start_position())

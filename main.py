@@ -9,7 +9,7 @@ class Spiel:
 
     def start_Spiel(self):
         print(f'Das Spiel startet')
-        print(self.brett.start_pos())
+        print(self.brett.start_position())
 
 
 Spiel()
