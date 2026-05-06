@@ -41,7 +41,7 @@ class Knight(Piece):
 
         for x, y in offsets:
             new_row, new_col = row + x, col + y
-            if 0 <= new_row <8 and 0 <= new_col <8 and boardstate [(new_row, new_col)] == 0:
+            if 0 <= new_row <8 and 0 <= new_col <8 and (boardstate[(new_row, new_col)].color != self.color or boardstate[(new_row, new_col)] == 0):
                 moves.append((new_row, new_col))
         return moves
          
@@ -62,19 +62,47 @@ class Bishop(Piece):
 
         for i in range(1, limit1 + 1):
             new_row, new_col = row - i, col - i 
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit2 + 1):
             new_row, new_col = row + i, col + i 
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit3 + 1):
             new_row, new_col = row + i, col - i 
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit4 + 1):
             new_row, new_col = row - i, col + i 
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         return moves
 
@@ -94,19 +122,47 @@ class Rook(Piece):
 
         for i in range(1, limit1 + 1):
             new_row, new_col = row - i, col
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit2 + 1):
             new_row, new_col = row, col - i
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit3 + 1):
             new_row, new_col = row + i, col
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit4 + 1):
-            new_row, new_col = row, col + 1
-            moves.append((new_row, new_col))
+            new_row, new_col = row, col + i
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
 
         return moves
@@ -134,35 +190,91 @@ class Queen(Piece):
 
         for i in range(1, limit1 + 1):
             new_row, new_col = row - i, col
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit2 + 1):
             new_row, new_col = row, col - i
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit3 + 1):
             new_row, new_col = row + i, col
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit4 + 1):
             new_row, new_col = row, col + i
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit5 + 1):
             new_row, new_col = row - i, col - i 
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit6 + 1):
             new_row, new_col = row + i, col + i 
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit7 + 1):
             new_row, new_col = row + i, col - i 
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         for i in range(1, limit8 + 1):
             new_row, new_col = row - i, col + i 
-            moves.append((new_row, new_col))
+            if boardstate[(new_row, new_col)] != 0:
+                if boardstate[(new_row, new_col)].color == self.color:
+                    break
+                else:
+                    moves.append((new_row, new_col))
+                    break
+            else:
+                moves.append((new_row, new_col))
 
         return moves
     
@@ -179,7 +291,7 @@ class King(Piece):
 
         for x, y in offsets:
             new_row, new_col = row + x, col + y
-            if 0 <= new_row <8 and 0 <= new_col <8:
+            if 0 <= new_row <8 and 0 <= new_col <8 and (boardstate[(new_row, new_col)].color != self.color or boardstate[(new_row, new_col)] == 0):
                 moves.append((new_row, new_col))
         return moves
     
