@@ -5,13 +5,15 @@ from chessboard.board import Board
 class Game: 
     def __init__(self):
         self.brett = Board()
+        self.brett.start_position()
         self.brett.chessboard_notation()
+        self.position = self.brett.start
         self.start_game()
         self.make_move()
 
     def start_game(self):
         print(f'The game begins!')
-        print(self.brett.start_position())
+        self.brett.display('name', self.brett.start)
     
     def make_move(self):
         start_square = input(f'Make a move! Select the square with the piece that you want to move: ')
@@ -24,8 +26,10 @@ class Game:
                     end_square = tuple((row, col))
 
 
-        new_pos = Move(self.brett.start_position(), start_square, end_square)
-        return new_pos
+        x = Move(self.position, start_square, end_square)
+        self.position = x.pos_new #wird wieder zu Brett umgewandelt
+        self.make_move() #ruft sich wieder sofort auf
+
 
 
 
