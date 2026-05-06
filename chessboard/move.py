@@ -8,7 +8,6 @@ import numpy as np
 
 class Move(Board):
     def __init__(self, boardstate, start_square, end_square): 
-        Board.__init__(self)
         self.start = boardstate
         self.start_square = start_square
         self.end_square = end_square
@@ -41,7 +40,7 @@ class Move(Board):
                 self.start1[self.end_square] = self.piece
                 self.start1[self.start_square] = 0
                 self.pos_new = self.start1
-                print(self.pos_new)
+                self.display('name', self.pos_new)
         else: self.pos_new = self.start1
         return self.pos_new
 
