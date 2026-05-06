@@ -74,13 +74,13 @@ class Board:
         return self.start
 
 
-    def display(self, attribute):
-        for rows, i in enumerate(self.start):
+    def display(self, attribute, boardstate):
+        for rows, i in enumerate(boardstate):
             for cols, j in enumerate(i):
-                if self.start[rows, cols] == 0:
+                if boardstate[rows, cols] == 0:
                     print(0, end=' ')
                 else:
-                    value = getattr(self.start[rows, cols], attribute)
+                    value = getattr(boardstate[rows, cols], attribute)
                     print(f"{value}", end = ' ')
             print()
 
@@ -114,5 +114,5 @@ class Board:
 if __name__ == '__main__':
     brett = Board()
     brett.start_position()
-    brett.display('name')
+    brett.display('name', brett.start)
   
