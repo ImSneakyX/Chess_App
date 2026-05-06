@@ -7,7 +7,7 @@ class Piece:
         self.value = value
         self.color = color
 
-    def get_legal_moves(self):
+    def get_legal_moves(self, boardstate, start_square):
         pass
 
 class Pawn(Piece):
@@ -32,7 +32,7 @@ class Knight(Piece):
     def __init__(self,color):
         Piece.__init__(self, 'Knight', 3, color)
 
-    def get_legal_moves(self, start_square):
+    def get_legal_moves(self, boardstate, start_square):
         
         moves = []
         row, col = start_square
@@ -41,7 +41,7 @@ class Knight(Piece):
 
         for x, y in offsets:
             new_row, new_col = row + x, col + y
-            if 0 <= new_row and 0 <= new_col:
+            if 0 <= new_row <8 and 0 <= new_col <8:
                 moves.append((new_row, new_col))
         return moves
          
@@ -50,7 +50,7 @@ class Bishop(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Bishop', 3, color)
 
-    def get_legal_moves(self, start_square):
+    def get_legal_moves(self, boardstate, start_square):
         
         moves = []
         row, col = start_square
@@ -60,30 +60,132 @@ class Bishop(Piece):
         limit3 = min(7-row, col) #unten links
         limit4 = min(row, 7-col) #oben rechts
 
-        limit = [limit1, limit2, limit3, limit4]
+        for i in range(1, limit1 + 1):
+            new_row, new_col = row - i, col - i 
+            moves.append((new_row, new_col))
 
-        offset = [x for x in limit]
+        for i in range(1, limit2 + 1):
+            new_row, new_col = row + i, col + i 
+            moves.append((new_row, new_col))
 
+        for i in range(1, limit3 + 1):
+            new_row, new_col = row + i, col - i 
+            moves.append((new_row, new_col))
+
+        for i in range(1, limit4 + 1):
+            new_row, new_col = row - i, col + i 
+            moves.append((new_row, new_col))
+
+        return moves
 
 class Rook(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Rook', 5, color)
+
+    def get_legal_moves(self, boardstate, start_square):
+        moves = []
+        row, col = start_square
+
+        limit1 = row # oben
+        limit2 = col #links 
+        limit3 = 7 - row #unten
+        limit4 = 7 - col #rechts
+
+
+        for i in range(1, limit1 + 1):
+            new_row, new_col = row - i, col
+            moves.append((new_row, new_col))
+
+        for i in range(1, limit2 + 1):
+            new_row, new_col = row, col - i
+            moves.append((new_row, new_col))
+
+        for i in range(1, limit3 + 1):
+            new_row, new_col = row + i, col
+            moves.append((new_row, new_col))
+
+        for i in range(1, limit4 + 1):
+            new_row, new_col = row, col + 1
+            moves.append((new_row, new_col))
+
+
+        return moves
+
+
 
 
 class Queen(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Queen', 9, color)
 
+    def get_legal_moves(self, boardstate, start_square):
+        moves = []
+        row, col = start_square
 
+        limit1 = row # oben
+        limit2 = col #links 
+        limit3 = 7 - row #unten
+        limit4 = 7 - col #rechts
+
+        limit5 = min(row, col) #oben links
+        limit6 = min(7-row, 7-col) #unten rechts
+        limit7 = min(7-row, col) #unten links
+        limit8 = min(row, 7-col) #oben rechts
+
+        for i in range(1, limit1 + 1):
+            new_row, new_col = row - i, col
+            moves.append((new_row, new_col))
+
+        for i in range(1, limit2 + 1):
+            new_row, new_col = row, col - i
+            moves.append((new_row, new_col))
+
+        for i in range(1, limit3 + 1):
+            new_row, new_col = row + i, col
+            moves.append((new_row, new_col))
+
+        for i in range(1, limit4 + 1):
+            new_row, new_col = row, col + 1
+            moves.append((new_row, new_col))
+
+        for i in range(1, limit5 + 1):
+            new_row, new_col = row - i, col - i 
+            moves.append((new_row, new_col))
+
+        for i in range(1, limit6 + 1):
+            new_row, new_col = row + i, col + i 
+            moves.append((new_row, new_col))
+
+        for i in range(1, limit7 + 1):
+            new_row, new_col = row + i, col - i 
+            moves.append((new_row, new_col))
+
+        for i in range(1, limit8 + 1):
+            new_row, new_col = row - i, col + i 
+            moves.append((new_row, new_col))
+
+        return moves
+    
 class King(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'King', 100, color)
 
+    def get_legal_moves(self, boardstate, start_square):
+        
+        moves = []
+        row, col = start_square
 
+        offsets = [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
+
+        for x, y in offsets:
+            new_row, new_col = row + x, col + y
+            if 0 <= new_row <8 and 0 <= new_col <8:
+                moves.append((new_row, new_col))
+        return moves
+    
 class Board:
     def __init__(self):
-        self.brett = np.zeros(64, 'object')
-        self.brett = self.brett.reshape(8,8)
+        self.brett = np.zeros((8,8), 'object')
 
         #weiße Figuren
         self.pawn_w = Pawn('w')
