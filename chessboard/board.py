@@ -9,6 +9,7 @@ class Board:
     def __init__(self):
         self.brett = np.zeros((8,8), 'object')
         self.start = None
+        self.notation = None
         #weiße Figuren
         self.pawn_w = Pawn('w')
         self.knight_w = Knight('w')
@@ -28,8 +29,7 @@ class Board:
 
         
     def start_position(self):
-        self.start = self.brett
-
+        self.start = self.brett.copy()
         #Bauern
         self.start[1,:] = self.pawn_b
         self.start[-2,:] = self.pawn_w
@@ -87,10 +87,34 @@ class Board:
     def getposition(self, position):
         return self.start[position]
     
+    def chessboard_notation(self): 
+        row_name = self.brett.copy()
+        col_name = self.brett.copy()
+        self.notation = self.brett.copy()
+
+        rows = ['1', '2', '3', '4', '5', '6', '7', '8']
+        cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+
+        for idx, name in enumerate(rows):
+            row_name[-idx-1] = name
+
+        for idx, name in enumerate(cols):
+                col_name[:,idx] = name 
+        
+        for row, i in enumerate(self.notation):
+            for col, j in enumerate(i):
+                self.notation[row, col] = ''.join((col_name[row, col], row_name[row, col]))
+
+        return self.notation
+
+
+    
     
 
 if __name__ == '__main__':
     brett = Board()
     brett.start_position()
+    brett.chessboard_notation()
     brett.display('name')
-    print(brett.start_position())
+    print(brett.start)
+    print(brett.chessboard_notation())
