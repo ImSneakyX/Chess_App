@@ -41,7 +41,7 @@ class Knight(Piece):
 
         for x, y in offsets:
             new_row, new_col = row + x, col + y
-            if 0 <= new_row <8 and 0 <= new_col <8:
+            if 0 <= new_row <8 and 0 <= new_col <8 and boardstate [(new_row, new_col)] == 0:
                 moves.append((new_row, new_col))
         return moves
          
@@ -145,7 +145,7 @@ class Queen(Piece):
             moves.append((new_row, new_col))
 
         for i in range(1, limit4 + 1):
-            new_row, new_col = row, col + 1
+            new_row, new_col = row, col + i
             moves.append((new_row, new_col))
 
         for i in range(1, limit5 + 1):
@@ -186,7 +186,7 @@ class King(Piece):
 class Board:
     def __init__(self):
         self.brett = np.zeros((8,8), 'object')
-
+        self.start = None
         #weiße Figuren
         self.pawn_w = Pawn('w')
         self.knight_w = Knight('w')

@@ -13,6 +13,7 @@ class Move(Board):
         self.legal_move_mask = None
         self.get_legal_move_mask()
         self.is_move_legal()
+        self.move()
 
     def get_legal_move_mask(self):
         mask = np.zeros((8, 8), dtype = 'bool')
@@ -28,29 +29,27 @@ class Move(Board):
         else:
             print(f'move is not legal')
 
-    def move_white(self):
-        if isinstance(self.piece, (Pawn, Rook, Knight, Queen, King, Bishop)):
-            if self.piece.color == 'w': 
-                self.start[self.end_square] = self.piece
-                self.start[self.start_square] = 0
-                self.pos_new = self.start
+
+    def move(self):
+        self.start1 = self.start.copy()
+        if self.legal_move_mask[self.end_square] == True:
+            if isinstance(self.piece, (Pawn, Rook, Knight, Queen, King, Bishop)):
+                self.start1[self.end_square] = self.piece
+                self.start1[self.start_square] = 0
+                self.pos_new = self.start1
+                print(self.pos_new)
+        else: self.pos_new = self.start1
         return self.pos_new
 
-    def move_black(self):
-        if isinstance(self.piece, (Pawn, Rook, Knight, Queen, King, Bishop)):
-            if self.piece.color == 'b': 
-                self.start[self.end_square] = self.piece
-                self.start[self.start_square] = 0
-                self.pos_new = self.start
-        return self.pos_new
-    
     
     
     
     
 brett = Board()
-brett1 = Move(brett.start_position(), (-2, 4), (-3, 4))
-print(brett1.move_white())
+brett1 = Move(brett.start, (7, 1), (5, 2))
+print(brett1.get_legal_move_mask())
+
+
 
 
 
