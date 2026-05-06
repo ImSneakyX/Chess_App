@@ -18,17 +18,28 @@ class Pawn(Piece):
         row, col = start_square
 
         if self.color == 'w':
+            if boardstate[(row - 1, col - 1)] != 0 and boardstate[(row - 1, col - 1)].color != self.color: 
+                moves.append((row - 1, col -1))
+            if boardstate[(row - 1, col + 1)] != 0 and boardstate[(row - 1, col + 1)].color != self.color: 
+                    moves.append((row - 1, col + 1))
+
             if row == 6: 
                 if boardstate[(row - 1, col)] == 0:
                     moves.append((row - 1, col))  
                     if boardstate[(row - 2, col)] == 0:
-                        moves.append((row - 2, col)) 
+                        moves.append((row - 2, col))             
             elif row > 0 and boardstate[row-1, col] == 0:
                     moves.append((row-1, col))
+                
         else:
+            if boardstate[(row + 1, col - 1)] != 0 and boardstate[(row + 1, col - 1)].color != self.color: 
+                moves.append((row + 1, col -1))
+            if boardstate[(row + 1, col + 1)] != 0 and boardstate[(row + 1, col + 1)].color != self.color: 
+                moves.append((row + 1, col + 1))
+
             if row == 1:
                 if boardstate[(row + 1, col)] == 0:
-                    moves.append((row - 1, col))
+                    moves.append((row + 1, col))
                     if boardstate [(row + 2, col)]:
                         moves.append((row + 2, col)) 
 
