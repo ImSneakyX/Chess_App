@@ -5,14 +5,14 @@ class Piece:
         self.value = value
         self.color = color
 
-    def get_legal_moves(self, boardstate, start_square):
+    def get_legal_moves(self, boardstate, start_square, vision):
         pass
 
 class Pawn(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Pawn', 1, color)
 
-    def get_legal_moves(self, boardstate, start_square):
+    def get_legal_moves(self, boardstate, start_square, vision):
 
         moves = []
         row, col = start_square
@@ -52,7 +52,7 @@ class Knight(Piece):
     def __init__(self,color):
         Piece.__init__(self, 'Knight', 3, color)
 
-    def get_legal_moves(self, boardstate, start_square):
+    def get_legal_moves(self, boardstate, start_square, vision):
         
         moves = []
         row, col = start_square
@@ -70,7 +70,7 @@ class Bishop(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Bishop', 3, color)
 
-    def get_legal_moves(self, boardstate, start_square):
+    def get_legal_moves(self, boardstate, start_square, vision):
         
         moves = []
         row, col = start_square
@@ -130,7 +130,7 @@ class Rook(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Rook', 5, color)
 
-    def get_legal_moves(self, boardstate, start_square):
+    def get_legal_moves(self, boardstate, start_square, vision):
         moves = []
         row, col = start_square
 
@@ -194,7 +194,7 @@ class Queen(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Queen', 9, color)
 
-    def get_legal_moves(self, boardstate, start_square):
+    def get_legal_moves(self, boardstate, start_square, vision):
         moves = []
         row, col = start_square
 
@@ -302,7 +302,7 @@ class King(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'King', 100, color)
 
-    def get_legal_moves(self, boardstate, start_square):
+    def get_legal_moves(self, boardstate, start_square, vision):
         
         moves = []
         row, col = start_square
@@ -311,7 +311,7 @@ class King(Piece):
 
         for x, y in offsets:
             new_row, new_col = row + x, col + y
-            if 0 <= new_row <8 and 0 <= new_col <8 and boardstate[(new_row, new_col)].color != self.color:
+            if 0 <= new_row <8 and 0 <= new_col <8 and boardstate[(new_row, new_col)].color != self.color and vision[(new_col, new_row)] == False:
                 moves.append((new_row, new_col))
         return moves
 
@@ -319,6 +319,6 @@ class Empty(Piece):
     def __init__(self):
         Piece.__init__(self, 'empty', 0, None)
 
-    def get_legal_moves(self, boardstate, start_square):
+    def get_legal_moves(self, boardstate, start_square, vision):
         moves = []
         return moves 

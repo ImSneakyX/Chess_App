@@ -10,6 +10,8 @@ class Board:
         self.brett = np.zeros((8,8), 'object')
         self.start = None
         self.notation = None
+        self.vision_w = None
+        self.vision_s = None
         #weiße Figuren
         self.pawn_w = Pawn('w')
         self.knight_w = Knight('w')
@@ -114,6 +116,8 @@ class Board:
                 self.notation[row, col] = ''.join((col_name[row, col], row_name[row, col]))
 
         return self.notation
+
+
 
 
     
