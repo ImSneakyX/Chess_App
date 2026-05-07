@@ -24,7 +24,7 @@ class Move_White(Board):
     def get_legal_move_mask(self):
         mask = np.zeros((8, 8), dtype = 'bool')
         if self.piece.color == 'w':
-            moves = self.piece.get_legal_moves(self.start, self.start_square, self.vision)
+            moves, moves_for_vision = self.piece.get_legal_moves(self.start, self.start_square, self.vision)
             for row, col in moves: 
                 mask[(row, col)] = True 
         self.legal_move_mask = mask
@@ -34,9 +34,11 @@ class Move_White(Board):
         self.vision = np.zeros((8, 8), dtype = 'bool')
         for row, i in enumerate(self.start):
             for col, j in enumerate(i):
-                if self.start[(row, col)].color == 'b' and isinstance(self.start[(row, col)], (Rook, Knight, Bishop, Queen)):
-                    moves = self.start[(row, col)].get_legal_moves(self.start, (row, col), None)
+                if self.start[(row, col)].color == 'b' and isinstance(self.start[(row, col)], (Knight, Rook, Queen, Bishop)):
+                    moves, moves_for_vision = self.start[(row, col)].get_legal_moves(self.start, (row, col), None)
                     for x, y in moves: 
+                        self.vision[(x, y)] = True
+                    for x, y in moves_for_vision:
                         self.vision[(x, y)] = True
                 if self.start[(row, col)].color == 'b' and isinstance(self.start[(row, col)], Pawn):
                     if 0 <= col - 1 < 8:
@@ -88,7 +90,7 @@ class Move_Black(Board):
     def get_legal_move_mask(self):
         mask = np.zeros((8, 8), dtype = 'bool')
         if self.piece.color == 'b':
-            moves = self.piece.get_legal_moves(self.start, self.start_square, self.vision)
+            moves, moves_for_vision = self.piece.get_legal_moves(self.start, self.start_square, self.vision)
             for row, col in moves: 
                 mask[(row, col)] = True 
         self.legal_move_mask = mask
@@ -99,8 +101,10 @@ class Move_Black(Board):
         for row, i in enumerate(self.start):
             for col, j in enumerate(i):
                 if self.start[(row, col)].color == 'w' and isinstance(self.start[(row, col)], (Rook, Knight, Bishop, Queen)):
-                    moves = self.start[(row, col)].get_legal_moves(self.start, (row, col), None)
+                    moves, moves_for_vision = self.start[(row, col)].get_legal_moves(self.start, (row, col), None)
                     for x, y in moves: 
+                        self.vision[(x, y)] = True
+                    for x, y in moves_for_vision:
                         self.vision[(x, y)] = True
                 if self.start[(row, col)].color == 'w' and isinstance(self.start[(row, col)], Pawn):
                     if 0 <= col - 1 < 8:
@@ -113,7 +117,6 @@ class Move_Black(Board):
                         new_row, new_col = row + x, col + y
                         if 0 <= new_row <8 and 0 <= new_col <8:
                             self.vision[(new_row, new_col)] = True
-        print(self.vision)
         return self.vision
 
     def is_move_legal(self): 

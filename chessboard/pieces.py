@@ -13,7 +13,8 @@ class Pawn(Piece):
         Piece.__init__(self, 'Pawn', 1, color)
 
     def get_legal_moves(self, boardstate, start_square, vision):
-
+        
+        moves_for_vision = []
         moves = []
         row, col = start_square
 
@@ -45,7 +46,7 @@ class Pawn(Piece):
 
             elif row < 7 and boardstate[row+1, col].value == 0:
                     moves.append((row+1, col))
-        return moves 
+        return moves, moves_for_vision
 
 
 class Knight(Piece):
@@ -55,6 +56,7 @@ class Knight(Piece):
     def get_legal_moves(self, boardstate, start_square, vision):
         
         moves = []
+        moves_for_vision = []
         row, col = start_square
 
         offsets = [(-2, 1), (-2, -1), (-1, -2), (1,-2), (2,-1), (2,1), (1,2), (-1, 2)]
@@ -63,7 +65,9 @@ class Knight(Piece):
             new_row, new_col = row + x, col + y
             if 0 <= new_row <8 and 0 <= new_col <8 and boardstate[(new_row, new_col)].color != self.color:
                 moves.append((new_row, new_col))
-        return moves
+            if 0 <= new_row <8 and 0 <= new_col <8 and boardstate[(new_row, new_col)].color == self.color:
+                moves_for_vision.append((new_row, new_col))
+        return moves, moves_for_vision
          
 
 class Bishop(Piece):
@@ -73,6 +77,7 @@ class Bishop(Piece):
     def get_legal_moves(self, boardstate, start_square, vision):
         
         moves = []
+        moves_for_vision = []
         row, col = start_square
 
         limit1 = min(row, col) #oben links
@@ -84,6 +89,7 @@ class Bishop(Piece):
             new_row, new_col = row - i, col - i 
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -95,6 +101,7 @@ class Bishop(Piece):
             new_row, new_col = row + i, col + i 
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -106,6 +113,7 @@ class Bishop(Piece):
             new_row, new_col = row + i, col - i 
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -117,6 +125,7 @@ class Bishop(Piece):
             new_row, new_col = row - i, col + i 
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -124,7 +133,7 @@ class Bishop(Piece):
             else:
                 moves.append((new_row, new_col))
 
-        return moves
+        return moves, moves_for_vision
 
 class Rook(Piece):
     def __init__(self, color):
@@ -132,6 +141,7 @@ class Rook(Piece):
 
     def get_legal_moves(self, boardstate, start_square, vision):
         moves = []
+        moves_for_vision = []
         row, col = start_square
 
         limit1 = row # oben
@@ -144,6 +154,7 @@ class Rook(Piece):
             new_row, new_col = row - i, col
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -155,6 +166,7 @@ class Rook(Piece):
             new_row, new_col = row, col - i
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -166,6 +178,7 @@ class Rook(Piece):
             new_row, new_col = row + i, col
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -177,6 +190,7 @@ class Rook(Piece):
             new_row, new_col = row, col + i
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -185,7 +199,7 @@ class Rook(Piece):
                 moves.append((new_row, new_col))
 
 
-        return moves
+        return moves, moves_for_vision
 
 
 
@@ -196,6 +210,7 @@ class Queen(Piece):
 
     def get_legal_moves(self, boardstate, start_square, vision):
         moves = []
+        moves_for_vision = []
         row, col = start_square
 
         limit1 = row # oben
@@ -212,6 +227,7 @@ class Queen(Piece):
             new_row, new_col = row - i, col
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -223,6 +239,7 @@ class Queen(Piece):
             new_row, new_col = row, col - i
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -234,6 +251,7 @@ class Queen(Piece):
             new_row, new_col = row + i, col
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -245,6 +263,7 @@ class Queen(Piece):
             new_row, new_col = row, col + i
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -256,6 +275,7 @@ class Queen(Piece):
             new_row, new_col = row - i, col - i 
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -267,6 +287,7 @@ class Queen(Piece):
             new_row, new_col = row + i, col + i 
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -278,6 +299,7 @@ class Queen(Piece):
             new_row, new_col = row + i, col - i 
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -289,6 +311,7 @@ class Queen(Piece):
             new_row, new_col = row - i, col + i 
             if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
+                    moves_for_vision.append((new_row, new_col))
                     break
                 else:
                     moves.append((new_row, new_col))
@@ -296,7 +319,7 @@ class Queen(Piece):
             else:
                 moves.append((new_row, new_col))
 
-        return moves
+        return moves, moves_for_vision
     
 class King(Piece):
     def __init__(self, color):
@@ -305,6 +328,7 @@ class King(Piece):
     def get_legal_moves(self, boardstate, start_square, vision):
         
         moves = []
+        moves_for_vision = []
         row, col = start_square
 
         offsets = [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
@@ -313,7 +337,7 @@ class King(Piece):
             new_row, new_col = row + x, col + y
             if 0 <= new_row <8 and 0 <= new_col <8 and boardstate[(new_row, new_col)].color != self.color and vision[(new_row, new_col)] == False:
                 moves.append((new_row, new_col))
-        return moves
+        return moves, moves_for_vision
 
 class Empty(Piece):
     def __init__(self):
@@ -321,4 +345,5 @@ class Empty(Piece):
 
     def get_legal_moves(self, boardstate, start_square, vision):
         moves = []
-        return moves 
+        moves_for_vision = []
+        return moves, moves_for_vision
