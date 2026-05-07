@@ -85,7 +85,7 @@ class Board:
     def display(self, attribute, boardstate):
         for rows, i in enumerate(boardstate):
             for cols, j in enumerate(i):
-                if boardstate[rows, cols] == self.empty:
+                if boardstate[rows, cols].value == 0:
                     print(self.empty.value, end=' ')
                 else:
                     value = getattr(boardstate[rows, cols], attribute)

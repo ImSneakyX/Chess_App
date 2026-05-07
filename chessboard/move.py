@@ -7,6 +7,7 @@ import numpy as np
 
 class Move(Board):
     def __init__(self, boardstate, start_square, end_square): 
+        Board.__init__(self)
         self.start = boardstate
         self.start_square = start_square
         self.end_square = end_square
@@ -36,7 +37,7 @@ class Move(Board):
         self.start1 = self.start.copy()
         if self.legal_move_mask[self.end_square] == True:
             self.start1[self.end_square] = self.piece
-            self.start1[self.start_square] = 0
+            self.start1[self.start_square] = self.empty
             self.pos_new = self.start1
             self.display('name', self.pos_new)
         else: self.pos_new = self.start1
@@ -47,7 +48,7 @@ class Move(Board):
 if __name__ == '__main__':
     brett = Board()
     brett.start_position()
-    brett1 = Move(brett.start, (6, 4), (4, 4))
+    brett1 = Move(brett.start, (7, 6), (5, 5))
     print(brett1.get_legal_move_mask())
 
 

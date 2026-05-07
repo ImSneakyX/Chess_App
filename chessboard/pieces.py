@@ -61,7 +61,7 @@ class Knight(Piece):
 
         for x, y in offsets:
             new_row, new_col = row + x, col + y
-            if 0 <= new_row <8 and 0 <= new_col <8 and (boardstate[(new_row, new_col)].color != self.color or boardstate[(new_row, new_col)] == 0):
+            if 0 <= new_row <8 and 0 <= new_col <8 and boardstate[(new_row, new_col)].color != self.color:
                 moves.append((new_row, new_col))
         return moves
          
@@ -82,7 +82,7 @@ class Bishop(Piece):
 
         for i in range(1, limit1 + 1):
             new_row, new_col = row - i, col - i 
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -93,7 +93,7 @@ class Bishop(Piece):
 
         for i in range(1, limit2 + 1):
             new_row, new_col = row + i, col + i 
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -104,7 +104,7 @@ class Bishop(Piece):
 
         for i in range(1, limit3 + 1):
             new_row, new_col = row + i, col - i 
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -115,7 +115,7 @@ class Bishop(Piece):
 
         for i in range(1, limit4 + 1):
             new_row, new_col = row - i, col + i 
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -142,7 +142,7 @@ class Rook(Piece):
 
         for i in range(1, limit1 + 1):
             new_row, new_col = row - i, col
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -153,7 +153,7 @@ class Rook(Piece):
 
         for i in range(1, limit2 + 1):
             new_row, new_col = row, col - i
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -164,7 +164,7 @@ class Rook(Piece):
 
         for i in range(1, limit3 + 1):
             new_row, new_col = row + i, col
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -175,7 +175,7 @@ class Rook(Piece):
 
         for i in range(1, limit4 + 1):
             new_row, new_col = row, col + i
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -210,7 +210,7 @@ class Queen(Piece):
 
         for i in range(1, limit1 + 1):
             new_row, new_col = row - i, col
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -221,7 +221,7 @@ class Queen(Piece):
 
         for i in range(1, limit2 + 1):
             new_row, new_col = row, col - i
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -232,7 +232,7 @@ class Queen(Piece):
 
         for i in range(1, limit3 + 1):
             new_row, new_col = row + i, col
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -243,7 +243,7 @@ class Queen(Piece):
 
         for i in range(1, limit4 + 1):
             new_row, new_col = row, col + i
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -254,7 +254,7 @@ class Queen(Piece):
 
         for i in range(1, limit5 + 1):
             new_row, new_col = row - i, col - i 
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -265,7 +265,7 @@ class Queen(Piece):
 
         for i in range(1, limit6 + 1):
             new_row, new_col = row + i, col + i 
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -276,7 +276,7 @@ class Queen(Piece):
 
         for i in range(1, limit7 + 1):
             new_row, new_col = row + i, col - i 
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -287,7 +287,7 @@ class Queen(Piece):
 
         for i in range(1, limit8 + 1):
             new_row, new_col = row - i, col + i 
-            if boardstate[(new_row, new_col)] != 0:
+            if boardstate[(new_row, new_col)].value != 0:
                 if boardstate[(new_row, new_col)].color == self.color:
                     break
                 else:
@@ -311,7 +311,7 @@ class King(Piece):
 
         for x, y in offsets:
             new_row, new_col = row + x, col + y
-            if 0 <= new_row <8 and 0 <= new_col <8 and (boardstate[(new_row, new_col)].color != self.color or boardstate[(new_row, new_col)] == 0):
+            if 0 <= new_row <8 and 0 <= new_col <8 and boardstate[(new_row, new_col)].color != self.color:
                 moves.append((new_row, new_col))
         return moves
 
