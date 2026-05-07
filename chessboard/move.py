@@ -2,7 +2,6 @@ import sys
 import os 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.board import Board
-from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop
 import numpy as np
 
 
@@ -36,11 +35,10 @@ class Move(Board):
     def move(self):
         self.start1 = self.start.copy()
         if self.legal_move_mask[self.end_square] == True:
-            if isinstance(self.piece, (Pawn, Rook, Knight, Queen, King, Bishop)):
-                self.start1[self.end_square] = self.piece
-                self.start1[self.start_square] = 0
-                self.pos_new = self.start1
-                self.display('name', self.pos_new)
+            self.start1[self.end_square] = self.piece
+            self.start1[self.start_square] = 0
+            self.pos_new = self.start1
+            self.display('name', self.pos_new)
         else: self.pos_new = self.start1
         return self.pos_new
 

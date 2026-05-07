@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
-from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop
+from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 
 class Board:
     def __init__(self):
@@ -25,6 +25,9 @@ class Board:
         self.rook_b = Rook('b')
         self.queen_b = Queen('b')
         self.king_b = King('b')
+
+        #empty 
+        self.empty = Empty()
     
 
         
@@ -71,14 +74,19 @@ class Board:
         self.start[0, 4] = self.king_b
         self.start[-1,4] = self.king_w
 
+        #leere Felder
+        for i in range(2, 6):
+            self.start[i] = self.empty
+
+
         return self.start
 
 
     def display(self, attribute, boardstate):
         for rows, i in enumerate(boardstate):
             for cols, j in enumerate(i):
-                if boardstate[rows, cols] == 0:
-                    print(0, end=' ')
+                if boardstate[rows, cols] == self.empty:
+                    print(self.empty.value, end=' ')
                 else:
                     value = getattr(boardstate[rows, cols], attribute)
                     print(f"{value}", end = ' ')
