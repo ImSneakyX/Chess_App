@@ -311,7 +311,7 @@ class King(Piece):
 
         for x, y in offsets:
             new_row, new_col = row + x, col + y
-            if 0 <= new_row <8 and 0 <= new_col <8 and boardstate[(new_row, new_col)].color != self.color and vision[(new_col, new_row)] == False:
+            if 0 <= new_row <8 and 0 <= new_col <8 and boardstate[(new_row, new_col)].color != self.color and vision[(new_row, new_col)] == False:
                 moves.append((new_row, new_col))
         return moves
 

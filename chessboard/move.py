@@ -49,7 +49,6 @@ class Move_White(Board):
                         new_row, new_col = row + x, col + y
                         if 0 <= new_row <8 and 0 <= new_col <8:
                             self.vision[(new_row, new_col)] = True
-        print(self.vision)
         return self.vision
     
 
