@@ -18,32 +18,32 @@ class Pawn(Piece):
         row, col = start_square
 
         if self.color == 'w':
-            if boardstate[(row - 1, col - 1)] != 0 and boardstate[(row - 1, col - 1)].color != self.color: 
+            if boardstate[(row - 1, col - 1)].color != self.color and boardstate[(row - 1, col -1)].color != None: 
                 moves.append((row - 1, col -1))
-            if boardstate[(row - 1, col + 1)] != 0 and boardstate[(row - 1, col + 1)].color != self.color: 
+            if boardstate[(row - 1, col + 1)].color != None and boardstate[(row - 1, col + 1)].color != self.color: 
                     moves.append((row - 1, col + 1))
 
             if row == 6: 
-                if boardstate[(row - 1, col)] == 0:
+                if boardstate[(row - 1, col)].value == 0:
                     moves.append((row - 1, col))  
-                    if boardstate[(row - 2, col)] == 0:
+                    if boardstate[(row - 2, col)].value == 0:
                         moves.append((row - 2, col))             
-            elif row > 0 and boardstate[row-1, col] == 0:
+            elif row > 0 and boardstate[row-1, col].value == 0:
                     moves.append((row-1, col))
                 
         else:
-            if boardstate[(row + 1, col - 1)] != 0 and boardstate[(row + 1, col - 1)].color != self.color: 
+            if boardstate[(row + 1, col - 1)].color != None and boardstate[(row + 1, col - 1)].color != self.color: 
                 moves.append((row + 1, col -1))
-            if boardstate[(row + 1, col + 1)] != 0 and boardstate[(row + 1, col + 1)].color != self.color: 
+            if boardstate[(row + 1, col + 1)].color != None and boardstate[(row + 1, col + 1)].color != self.color: 
                 moves.append((row + 1, col + 1))
 
             if row == 1:
-                if boardstate[(row + 1, col)] == 0:
+                if boardstate[(row + 1, col)].value == 0:
                     moves.append((row + 1, col))
-                    if boardstate [(row + 2, col)]:
+                    if boardstate [(row + 2, col)].value == 0:
                         moves.append((row + 2, col)) 
 
-            elif row < 7 and boardstate[row+1, col] == 0:
+            elif row < 7 and boardstate[row+1, col].value == 0:
                     moves.append((row+1, col))
         return moves 
 
@@ -314,3 +314,11 @@ class King(Piece):
             if 0 <= new_row <8 and 0 <= new_col <8 and (boardstate[(new_row, new_col)].color != self.color or boardstate[(new_row, new_col)] == 0):
                 moves.append((new_row, new_col))
         return moves
+
+class Empty(Piece):
+    def __init__(self):
+        Piece.__init__(self, 'empty', 0, None)
+
+    def get_legal_moves(self, boardstate, start_square):
+        moves = []
+        return moves 
