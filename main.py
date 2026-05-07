@@ -9,11 +9,14 @@ class Game:
         self.brett.chessboard_notation()
         self.position = self.brett.start
         self.start_game()
-        self.make_move_white()
+
 
     def start_game(self):
         print(f'The game begins!')
         self.brett.display('name', self.brett.start)
+        while 0 == 0:
+            self.make_move_white()
+            self.make_move_black()
     
     def make_move_white(self):
         start_square = input(f'White, make a move! Select the square with the piece that you want to move: ')
@@ -27,8 +30,10 @@ class Game:
 
 
         x = Move_White(self.position, start_square, end_square)
-        self.position = x.pos_new #wird wieder zu Brett umgewandelt
-        self.make_move_black() #ruft die andere func auf
+        if x.legal_move_mask[x.end_square] == True:
+            self.position = x.pos_new #wird wieder zu Brett umgewandelt
+        else: 
+            self.make_move_white()
 
     def make_move_black(self):
         start_square = input(f'Black, make a move! Select the square with the piece that you want to move: ')
@@ -42,8 +47,12 @@ class Game:
 
 
         x = Move_Black(self.position, start_square, end_square)
-        self.position = x.pos_new #wird wieder zu Brett umgewandelt
-        self.make_move_white() #ruft wieder sofort die andere func uf
+        if x.legal_move_mask[x.end_square] == True:
+             self.position = x.pos_new
+        else:
+             self.make_move_black()
+
+
 
 
 
