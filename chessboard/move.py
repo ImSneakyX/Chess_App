@@ -5,8 +5,7 @@ from chessboard.board import Board
 from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 import numpy as np
 
-
-class Move_White(Board):
+class Move(Board):
     def __init__(self, boardstate, start_square, end_square): 
         Board.__init__(self)
         self.start = boardstate
@@ -16,8 +15,50 @@ class Move_White(Board):
 
         self.vision = None
         self.legal_move_mask = None
+        self.order()
+
+    def oder(self):
+        pass
+
+    def visions(self):
+        pass
+
+    def get_legal_move_mask(self):
+        pass
+
+    def is_move_legal(self): 
+        if self.legal_move_mask[self.end_square] == True:
+            print(f'Move is legal :)')
+        else:
+            print(f'Move is not legal! Try another one!')
+        return self.legal_move_mask[self.end_square]
+
+
+    def move(self):
+        self.start1 = self.start.copy()
+        if self.legal_move_mask[self.end_square] == True:
+            self.start1[self.end_square] = self.piece
+            self.start1[self.start_square] = self.empty
+            self.pos_new = self.start1
+            self.display('name', self.pos_new)
+        else: 
+            self.pos_new = self.start1
+        return self.pos_new
+    
+    
+
+class Move_White(Move):
+    def __init__(self, boardstate, start_square, end_square): 
+        Move.__init__(self, boardstate, start_square, end_square)
+
+
+    def order(self):
         self.visions()
-        self.get_legal_move_mask()
+        square = self.find_piece(self.start, King, 'w')[0] # steht weiß im Schach?
+        if self.vision[square] == True:
+            self.check()
+        else: 
+            self.get_legal_move_mask()
         self.is_move_legal()
         self.move()
 
@@ -54,38 +95,23 @@ class Move_White(Board):
         return self.vision
     
 
-    def is_move_legal(self): 
-        if self.legal_move_mask[self.end_square] == True:
-            print(f'Move is legal :)')
-        else:
-            print(f'Move is not legal! Try another one!')
-        return self.legal_move_mask[self.end_square]
+            
 
-
-    def move(self):
-        self.start1 = self.start.copy()
-        if self.legal_move_mask[self.end_square] == True:
-            self.start1[self.end_square] = self.piece
-            self.start1[self.start_square] = self.empty
-            self.pos_new = self.start1
-            self.display('name', self.pos_new)
-        else: self.pos_new = self.start1
-        return self.pos_new
     
-class Move_Black(Board):
+class Move_Black(Move):
     def __init__(self, boardstate, start_square, end_square): 
-        Board.__init__(self)
-        self.start = boardstate
-        self.start_square = start_square
-        self.end_square = end_square
-        self.piece = self.start[self.start_square]
+        Move.__init__(self, boardstate, start_square, end_square)
 
-        self.vision = None
-        self.legal_move_mask = None
+    def order(self):
         self.visions()
-        self.get_legal_move_mask()
+        square = self.find_piece(self.start, King, 'b')[0] # steht schwarz im Schach?
+        if self.vision[square] == True:
+            self.check()
+        else: 
+            self.get_legal_move_mask()
         self.is_move_legal()
         self.move()
+
 
     def get_legal_move_mask(self):
         mask = np.zeros((8, 8), dtype = 'bool')
@@ -118,24 +144,6 @@ class Move_Black(Board):
                         if 0 <= new_row <8 and 0 <= new_col <8:
                             self.vision[(new_row, new_col)] = True
         return self.vision
-
-    def is_move_legal(self): 
-        if self.legal_move_mask[self.end_square] == True:
-            print(f'Move is legal :)')
-        else:
-            print(f'Move is not legal! Try another one!')
-        return self.legal_move_mask[self.end_square]
-
-
-    def move(self):
-        self.start1 = self.start.copy()
-        if self.legal_move_mask[self.end_square] == True:
-            self.start1[self.end_square] = self.piece
-            self.start1[self.start_square] = self.empty
-            self.pos_new = self.start1
-            self.display('name', self.pos_new)
-        else: self.pos_new = self.start1
-        return self.pos_new
 
     
     

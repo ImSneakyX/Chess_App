@@ -95,13 +95,13 @@ class Board:
             print()
 
     def find_piece(self, boardstate, piece, color):
-        pieces = ()
+        square = []
         for row, i in enumerate(boardstate):
             for col, j in enumerate(i):
                 if isinstance(boardstate[(row, col)], piece):
                     if boardstate[(row, col)].color == color:
-                        pieces.append((row, col))
-        return pieces
+                        square.append((row, col))
+        return square
     
     def chessboard_notation(self): 
         row_name = self.brett.copy()
