@@ -27,6 +27,17 @@ class Game:
                     start_square = tuple((row, col))
                 if  self.brett.notation[row, col] == end_square:
                     end_square = tuple((row, col))
+                    
+        if isinstance(start_square, str):
+            if isinstance(end_square, str):
+                print(f"Both selected squares don't exist! Please select exisitng squares")
+                self.make_move_white()
+            else:
+                print(f"Selected start square doesn't exist! Please select an exisiting square")
+                self.make_move_white()
+        if isinstance(end_square, str) and not isinstance(start_square, str):
+            print(f"Selected end square doesn't exist! Please select an exisitng square")
+            self.make_move_white()
 
 
         x = Move_White(self.position, start_square, end_square)
@@ -44,6 +55,17 @@ class Game:
                         start_square = tuple((row, col))
                 if  self.brett.notation[row, col] == end_square:
                         end_square = tuple((row, col))
+
+        if isinstance(start_square, str):
+            if isinstance(end_square, str):
+                print(f"Both selected squares don't exist! Please select exisitng squares")
+                self.make_move_black()
+            else:
+                print(f"Selected start square doesn't exist! Please select an exisiting square")
+                self.make_move_black()
+        if isinstance(end_square, str) and not isinstance(start_square, str):
+            print(f"Selected end square doesn't exist! Please select an exisitng square")
+            self.make_move_black()
 
 
         x = Move_Black(self.position, start_square, end_square)
