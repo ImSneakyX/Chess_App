@@ -19,10 +19,13 @@ class Pawn(Piece):
         row, col = start_square
 
         if self.color == 'w':
-            if boardstate[(row - 1, col - 1)].color != self.color and boardstate[(row - 1, col -1)].color != None: 
-                moves.append((row - 1, col -1))
-            if boardstate[(row - 1, col + 1)].color != None and boardstate[(row - 1, col + 1)].color != self.color: 
-                    moves.append((row - 1, col + 1))
+         
+            if 0 <= col - 1 < 8:
+                if boardstate[(row - 1, col - 1)].color != self.color and boardstate[(row - 1, col -1)].color != None: 
+                    moves.append((row - 1, col -1))
+            if 0 <= col + 1 < 8:
+                if boardstate[(row - 1, col + 1)].color != None and boardstate[(row - 1, col + 1)].color != self.color: 
+                        moves.append((row - 1, col + 1))
 
             if row == 6: 
                 if boardstate[(row - 1, col)].value == 0:
@@ -33,10 +36,12 @@ class Pawn(Piece):
                     moves.append((row-1, col))
                 
         else:
-            if boardstate[(row + 1, col - 1)].color != None and boardstate[(row + 1, col - 1)].color != self.color: 
-                moves.append((row + 1, col -1))
-            if boardstate[(row + 1, col + 1)].color != None and boardstate[(row + 1, col + 1)].color != self.color: 
-                moves.append((row + 1, col + 1))
+            if 0 <= col - 1 < 8:
+                if boardstate[(row + 1, col - 1)].color != None and boardstate[(row + 1, col - 1)].color != self.color: 
+                    moves.append((row + 1, col -1))
+            if 0 <= col + 1 < 8:
+                if boardstate[(row + 1, col + 1)].color != None and boardstate[(row + 1, col + 1)].color != self.color: 
+                    moves.append((row + 1, col + 1))
 
             if row == 1:
                 if boardstate[(row + 1, col)].value == 0:
