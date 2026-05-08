@@ -27,16 +27,13 @@ class Move(Board):
         pass
 
     def is_move_legal(self): 
-        if self.legal_move_mask[self.end_square] == True:
-            print(f'Move is legal :)')
-        else:
-            print(f'Move is not legal! Try another one!')
-        return self.legal_move_mask[self.end_square]
+        pass
 
 
     def move(self):
         self.start1 = self.start.copy()
-        if self.legal_move_mask[self.end_square] == True:
+        legal = self.is_move_legal()
+        if legal == True:
             self.start1[self.end_square] = self.piece
             self.start1[self.start_square] = self.empty
             self.pos_new = self.start1
@@ -54,13 +51,9 @@ class Move_White(Move):
 
     def order(self):
         self.visions()
-        square = self.find_piece(self.start, King, 'w')[0] # steht weiß im Schach?
-        if self.vision[square] == True:
-            self.check()
-        else: 
-            self.get_legal_move_mask()
-        self.is_move_legal()
+        self.get_legal_move_mask()
         self.move()
+        
 
     def get_legal_move_mask(self):
         mask = np.zeros((8, 8), dtype = 'bool')
@@ -93,6 +86,16 @@ class Move_White(Move):
                         if 0 <= new_row <8 and 0 <= new_col <8:
                             self.vision[(new_row, new_col)] = True
         return self.vision
+    
+    def is_move_legal(self): 
+        if self.legal_move_mask[self.end_square] == True and self.vision[self.find_piece(self.start, King, 'w')[0]] == False:
+            print(f'Move is legal :)')
+            legal = True
+        else:
+            print(f'Move is not legal! Try another one!')
+            legal = False
+        return legal
+
     
 
             
@@ -144,6 +147,15 @@ class Move_Black(Move):
                         if 0 <= new_row <8 and 0 <= new_col <8:
                             self.vision[(new_row, new_col)] = True
         return self.vision
+    
+    def is_move_legal(self): 
+        if self.legal_move_mask[self.end_square] == True and self.vision[self.find_piece(self.start, King, 'b')[0]] == False:
+            print(f'Move is legal :)')
+            legal = True
+        else:
+            print(f'Move is not legal! Try another one!')
+            legal = False
+        return legal
 
     
     
