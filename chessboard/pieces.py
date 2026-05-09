@@ -4,13 +4,19 @@ class Piece:
         self.name = name
         self.value = value
         self.color = color
+        self.moved = False
 
     def get_legal_moves(self, boardstate, start_square, vision):
         pass
 
+    def move_tracker(self):
+        pass
+
+
 class Pawn(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Pawn', 1, color)
+
 
     def get_legal_moves(self, boardstate, start_square, vision):
         
@@ -90,6 +96,7 @@ class Bishop(Piece):
         limit3 = min(7-row, col) #unten links
         limit4 = min(row, 7-col) #oben rechts
 
+
         for i in range(1, limit1 + 1):
             new_row, new_col = row - i, col - i 
             if boardstate[(new_row, new_col)].value != 0:
@@ -141,8 +148,9 @@ class Bishop(Piece):
         return moves, moves_for_vision
 
 class Rook(Piece):
-    def __init__(self, color):
+    def __init__(self, color, side):
         Piece.__init__(self, 'Rook', 5, color)
+        self.side = side
 
     def get_legal_moves(self, boardstate, start_square, vision):
         moves = []
@@ -205,6 +213,14 @@ class Rook(Piece):
 
 
         return moves, moves_for_vision
+    
+    def move_tracker(self, start_position_rook, start_square):
+
+        if start_square == start_position_rook:
+            self.moved = True
+
+
+        return self.moved
 
 
 
@@ -329,6 +345,9 @@ class Queen(Piece):
 class King(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'King', 100, color)
+        self.castling_c = False
+        self.castling_g = False
+        
 
     def get_legal_moves(self, boardstate, start_square, vision):
         
@@ -342,7 +361,36 @@ class King(Piece):
             new_row, new_col = row + x, col + y
             if 0 <= new_row <8 and 0 <= new_col <8 and boardstate[(new_row, new_col)].color != self.color and vision[(new_row, new_col)] == False:
                 moves.append((new_row, new_col))
+        if self.castling_c == True:
+            moves.append((0, 2 - col))
+
+        if self.castling_g == True:
+            moves.append((0, 6 - col))
         return moves, moves_for_vision
+    
+    def move_tracker(self, start_position_king, input_start_square):
+
+        if input_start_square == start_position_king:
+            self.moved = True
+
+
+        return self.moved
+
+    def castling(self, boardstate, moved_rook_left, moved_rook_right, start_square_king, start_square_rook_left, start_square_rook_right, vision):
+        row, col = start_square_king 
+        row_l, col_l = start_square_rook_left
+        row_r, col_r = start_square_rook_right
+        col_min_l, col_max_l = sorted([2, col])
+
+        if moved_rook_left == False and self.moved == False and isinstance(boardstate[row, col_l + 1:col], Empty) and vision[row, col_min_l:col_max_l+1].all() == False:
+            self.castling_c = True
+
+        if moved_rook_right == False and self.moved == False and isinstance(boardstate[row, col + 1:col_r], Empty) and vision[row, col:col_r+1].all() == False:
+            self.castling_g = True
+        
+
+
+
 
 class Empty(Piece):
     def __init__(self):

@@ -8,7 +8,7 @@ from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 class Board:
     def __init__(self):
         self.brett = np.zeros((8,8), 'object')
-        self.start = None
+        self.start_pos = None
         self.notation = None
         self.vision_w = None
         self.vision_s = None
@@ -16,7 +16,8 @@ class Board:
         self.pawn_w = Pawn('w')
         self.knight_w = Knight('w')
         self.bishop_w = Bishop('w')
-        self.rook_w = Rook('w')
+        self.rook_w_l = Rook('w', 'l')
+        self.rook_w_r = Rook('w', 'r')
         self.queen_w = Queen('w')
         self.king_w = King('w')
 
@@ -24,7 +25,8 @@ class Board:
         self.pawn_b = Pawn('b')
         self.knight_b = Knight('b')
         self.bishop_b = Bishop('b')
-        self.rook_b = Rook('b')
+        self.rook_b_l = Rook('b', 'l')
+        self.rook_b_r = Rook('b', 'r')
         self.queen_b = Queen('b')
         self.king_b = King('b')
 
@@ -34,54 +36,52 @@ class Board:
 
         
     def start_position(self):
-        self.start = self.brett.copy()
+        self.start_pos = self.brett.copy()
         #Bauern
-        self.start[1,:] = self.pawn_b
-        self.start[-2,:] = self.pawn_w
+        self.start_pos[1,:] = self.pawn_b
+        self.start_pos[-2,:] = self.pawn_w
         
         #Türme
 
-        row = [0,0]
-        col = [0, -1]
-        self.start[row, col] = self.rook_b
+        self.start_pos[0,0] = self.rook_b_r
+        self.start_pos[0, -1] = self.rook_b_l
 
-        row = [-1,-1]
-        col = [0, -1]
-        self.start[row, col] = self.rook_w
+        self.start_pos[-1, 0] = self.rook_w_l
+        self.start_pos[-1, -1] = self.rook_w_r
 
         #Springer
 
         row = [0,0]
         col = [1, -2]
-        self.start[row, col] = self.knight_b
+        self.start_pos[row, col] = self.knight_b
 
         row = [-1, -1]
         col = [1, -2]
-        self.start[row, col] = self.knight_w
+        self.start_pos[row, col] = self.knight_w
 
         #Läufer
         row = [0,0]
         col = [2, -3]
-        self.start[row, col] = self.bishop_b
+        self.start_pos[row, col] = self.bishop_b
 
         row = [-1, -1]
         col = [2, -3]
-        self.start[row, col] = self.bishop_w
+        self.start_pos[row, col] = self.bishop_w
 
         #Dame
-        self.start[0, 3] = self.queen_b
-        self.start[-1,3] = self.queen_w
+        self.start_pos[0, 3] = self.queen_b
+        self.start_pos[-1,3] = self.queen_w
 
         #König
-        self.start[0, 4] = self.king_b
-        self.start[-1,4] = self.king_w
+        self.start_pos[0, 4] = self.king_b
+        self.start_pos[-1,4] = self.king_w
 
         #leere Felder
         for i in range(2, 6):
-            self.start[i] = self.empty
+            self.start_pos[i] = self.empty
 
 
-        return self.start
+        return self.start_pos
 
 
     def display(self, attribute, boardstate):
