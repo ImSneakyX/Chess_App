@@ -60,7 +60,7 @@ class Move_White(Move):
         self.rook_l = self.start_pos[self.rook_starts[0]]
         self.rook_r = self.start_pos[self.rook_starts[1]]
         self.king.castling(self.start, self.moved_rook_l, self.moved_rook_r, self.moved_king, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
-        a = isinstance(self.start[-1,  5:7], Empty)
+        a = isinstance(self.start[-1,  5:6].all(), Empty)
         print(self.king.castling_g, self.king.moved, self.rook_r, self.rook_l, a)
 
         self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
