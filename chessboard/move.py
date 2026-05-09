@@ -8,10 +8,15 @@ import numpy as np
 class Move(Board):
     def __init__(self, boardstate, start_square, end_square): 
         Board.__init__(self)
+        self.start_pos = self.start_position()
         self.start = boardstate
         self.start_square = start_square
         self.end_square = end_square
         self.piece = self.start[self.start_square]
+
+        self.moved_king = False
+        self.moved_rook_l = False
+        self.moved_rook_r = False
 
         self.vision = None
         self.legal_move_mask = None
@@ -50,15 +55,17 @@ class Move_White(Move):
     def castling_white(self):
         self.king_start = self.find_piece(self.start_pos, King, 'w')[0]
         self.king = self.start_pos[self.king_start]
-        self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
 
         self.rook_starts = self.find_piece(self.start_pos, Rook, 'w')
         self.rook_l = self.start_pos[self.rook_starts[0]]
         self.rook_r = self.start_pos[self.rook_starts[1]]
+        self.king.castling(self.start, self.moved_rook_l, self.moved_rook_r, self.moved_king, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
+        a = isinstance(self.start[-1,  5:7], Empty)
+        print(self.king.castling_g, self.king.moved, self.rook_r, self.rook_l, a)
+
+        self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
         self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
         self.moved_rook_r = self.rook_r.move_tracker(self.rook_starts[1], self.start_square)
-        self.king.castling(self.start, self.moved_rook_l, self.moved_rook_r, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
-
         
 
     def get_legal_move_mask(self):
@@ -123,6 +130,7 @@ class Move_White(Move):
 class Move_Black(Move):
     def __init__(self, boardstate, start_square, end_square): 
         Move.__init__(self, boardstate, start_square, end_square)
+        
 
     def order(self):
         self.visions(self.start)
@@ -133,15 +141,15 @@ class Move_Black(Move):
     def castling_black(self):
         self.king_start = self.find_piece(self.start_pos, King, 'b')[0]
         self.king = self.start_pos[self.king_start]
-        self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
 
         self.rook_starts = self.find_piece(self.start_pos, Rook, 'b')
         self.rook_l = self.start_pos[self.rook_starts[0]]
         self.rook_r = self.start_pos[self.rook_starts[1]]
+        self.king.castling(self.start, self.moved_rook_l, self.moved_rook_r, self.moved_king, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
+
+        self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
         self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
         self.moved_rook_r = self.rook_r.move_tracker(self.rook_starts[1], self.start_square)
-        self.king.castling(self.start, self.moved_rook_l, self.moved_rook_r, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
-
 
     def get_legal_move_mask(self):
         mask = np.zeros((8, 8), dtype = 'bool')

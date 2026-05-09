@@ -376,16 +376,16 @@ class King(Piece):
 
         return self.moved
 
-    def castling(self, boardstate, moved_rook_left, moved_rook_right, start_square_king, start_square_rook_left, start_square_rook_right, vision):
+    def castling(self, boardstate, moved_rook_left, moved_rook_right, moved_king, start_square_king, start_square_rook_left, start_square_rook_right, vision):
         row, col = start_square_king 
         row_l, col_l = start_square_rook_left
         row_r, col_r = start_square_rook_right
         col_min_l, col_max_l = sorted([2, col])
 
-        if moved_rook_left == False and self.moved == False and isinstance(boardstate[row, col_l + 1:col], Empty) and vision[row, col_min_l:col_max_l+1].all() == False:
+        if moved_rook_left == False and moved_king == False and isinstance(boardstate[row, col_l + 1:col], Empty) and vision[row, col_min_l:col_max_l+1].all() == False:
             self.castling_c = True
 
-        if moved_rook_right == False and self.moved == False and isinstance(boardstate[row, col + 1:col_r], Empty) and vision[row, col:col_r+1].all() == False:
+        if moved_rook_right == False and moved_king == False and isinstance(boardstate[row, col + 1:col_r], Empty) and vision[row, col:col_r+1].all() == False:
             self.castling_g = True
         
 

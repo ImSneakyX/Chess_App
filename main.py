@@ -7,13 +7,13 @@ class Game:
         self.brett = Board()
         self.brett.start_position()
         self.brett.chessboard_notation()
-        self.position = self.brett.start
+        self.position = self.brett.start_pos
         self.start_game()
 
 
     def start_game(self):
         print(f'The game begins!')
-        self.brett.display('name', self.brett.start)
+        self.brett.display('name', self.brett.start_pos)
         while 0 == 0:
             self.make_move_white()
             self.make_move_black()
