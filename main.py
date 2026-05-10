@@ -27,6 +27,7 @@ class Game:
                     start_square = tuple((row, col))
                 if  self.brett.notation[row, col] == end_square:
                     end_square = tuple((row, col))
+        
 
         if isinstance(start_square, str):
             if isinstance(end_square, str):
@@ -43,7 +44,6 @@ class Game:
         x = Move_White(self.position, start_square, end_square, self.start_pos)
         if x.legal == True:
             self.position = x.pos_new #wird wieder zu Brett umgewandelt
-            print(self.position)
         else: 
             self.make_move_white()
 
