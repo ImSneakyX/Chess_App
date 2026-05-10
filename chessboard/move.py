@@ -6,9 +6,9 @@ from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 import numpy as np
 
 class Move(Board):
-    def __init__(self, boardstate, start_square, end_square): 
+    def __init__(self, boardstate, start_square, end_square, start_pos): 
         Board.__init__(self)
-        self.start_pos = self.start_position()
+        self.start_pos = start_pos
         self.start = boardstate
         self.start_square = start_square
         self.end_square = end_square
@@ -42,8 +42,8 @@ class Move(Board):
     
 
 class Move_White(Move):
-    def __init__(self, boardstate, start_square, end_square): 
-        Move.__init__(self, boardstate, start_square, end_square)
+    def __init__(self, boardstate, start_square, end_square, start_pos): 
+        Move.__init__(self, boardstate, start_square, end_square, start_pos)
 
     def order(self):
         self.visions(self.start)
@@ -60,7 +60,7 @@ class Move_White(Move):
         self.rook_l = self.start_pos[self.rook_starts[0]]
         self.rook_r = self.start_pos[self.rook_starts[1]]
         self.king.castling(self.start, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
-        print(self.king.castling_g, self.king.get_legal_moves(self.start, self.start_square, self.vision), self.king)
+        print(self.king.castling_g, self.king.get_legal_moves(self.start, self.start_square, self.vision), self.rook_r.moved, self.king.moved)
 
         self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
         self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
@@ -129,8 +129,8 @@ class Move_White(Move):
 
     
 class Move_Black(Move):
-    def __init__(self, boardstate, start_square, end_square): 
-        Move.__init__(self, boardstate, start_square, end_square)
+    def __init__(self, boardstate, start_square, end_square, start_pos): 
+        Move.__init__(self, boardstate, start_square, end_square, start_pos)
         
 
     def order(self):

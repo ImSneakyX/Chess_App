@@ -5,7 +5,7 @@ from chessboard.board import Board
 class Game: 
     def __init__(self):
         self.brett = Board()
-        self.brett.start_position()
+        self.start_pos = self.brett.start_position()
         self.brett.chessboard_notation()
         self.position = self.brett.start_pos
         self.start_game()
@@ -40,7 +40,7 @@ class Game:
             self.make_move_white()
 
 
-        x = Move_White(self.position, start_square, end_square)
+        x = Move_White(self.position, start_square, end_square, self.start_pos)
         if x.legal == True:
             self.position = x.pos_new #wird wieder zu Brett umgewandelt
             print(self.position)
@@ -69,7 +69,7 @@ class Game:
             self.make_move_black()
 
 
-        x = Move_Black(self.position, start_square, end_square)
+        x = Move_Black(self.position, start_square, end_square, self.start_pos)
         if x.legal == True:
              self.position = x.pos_new
         else:
