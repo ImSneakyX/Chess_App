@@ -43,6 +43,7 @@ class Game:
         x = Move_White(self.position, start_square, end_square)
         if x.legal == True:
             self.position = x.pos_new #wird wieder zu Brett umgewandelt
+            print(self.position)
         else: 
             self.make_move_white()
 

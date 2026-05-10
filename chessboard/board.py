@@ -10,8 +10,7 @@ class Board:
         self.brett = np.zeros((8,8), 'object')
         self.start_pos = None
         self.notation = None
-        self.vision_w = None
-        self.vision_s = None
+
         #weiße Figuren
         self.pawn_w = Pawn('w')
         self.knight_w = Knight('w')
@@ -132,5 +131,6 @@ class Board:
 if __name__ == '__main__':
     brett = Board()
     brett.start_position()
-    brett.display('name', brett.start)
+    brett.display('name', brett.start_pos)
+    print(brett.start_pos)
   

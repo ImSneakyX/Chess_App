@@ -362,10 +362,10 @@ class King(Piece):
             if 0 <= new_row <8 and 0 <= new_col <8 and boardstate[(new_row, new_col)].color != self.color and vision[(new_row, new_col)] == False:
                 moves.append((new_row, new_col))
         if self.castling_c == True:
-            moves.append((0, 2 - col))
+            moves.append((row, 2))
 
         if self.castling_g == True:
-            moves.append((0, 6 - col))
+            moves.append((row, 6))
         return moves, moves_for_vision
     
     def move_tracker(self, start_position_king, input_start_square):
@@ -382,10 +382,10 @@ class King(Piece):
         row_r, col_r = start_square_rook_right
         col_min_l, col_max_l = sorted([2, col])
 
-        if moved_rook_left == False and moved_king == False and isinstance(boardstate[row, col_l + 1:col], Empty) and vision[row, col_min_l:col_max_l+1].all() == False:
+        if moved_rook_left == False and moved_king == False and all(isinstance(square, Empty) for square in boardstate[row, col_l + 1:col]) == True and vision[row, col_min_l:col_max_l+1].all() == False:
             self.castling_c = True
 
-        if moved_rook_right == False and moved_king == False and isinstance(boardstate[row, col + 1:col_r], Empty) and vision[row, col:col_r+1].all() == False:
+        if moved_rook_right == False and moved_king == False and all(isinstance(square, Empty) for square in boardstate[row, col + 1:col_r]) == True and vision[row, col:col_r+1].all() == False:
             self.castling_g = True
         
 

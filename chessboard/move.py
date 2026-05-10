@@ -59,9 +59,8 @@ class Move_White(Move):
         self.rook_starts = self.find_piece(self.start_pos, Rook, 'w')
         self.rook_l = self.start_pos[self.rook_starts[0]]
         self.rook_r = self.start_pos[self.rook_starts[1]]
-        self.king.castling(self.start, self.moved_rook_l, self.moved_rook_r, self.moved_king, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
-        a = isinstance(self.start[-1,  5:6].all(), Empty)
-        print(self.king.castling_g, self.king.moved, self.rook_r, self.rook_l, a)
+        self.king.castling(self.start, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
+        print(self.king.castling_g, self.king.get_legal_moves(self.start, self.start_square, self.vision), self.king)
 
         self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
         self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
@@ -72,6 +71,8 @@ class Move_White(Move):
         mask = np.zeros((8, 8), dtype = 'bool')
         if self.piece.color == 'w':
             moves, moves_for_vision = self.piece.get_legal_moves(self.start, self.start_square, self.vision)
+            if isinstance(self.piece, King):
+                print(moves)
             for row, col in moves: 
                 mask[(row, col)] = True 
         self.legal_move_mask = mask
