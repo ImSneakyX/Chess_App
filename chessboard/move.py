@@ -61,9 +61,6 @@ class Move_White(Move):
         self.rook_r = self.start_pos[self.rook_starts[1]]
         self.king.castling(self.start, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
 
-        self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
-        self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
-        self.moved_rook_r = self.rook_r.move_tracker(self.rook_starts[1], self.start_square)
         
 
     def get_legal_move_mask(self):
@@ -103,8 +100,12 @@ class Move_White(Move):
         if self.legal_move_mask[self.end_square] == True:
             self.start1[self.end_square] = self.piece
             self.start1[self.start_square] = self.empty
-            if isinstance(self.piece, King) and self.start_square == self.king_start and (self.end_square ==  (0, 2) or self.end_square == (0, 6)):
-                self.start1[self.end_square] = self.empty
+            if isinstance(self.piece, King) and self.start_square == self.king_start and self.end_square == (7, 6):
+                self.start1[self.rook_starts[1]] = self.empty
+                self.start1[(7, 5)] = self.rook_r
+            if isinstance(self.piece, King) and self.start_square == self.king_start and self.end_square == (7, 2):
+                self.start1[self.rook_starts[0]] = self.empty
+                self.start1[(7, 3)] = self.rook_l
             self.pos_new = self.start1
             self.visions(self.pos_new)
             if self.vision[self.find_piece(self.pos_new, King, 'w')[0]] == False:
@@ -119,6 +120,12 @@ class Move_White(Move):
             print(f'Move is not legal! Try another one!')
             self.pos_new = self.start1
             self.legal = False
+
+        # Move-Tracker 
+        if self.legal == True:
+            self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
+            self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
+            self.moved_rook_r = self.rook_r.move_tracker(self.rook_starts[1], self.start_square)
         return self.pos_new
 
 
@@ -145,11 +152,7 @@ class Move_Black(Move):
         self.rook_starts = self.find_piece(self.start_pos, Rook, 'b')
         self.rook_l = self.start_pos[self.rook_starts[0]]
         self.rook_r = self.start_pos[self.rook_starts[1]]
-        self.king.castling(self.start, self.moved_rook_l, self.moved_rook_r, self.moved_king, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
-
-        self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
-        self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
-        self.moved_rook_r = self.rook_r.move_tracker(self.rook_starts[1], self.start_square)
+        self.king.castling(self.start, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
 
     def get_legal_move_mask(self):
         mask = np.zeros((8, 8), dtype = 'bool')
@@ -188,6 +191,12 @@ class Move_Black(Move):
         if self.legal_move_mask[self.end_square] == True:
             self.start1[self.end_square] = self.piece
             self.start1[self.start_square] = self.empty
+            if isinstance(self.piece, King) and self.start_square == self.king_start and self.end_square == (0, 6):
+                self.start1[self.rook_starts[1]] = self.empty
+                self.start1[(0, 5)] = self.rook_r
+            if isinstance(self.piece, King) and self.start_square == self.king_start and self.end_square == (0, 2):
+                self.start1[self.rook_starts[0]] = self.empty
+                self.start1[(0, 3)] = self.rook_l
             self.pos_new = self.start1
             self.visions(self.pos_new)
             if self.vision[self.find_piece(self.pos_new, King, 'b')[0]] == False:
@@ -202,6 +211,12 @@ class Move_Black(Move):
             print(f'Move is not legal! Try another one!')
             self.legal = False
             self.pos_new = self.start1
+
+        # Move-Tracker 
+        if self.legal == True:
+            self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
+            self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
+            self.moved_rook_r = self.rook_r.move_tracker(self.rook_starts[1], self.start_square)
         return self.pos_new
     
 

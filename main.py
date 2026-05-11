@@ -27,6 +27,7 @@ class Game:
                     start_square = tuple((row, col))
                 if  self.brett.notation[row, col] == end_square:
                     end_square = tuple((row, col))
+        print(start_square)
         
 
         if isinstance(start_square, str):
