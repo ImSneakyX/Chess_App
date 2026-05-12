@@ -8,13 +8,14 @@ class Game:
         self.start_pos = self.brett.start_position()
         self.brett.chessboard_notation()
         self.position = self.brett.start_pos
+        self.game = 0
         self.start_game()
 
 
     def start_game(self):
         print(f'The game begins!')
         self.brett.display('name', self.brett.start_pos)
-        while 0 == 0:
+        while self.game == 0:
             self.make_move_white()
             self.make_move_black()
     
@@ -42,6 +43,14 @@ class Game:
 
 
         x = Move_White(self.position, start_square, end_square, self.start_pos)
+        if x.mate == True:
+            print('Schachmatt, Schwarz gewinnt!')
+            self.game = 1
+            return self.game
+        if x.stalemate == True:
+            print('Patt!')
+            self.game = 1
+            return self.game
         if x.legal == True:
             self.position = x.pos_new #wird wieder zu Brett umgewandelt
         else: 
@@ -70,11 +79,19 @@ class Game:
 
 
         x = Move_Black(self.position, start_square, end_square, self.start_pos)
+        if x.mate == True:
+            print('Schachmatt, Weiß gewinnt!')
+            self.game = 1
+            return self.game
+        if x.stalemate == True:
+            print('Patt!')
+            self.game = 1
+            return self.game
         if x.legal == True:
              self.position = x.pos_new
+             self.vision = x.vision
         else:
              self.make_move_black()
-
 
 
 

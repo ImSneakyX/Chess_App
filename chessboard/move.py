@@ -14,6 +14,9 @@ class Move(Board):
         self.end_square = end_square
         self.piece = self.start[self.start_square]
 
+        self.mate = False
+        self.stalemate = False
+
         self.moved_king = False
         self.moved_rook_l = False
         self.moved_rook_r = False
@@ -37,6 +40,9 @@ class Move(Board):
     def move(self):
         pass
 
+    def get_all_legal_moves(self):
+        pass
+
     
     
     
@@ -46,6 +52,11 @@ class Move_White(Move):
         Move.__init__(self, boardstate, start_square, end_square, start_pos)
 
     def order(self):
+        self.mate, self.stalemate = self.mate_or_stalemate()
+        if self.mate == True:
+            return self.mate
+        if self.stalemate == True:
+            return self.stalemate
         self.visions(self.start)
         self.castling_white()
         self.get_legal_move_mask()
@@ -146,7 +157,29 @@ class Move_White(Move):
         return self.pos_new
 
 
-    
+    def mate_or_stalemate(self):
+        mate = False
+        stalemate = False
+        moves = [0]
+        start = self.start.copy()
+        for row, i in enumerate(start):
+            for col, j in enumerate(i):
+                if self.start[(row, col)].color == 'w':
+                    moves_row_col, moves_for_vision = self.start[(row, col)].get_legal_moves(self.start, (row, col), self.vision)
+                    for x, y in moves_row_col:
+                        start[(x, y)] = start[(row, col)]
+                        start[(row, col)] = self.empty
+                        self.visions(start) 
+                        if self.vision[self.find_piece(start, King, 'w')[0]] == False:
+                            moves.append(1)
+                            
+        self.visions(self.start)
+        if moves[-1] == 0 and self.vision[self.find_piece(self.start, King, 'w')[0]] == True:
+            mate = True
+        if moves[-1] == 0 and self.vision[self.find_piece(self.start, King, 'w')[0]] == False:
+            stalemate = True
+
+        return mate, stalemate
 
             
 
@@ -157,6 +190,11 @@ class Move_Black(Move):
         
 
     def order(self):
+        self.mate, self.stalemate = self.mate_or_stalemate()
+        if self.mate == True:
+            return self.mate
+        if self.stalemate == True:
+            return self.stalemate
         self.visions(self.start)
         self.castling_black()
         self.get_legal_move_mask()
@@ -249,6 +287,31 @@ class Move_Black(Move):
                     if isinstance(self.start1[row, col], Pawn) and self.start1[row, col] != self.pawn_b: 
                         self.start1[row, col].moved_two_steps = False
         return self.pos_new
+    
+
+    def mate_or_stalemate(self):
+        mate = False
+        stalemate = False
+        moves = [0]
+        start = self.start.copy()
+        for row, i in enumerate(start):
+            for col, j in enumerate(i):
+                if self.start[(row, col)].color == 'b':
+                    moves_row_col, moves_for_vision = self.start[(row, col)].get_legal_moves(self.start, (row, col), self.vision)
+                    for x, y in moves_row_col:
+                        start[(x, y)] = start[(row, col)]
+                        start[(row, col)] = self.empty
+                        self.visions(start) 
+                        if self.vision[self.find_piece(start, King, 'b')[0]] == False:
+                            moves.append(1)
+                            
+        self.visions(self.start)
+        if moves[-1] == 0 and self.vision[self.find_piece(self.start, King, 'b')[0]] == True:
+            mate = True
+        if moves[-1] == 0 and self.vision[self.find_piece(self.start, King, 'b')[0]] == False:
+            stalemate = True
+
+        return mate, stalemate
     
 
     
