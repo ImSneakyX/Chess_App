@@ -97,15 +97,27 @@ class Move_White(Move):
     
     def move(self):
         self.start1 = self.start.copy()
+        piece_on_end_square = self.start1[self.end_square]
         if self.legal_move_mask[self.end_square] == True:
             self.start1[self.end_square] = self.piece
             self.start1[self.start_square] = self.empty
+
             if isinstance(self.piece, King) and self.start_square == self.king_start and self.end_square == (7, 6):
                 self.start1[self.rook_starts[1]] = self.empty
                 self.start1[(7, 5)] = self.rook_r
+
             if isinstance(self.piece, King) and self.start_square == self.king_start and self.end_square == (7, 2):
                 self.start1[self.rook_starts[0]] = self.empty
                 self.start1[(7, 3)] = self.rook_l
+
+            if isinstance(self.piece, Pawn) and isinstance(piece_on_end_square, Empty) and self.start_square[1] != self.end_square[1]:
+                self.start1[(self.start_square[0], self.end_square[1])] = self.empty
+
+            if isinstance(self.piece, Pawn) and self.start_square[0] == 6 and self.end_square[0] == 4:
+                self.start1[self.end_square] = self.pawn_w 
+                self.start1[self.end_square].two_steps()
+
+
             self.pos_new = self.start1
             self.visions(self.pos_new)
             if self.vision[self.find_piece(self.pos_new, King, 'w')[0]] == False:
@@ -188,15 +200,25 @@ class Move_Black(Move):
     
     def move(self):
         self.start1 = self.start.copy()
+        piece_on_end_square = self.start1[self.end_square]
         if self.legal_move_mask[self.end_square] == True:
             self.start1[self.end_square] = self.piece
             self.start1[self.start_square] = self.empty
             if isinstance(self.piece, King) and self.start_square == self.king_start and self.end_square == (0, 6):
                 self.start1[self.rook_starts[1]] = self.empty
                 self.start1[(0, 5)] = self.rook_r
+
             if isinstance(self.piece, King) and self.start_square == self.king_start and self.end_square == (0, 2):
                 self.start1[self.rook_starts[0]] = self.empty
                 self.start1[(0, 3)] = self.rook_l
+
+            if isinstance(self.piece, Pawn) and isinstance(piece_on_end_square, Empty) and self.start_square[1] != self.end_square[1]:
+                self.start1[(self.start_square[0], self.end_square[1])] = self.empty
+            
+            if isinstance(self.piece, Pawn) and self.start_square[0] == 1 and self.end_square[0] == 3:
+                self.start1[self.end_square] = self.pawn_b
+                self.start1[self.end_square].two_steps()
+
             self.pos_new = self.start1
             self.visions(self.pos_new)
             if self.vision[self.find_piece(self.pos_new, King, 'b')[0]] == False:
