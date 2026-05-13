@@ -161,15 +161,15 @@ class Move_White(Move):
         mate = False
         stalemate = False
         moves = [0]
-        start = self.start.copy()
-        for row, i in enumerate(start):
+        for row, i in enumerate(self.start):
             for col, j in enumerate(i):
                 if self.start[(row, col)].color == 'w':
                     moves_row_col, moves_for_vision = self.start[(row, col)].get_legal_moves(self.start, (row, col), self.vision)
                     for x, y in moves_row_col:
+                        start = self.start.copy()
                         start[(x, y)] = start[(row, col)]
                         start[(row, col)] = self.empty
-                        self.visions(start) 
+                        self.visions(start)
                         if self.vision[self.find_piece(start, King, 'w')[0]] == False:
                             moves.append(1)
                             
@@ -293,15 +293,15 @@ class Move_Black(Move):
         mate = False
         stalemate = False
         moves = [0]
-        start = self.start.copy()
-        for row, i in enumerate(start):
+        for row, i in enumerate(self.start):
             for col, j in enumerate(i):
                 if self.start[(row, col)].color == 'b':
                     moves_row_col, moves_for_vision = self.start[(row, col)].get_legal_moves(self.start, (row, col), self.vision)
                     for x, y in moves_row_col:
+                        start = self.start.copy()
                         start[(x, y)] = start[(row, col)]
                         start[(row, col)] = self.empty
-                        self.visions(start) 
+                        self.visions(start)                 
                         if self.vision[self.find_piece(start, King, 'b')[0]] == False:
                             moves.append(1)
                             
