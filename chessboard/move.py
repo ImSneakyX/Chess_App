@@ -30,8 +30,51 @@ class Move(Board):
     def order(self):
         pass
 
-    def visions(self):
-        pass
+    def visions_black(self, boardstate):
+        self.vision_black = np.zeros((8, 8), dtype = 'bool')
+        for row, i in enumerate(boardstate):
+            for col, j in enumerate(i):
+                if boardstate[(row, col)].color == 'b' and isinstance(boardstate[(row, col)], (Knight, Rook, Queen, Bishop)):
+                    moves, moves_for_vision = boardstate[(row, col)].get_legal_moves(boardstate, (row, col), None)
+                    for x, y in moves: 
+                        self.vision_black[(x, y)] = True
+                    for x, y in moves_for_vision:
+                        self.vision_black[(x, y)] = True
+                if boardstate[(row, col)].color == 'b' and isinstance(boardstate[(row, col)], Pawn):
+                    if 0 <= col - 1 < 8:
+                        self.vision_black[(row + 1, col - 1)] = True
+                    if 0 <= col + 1 < 8:
+                        self.vision_black[(row + 1, col + 1)] = True
+                if boardstate[(row, col)].color == 'b' and isinstance(boardstate[(row, col)], King):
+                    offsets = [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
+                    for x, y in offsets:
+                        new_row, new_col = row + x, col + y
+                        if 0 <= new_row <8 and 0 <= new_col <8:
+                            self.vision_black[(new_row, new_col)] = True
+        return self.vision_black
+
+    def visions_white(self, boardstate):
+        self.vision_white = np.zeros((8, 8), dtype = 'bool')
+        for row, i in enumerate(boardstate):
+            for col, j in enumerate(i):
+                if boardstate[(row, col)].color == 'w' and isinstance(boardstate[(row, col)], (Rook, Knight, Bishop, Queen)):
+                    moves, moves_for_vision = boardstate[(row, col)].get_legal_moves(boardstate, (row, col), None)
+                    for x, y in moves: 
+                        self.vision_white[(x, y)] = True
+                    for x, y in moves_for_vision:
+                        self.vision_white[(x, y)] = True
+                if boardstate[(row, col)].color == 'w' and isinstance(boardstate[(row, col)], Pawn):
+                    if 0 <= col - 1 < 8:
+                        self.vision_white[(row - 1, col - 1)] = True
+                    if 0 <= col + 1 < 8:
+                        self.vision_white[(row - 1, col + 1)] = True
+                if boardstate[(row, col)].color == 'w' and isinstance(boardstate[(row, col)], King):
+                    offsets = [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
+                    for x, y in offsets:
+                        new_row, new_col = row + x, col + y
+                        if 0 <= new_row <8 and 0 <= new_col <8:
+                            self.vision_white[(new_row, new_col)] = True
+        return self.vision_white
 
     def get_legal_move_mask(self):
         pass
@@ -52,15 +95,16 @@ class Move_White(Move):
         Move.__init__(self, boardstate, start_square, end_square, start_pos)
 
     def order(self):
+        
+        self.visions_black(self.start)
+        self.castling_white()
+        self.get_legal_move_mask()
+        self.move()
         self.mate, self.stalemate = self.mate_or_stalemate()
         if self.mate == True:
             return self.mate
         if self.stalemate == True:
             return self.stalemate
-        self.visions(self.start)
-        self.castling_white()
-        self.get_legal_move_mask()
-        self.move()
 
 
     def castling_white(self):
@@ -70,41 +114,19 @@ class Move_White(Move):
         self.rook_starts = self.find_piece(self.start_pos, Rook, 'w')
         self.rook_l = self.start_pos[self.rook_starts[0]]
         self.rook_r = self.start_pos[self.rook_starts[1]]
-        self.king.castling(self.start, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
+        self.king.castling(self.start, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision_black)
 
         
 
     def get_legal_move_mask(self):
         mask = np.zeros((8, 8), dtype = 'bool')
         if self.piece.color == 'w':
-            moves, moves_for_vision = self.piece.get_legal_moves(self.start, self.start_square, self.vision)
+            moves, moves_for_vision = self.piece.get_legal_moves(self.start, self.start_square, self.vision_black)
             for row, col in moves: 
                 mask[(row, col)] = True 
         self.legal_move_mask = mask
         return mask
     
-    def visions(self, boardstate):
-        self.vision = np.zeros((8, 8), dtype = 'bool')
-        for row, i in enumerate(boardstate):
-            for col, j in enumerate(i):
-                if boardstate[(row, col)].color == 'b' and isinstance(boardstate[(row, col)], (Knight, Rook, Queen, Bishop)):
-                    moves, moves_for_vision = boardstate[(row, col)].get_legal_moves(boardstate, (row, col), None)
-                    for x, y in moves: 
-                        self.vision[(x, y)] = True
-                    for x, y in moves_for_vision:
-                        self.vision[(x, y)] = True
-                if boardstate[(row, col)].color == 'b' and isinstance(boardstate[(row, col)], Pawn):
-                    if 0 <= col - 1 < 8:
-                        self.vision[(row + 1, col - 1)] = True
-                    if 0 <= col + 1 < 8:
-                        self.vision[(row + 1, col + 1)] = True
-                if boardstate[(row, col)].color == 'b' and isinstance(boardstate[(row, col)], King):
-                    offsets = [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
-                    for x, y in offsets:
-                        new_row, new_col = row + x, col + y
-                        if 0 <= new_row <8 and 0 <= new_col <8:
-                            self.vision[(new_row, new_col)] = True
-        return self.vision
     
     def move(self):
         self.start1 = self.start.copy()
@@ -131,8 +153,8 @@ class Move_White(Move):
 
 
             self.pos_new = self.start1
-            self.visions(self.pos_new)
-            if self.vision[self.find_piece(self.pos_new, King, 'w')[0]] == False:
+            self.visions_black(self.pos_new)
+            if self.vision_black[self.find_piece(self.pos_new, King, 'w')[0]] == False:
                 print(f'Move is legal :)')
                 self.legal = True
                 self.display('name', self.pos_new)
@@ -161,22 +183,23 @@ class Move_White(Move):
         mate = False
         stalemate = False
         moves = [0]
-        for row, i in enumerate(self.start):
+        self.visions_white(self.pos_new)
+        for row, i in enumerate(self.pos_new):
             for col, j in enumerate(i):
-                if self.start[(row, col)].color == 'w':
-                    moves_row_col, moves_for_vision = self.start[(row, col)].get_legal_moves(self.start, (row, col), self.vision)
+                if self.pos_new[(row, col)].color == 'b':
+                    moves_row_col, moves_for_vision = self.pos_new[(row, col)].get_legal_moves(self.pos_new, (row, col), self.vision_white)
                     for x, y in moves_row_col:
-                        start = self.start.copy()
+                        start = self.pos_new.copy()
                         start[(x, y)] = start[(row, col)]
                         start[(row, col)] = self.empty
-                        self.visions(start)
-                        if self.vision[self.find_piece(start, King, 'w')[0]] == False:
+                        self.visions_white(start)
+                        if self.vision_white[self.find_piece(start, King, 'b')[0]] == False:
                             moves.append(1)
                             
-        self.visions(self.start)
-        if moves[-1] == 0 and self.vision[self.find_piece(self.start, King, 'w')[0]] == True:
+        self.visions_white(self.pos_new)
+        if moves[-1] == 0 and self.vision_white[self.find_piece(self.pos_new, King, 'b')[0]] == True:
             mate = True
-        if moves[-1] == 0 and self.vision[self.find_piece(self.start, King, 'w')[0]] == False:
+        if moves[-1] == 0 and self.vision_white[self.find_piece(self.pos_new, King, 'b')[0]] == False:
             stalemate = True
 
         return mate, stalemate
@@ -190,15 +213,16 @@ class Move_Black(Move):
         
 
     def order(self):
+        
+        self.visions_white(self.start)
+        self.castling_black()
+        self.get_legal_move_mask()
+        self.move()
         self.mate, self.stalemate = self.mate_or_stalemate()
         if self.mate == True:
             return self.mate
         if self.stalemate == True:
             return self.stalemate
-        self.visions(self.start)
-        self.castling_black()
-        self.get_legal_move_mask()
-        self.move()
 
     def castling_black(self):
         self.king_start = self.find_piece(self.start_pos, King, 'b')[0]
@@ -207,39 +231,17 @@ class Move_Black(Move):
         self.rook_starts = self.find_piece(self.start_pos, Rook, 'b')
         self.rook_l = self.start_pos[self.rook_starts[0]]
         self.rook_r = self.start_pos[self.rook_starts[1]]
-        self.king.castling(self.start, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision)
+        self.king.castling(self.start, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision_white)
 
     def get_legal_move_mask(self):
         mask = np.zeros((8, 8), dtype = 'bool')
         if self.piece.color == 'b':
-            moves, moves_for_vision = self.piece.get_legal_moves(self.start, self.start_square, self.vision)
+            moves, moves_for_vision = self.piece.get_legal_moves(self.start, self.start_square, self.vision_white)
             for row, col in moves: 
                 mask[(row, col)] = True 
         self.legal_move_mask = mask
         return mask
     
-    def visions(self, boardstate):
-        self.vision = np.zeros((8, 8), dtype = 'bool')
-        for row, i in enumerate(boardstate):
-            for col, j in enumerate(i):
-                if boardstate[(row, col)].color == 'w' and isinstance(boardstate[(row, col)], (Rook, Knight, Bishop, Queen)):
-                    moves, moves_for_vision = boardstate[(row, col)].get_legal_moves(boardstate, (row, col), None)
-                    for x, y in moves: 
-                        self.vision[(x, y)] = True
-                    for x, y in moves_for_vision:
-                        self.vision[(x, y)] = True
-                if boardstate[(row, col)].color == 'w' and isinstance(boardstate[(row, col)], Pawn):
-                    if 0 <= col - 1 < 8:
-                        self.vision[(row - 1, col - 1)] = True
-                    if 0 <= col + 1 < 8:
-                        self.vision[(row - 1, col + 1)] = True
-                if boardstate[(row, col)].color == 'w' and isinstance(boardstate[(row, col)], King):
-                    offsets = [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
-                    for x, y in offsets:
-                        new_row, new_col = row + x, col + y
-                        if 0 <= new_row <8 and 0 <= new_col <8:
-                            self.vision[(new_row, new_col)] = True
-        return self.vision
     
     def move(self):
         self.start1 = self.start.copy()
@@ -263,8 +265,8 @@ class Move_Black(Move):
                 self.pawn_b.two_steps()
 
             self.pos_new = self.start1
-            self.visions(self.pos_new)
-            if self.vision[self.find_piece(self.pos_new, King, 'b')[0]] == False:
+            self.visions_white(self.pos_new)
+            if self.vision_white[self.find_piece(self.pos_new, King, 'b')[0]] == False:
                 print(f'Move is legal :)')
                 self.legal = True
                 self.display('name', self.pos_new)
@@ -293,22 +295,23 @@ class Move_Black(Move):
         mate = False
         stalemate = False
         moves = [0]
-        for row, i in enumerate(self.start):
+        self.visions_black(self.pos_new)
+        for row, i in enumerate(self.pos_new):
             for col, j in enumerate(i):
-                if self.start[(row, col)].color == 'b':
-                    moves_row_col, moves_for_vision = self.start[(row, col)].get_legal_moves(self.start, (row, col), self.vision)
+                if self.pos_new[(row, col)].color == 'w':
+                    moves_row_col, moves_for_vision = self.pos_new[(row, col)].get_legal_moves(self.pos_new, (row, col), self.vision_black)
                     for x, y in moves_row_col:
-                        start = self.start.copy()
+                        start = self.pos_new.copy()
                         start[(x, y)] = start[(row, col)]
                         start[(row, col)] = self.empty
-                        self.visions(start)                 
-                        if self.vision[self.find_piece(start, King, 'b')[0]] == False:
+                        self.visions_black(start)                 
+                        if self.vision_black[self.find_piece(start, King, 'w')[0]] == False:
                             moves.append(1)
                             
-        self.visions(self.start)
-        if moves[-1] == 0 and self.vision[self.find_piece(self.start, King, 'b')[0]] == True:
+        self.visions_black(self.pos_new)
+        if moves[-1] == 0 and self.vision_black[self.find_piece(self.pos_new, King, 'w')[0]] == True:
             mate = True
-        if moves[-1] == 0 and self.vision[self.find_piece(self.start, King, 'b')[0]] == False:
+        if moves[-1] == 0 and self.vision_black[self.find_piece(self.pos_new, King, 'w')[0]] == False:
             stalemate = True
 
         return mate, stalemate

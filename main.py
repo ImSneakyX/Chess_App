@@ -17,7 +17,10 @@ class Game:
         self.brett.display('name', self.brett.start_pos)
         while self.game == 0:
             self.make_move_white()
-            self.make_move_black()
+            if self.game == 0:
+                self.make_move_black()
+            else: 
+                break
     
     def make_move_white(self):
         start_square = input(f'White, make a move! Select the square with the piece that you want to move: ')
@@ -44,7 +47,7 @@ class Game:
 
         x = Move_White(self.position, start_square, end_square, self.start_pos)
         if x.mate == True:
-            print('Schachmatt, Schwarz gewinnt!')
+            print('Schachmatt, Weiß gewinnt!')
             self.game = 1
             return self.game
         if x.stalemate == True:
@@ -80,7 +83,7 @@ class Game:
 
         x = Move_Black(self.position, start_square, end_square, self.start_pos)
         if x.mate == True:
-            print('Schachmatt, Weiß gewinnt!')
+            print('Schachmatt, Schwarz gewinnt!')
             self.game = 1
             return self.game
         if x.stalemate == True:
