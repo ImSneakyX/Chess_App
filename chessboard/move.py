@@ -154,6 +154,9 @@ class Move_White(Move):
 
             if isinstance(self.piece, Pawn) and self.end_square[0] == 0:
                 new_piece = input('What piece do you want to promote to? (Queen, Rook, Bishop, Knight):')
+                acceptable_input = ('Queen', 'Rook', 'Bishop', 'Knight')
+                while new_piece not in acceptable_input:
+                    new_piece = input('Please make a new input and only type Queen, Rook, Bishop or Knight:')
                 if new_piece == 'Queen':
                     self.start1[self.end_square] = Queen('w')
 
@@ -284,6 +287,10 @@ class Move_Black(Move):
 
             if isinstance(self.piece, Pawn) and self.end_square[0] == 7:
                 new_piece = input('What piece do you want to promote to? (Queen, Rook, Bishop, Knight):')
+                acceptable_input = ('Queen', 'Rook', 'Bishop', 'Knight')
+                while new_piece not in acceptable_input:
+                    new_piece = input('Please make a new input and only type Queen, Rook, Bishop or Knight:')
+
                 if new_piece == 'Queen':
                     self.start1[self.end_square] = Queen('b')
 
@@ -295,6 +302,7 @@ class Move_Black(Move):
 
                 if new_piece == 'Bishop':
                     self.start1[self.end_square] = Bishop('b')
+                
 
             self.pos_new = self.start1
             self.visions_white(self.pos_new)
