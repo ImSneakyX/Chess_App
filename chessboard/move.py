@@ -146,9 +146,27 @@ class Move_White(Move):
             if isinstance(self.piece, Pawn) and isinstance(piece_on_end_square, Empty) and self.start_square[1] != self.end_square[1]:
                 self.start1[(self.start_square[0], self.end_square[1])] = self.empty
 
+
+
             if isinstance(self.piece, Pawn) and self.start_square[0] == 6 and self.end_square[0] == 4:
                 self.start1[self.end_square] = self.pawn_w 
                 self.pawn_w.two_steps()
+
+            if isinstance(self.piece, Pawn) and self.end_square[0] == 0:
+                new_piece = input('What piece do you want to promote to? (Queen, Rook, Bishop, Knight):')
+                if new_piece == 'Queen':
+                    self.start1[self.end_square] = Queen('w')
+
+                if new_piece == 'Rook':
+                    self.start1[self.end_square] = Rook('w', 'l')
+
+                if new_piece == 'Knight':
+                    self.start1[self.end_square] = Knight('w')
+
+                if new_piece == 'Bishop':
+                    self.start1[self.end_square] = Bishop('w')
+
+
 
 
 
@@ -263,6 +281,20 @@ class Move_Black(Move):
             if isinstance(self.piece, Pawn) and self.start_square[0] == 1 and self.end_square[0] == 3:
                 self.start1[self.end_square] = self.pawn_b
                 self.pawn_b.two_steps()
+
+            if isinstance(self.piece, Pawn) and self.end_square[0] == 7:
+                new_piece = input('What piece do you want to promote to? (Queen, Rook, Bishop, Knight):')
+                if new_piece == 'Queen':
+                    self.start1[self.end_square] = Queen('b')
+
+                if new_piece == 'Rook':
+                    self.start1[self.end_square] = Rook('b', 'l')
+
+                if new_piece == 'Knight':
+                    self.start1[self.end_square] = Knight('b')
+
+                if new_piece == 'Bishop':
+                    self.start1[self.end_square] = Bishop('b')
 
             self.pos_new = self.start1
             self.visions_white(self.pos_new)
