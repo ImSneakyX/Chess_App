@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 from PyQt5.QtCore import Qt
 
@@ -8,22 +8,35 @@ from PyQt5.QtCore import Qt
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('My cool first GUI')
         self.setGeometry(0, 0, 500, 500)
-        self.setWindowIcon(QIcon('/Users/paul/Schach_App/Images/pawn.png'))
+        self.initUI()
 
-        label = QLabel('Hello', self)
-        label.setFont(QFont('Arial', 30))
-        label.setGeometry(0, 0, 500, 100)
-        label.setStyleSheet('color: #03fcd3;' 'background-color: #384d49;')
-        label.setAlignment(Qt.AlignCenter)
+    def initUI(self):
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
 
-        label1 = QLabel(self)
-        label1.setGeometry(100, 100, 250, 250)
-        pixmap = QPixmap('/Users/paul/Schach_App/Images/pawn.png')
-        label1.setPixmap(pixmap)
-        label1.setScaledContents(True)
-        label1.setGeometry((self.width() - label1.width()) //2, (self.height() - label1.height()) //2, label1.width(), label1.height())
+        label1 = QLabel('1', self)
+        label2 = QLabel('2', self)
+        label3 = QLabel('3', self)
+        label4 = QLabel('4', self)
+        label5 = QLabel('5', self)
+
+        label1.setStyleSheet('background-color: red;')
+        label2.setStyleSheet('background-color: yellow;')
+        label3.setStyleSheet('background-color: green;')
+        label4.setStyleSheet('background-color: blue;')
+        label5.setStyleSheet('background-color: purple;')
+
+        vbox = QVBoxLayout()
+
+        vbox.addWidget(label1)
+        vbox.addWidget(label2)
+        vbox.addWidget(label3)
+        vbox.addWidget(label4)
+        vbox.addWidget(label5)
+
+        central_widget.setLayout(vbox)
+
 def main():
     app = QApplication(sys.argv)
     window = MainWindow()

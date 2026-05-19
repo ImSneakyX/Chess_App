@@ -1,5 +1,5 @@
 venv/
-test.ipynb/
+test.ipynb
 .ipynb_checkpoints
 .DS_Store
 *.pyc
