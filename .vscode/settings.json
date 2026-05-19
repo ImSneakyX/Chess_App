@@ -2,5 +2,14 @@
     "editor.inlineSuggest.edits.allowCodeShifting": "never",
     "github.copilot.nextEditSuggestions.enabled": false,
     "python.defaultInterpreterPath": "${workspaceFolder}/venv/bin/python",
-    "python.terminal.executeInFileDir": true
+    "python.terminal.executeInFileDir": true, 
+    "files.exclude": {
+        "**/*.ipynb": true
+    },
+    "python.linting.pylintArgs": [
+        "--ignore=*.ipynb"
+    ],
+    "python.analysis.exclude": [
+        "**/*.ipynb"
+    ]
 }
