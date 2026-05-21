@@ -9,8 +9,28 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Schach')
-        self.setGeometry(1200, 650, 100, 100)
-        self.initUI()
+        self.setGeometry(750, 450, 300, 300)
+        self.buttons = {}
+        self.game_launcher()
+
+    def game_launcher(self):
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        layout = QVBoxLayout()
+        button1 = QPushButton('Freies-Spiel starten', self)
+        button1.setMinimumHeight(100)
+        button2 = QPushButton('Spiel gegen Computer starten', self)
+        button2.setMinimumHeight(100)
+        button3 = QPushButton('Eröffnungsdatenbank', self)
+        button3.setMinimumHeight(100)
+
+        layout.addWidget(button1)
+        layout.addWidget(button2)
+        layout.addWidget(button3)
+        button1.clicked.connect(self.initUI)
+        central_widget.setLayout(layout)
+
+
 
     def initUI(self):
         central_widget = QWidget()
@@ -26,12 +46,17 @@ class MainWindow(QMainWindow):
                 if (i + j) % 2 == 0:
                     button.setStyleSheet('background-color: #d7dbe0;')
                 else: 
-                    button.setStyleSheet('background-color: #c282b4;')
-                
+                    button.setStyleSheet('background-color: #8c6e5a;')
+                button.clicked.connect(lambda _, row = i, col = j: self.button_clicked(row, col))
+                self.buttons[(i, j)] = button
                 grid.addWidget(button, i, j)
 
         central_widget.setLayout(grid)
         
+        
+    def button_clicked(self, row, col):
+
+        print(f'Das ist das Feld ({row}, {col})')
 
 
 
