@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 from PyQt5.QtCore import Qt
 
@@ -8,34 +8,32 @@ from PyQt5.QtCore import Qt
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setGeometry(0, 0, 500, 500)
+        self.setWindowTitle('Schach')
+        self.setGeometry(1200, 650, 100, 100)
         self.initUI()
 
     def initUI(self):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
-        label1 = QLabel('1', self)
-        label2 = QLabel('2', self)
-        label3 = QLabel('3', self)
-        label4 = QLabel('4', self)
-        label5 = QLabel('5', self)
+        grid = QGridLayout()
+        grid.setSpacing(0)
 
-        label1.setStyleSheet('background-color: red;')
-        label2.setStyleSheet('background-color: yellow;')
-        label3.setStyleSheet('background-color: green;')
-        label4.setStyleSheet('background-color: blue;')
-        label5.setStyleSheet('background-color: purple;')
+        for i in range(8):
+            for j in range(8):
+                button = QPushButton()
+                button.setFixedSize(64, 64)
+                if (i + j) % 2 == 0:
+                    button.setStyleSheet('background-color: #d7dbe0;')
+                else: 
+                    button.setStyleSheet('background-color: #c282b4;')
+                
+                grid.addWidget(button, i, j)
 
-        vbox = QVBoxLayout()
+        central_widget.setLayout(grid)
+        
 
-        vbox.addWidget(label1)
-        vbox.addWidget(label2)
-        vbox.addWidget(label3)
-        vbox.addWidget(label4)
-        vbox.addWidget(label5)
 
-        central_widget.setLayout(vbox)
 
 def main():
     app = QApplication(sys.argv)
