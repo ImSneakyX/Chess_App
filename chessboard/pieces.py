@@ -5,6 +5,7 @@ class Piece:
         self.value = value
         self.color = color
         self.moved = False
+        
 
     def get_legal_moves(self, boardstate, start_square, vision):
         pass
@@ -17,7 +18,6 @@ class Pawn(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Pawn', 1, color)
         self.moved_two_steps = None
-
 
     def get_legal_moves(self, boardstate, start_square, vision):
         

@@ -1,16 +1,23 @@
 import sys
 import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 from PyQt5.QtCore import Qt
+from chessboard.board import Board
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Schach')
+        self.setWindowTitle('Schach-App')
         self.setGeometry(750, 450, 300, 300)
         self.buttons = {}
+
+        #Game Logic
+        self.brett = Board()
+        self.start_pos = self.brett.start_position()
+
         self.game_launcher()
 
     def game_launcher(self):
