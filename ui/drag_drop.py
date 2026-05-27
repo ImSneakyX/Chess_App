@@ -56,32 +56,46 @@ class ChessSquare(QPushButton):
 
     def set_piece(self):
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        if self.piece is None:
+        if self.piece is None or self.piece.value == 0:
             self.setIcon(QIcon())
             return
-        icon = QIcon(os.path.join(base_path, 'Images', f'{self.piece.name}_{self.piece.color}.png'))
+        image_path = os.path.join(base_path, 'Images', f'{self.piece.name}_{self.piece.color}.png')
+        icon = QIcon(image_path)
         self.setIcon(icon)
 
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.LeftButton:
-            drag = QDrag(self)
-            mime = QMimeData()
-            mime.setText(f'{self.row},{self.col}')
-            drag.setMimeData(mime)
-            drag.exec_(Qt.MoveAction)
+            if self.piece is not None and self.piece.value != 0:
+                base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                drag = QDrag(self)
+                mime = QMimeData()
+                drag.setMimeData(mime)
+
+                image_path = os.path.join(base_path, 'Images', f'{self.piece.name}_{self.piece.color}.png')
+                pixmap = QPixmap(image_path)
+
+                pixmap = pixmap.scaled(120, 120, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+                pixmap.setDevicePixelRatio(2.0)
+
+                drag.setPixmap(pixmap)
+                drag.setHotSpot(e.pos())
+
+                self.setIcon(QIcon())
+
+
+
+                drag.exec_(Qt.MoveAction)
 
     def dragEnterEvent(self, e):
-        if e.mimeData().hasText():
-            e.accept()
+        e.accept()
 
     def dropEvent(self, e):
 
         source_widget = e.source()
         self.piece = source_widget.piece
-        source_widget.piece = None 
-
+        source_widget.piece = None
         self.set_piece()
-        source_widget.set_piece()
+
 
 
         e.accept()
@@ -90,6 +104,8 @@ class ChessSquare(QPushButton):
         
     
 if __name__ == '__main__':
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
