@@ -4,7 +4,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QWidget, QLabel, QMainWindow, QVBoxLayout, QPushButton, QGridLayout
 from PyQt5.QtCore import Qt, QMimeData, pyqtSignal, QSize
 from PyQt5.QtGui import QDrag, QPixmap, QIcon
-from chessboard.pieces import Pawn, Bishop, Knight, Queen, King, Rook
 from chessboard.board import Board
 
 
@@ -20,20 +19,17 @@ class MainWindow(QMainWindow):
         self.brett = Board()
         self.start_pos = self.brett.start_position()
 
-        grid = QGridLayout()
-        grid.setSpacing(0)
+        self.grid = QGridLayout()
+        self.grid.setSpacing(0)
 
         for i in range(8):
             for j in range(8):
                 button = ChessSquare(i, j, self.start_pos[i, j])
-                grid.addWidget(button)
+                self.grid.addWidget(button, i, j)
 
 
-        centralWidget.setLayout(grid)
-        self.setAcceptDrops(True)
-    
-    def dragEnterEvent(self, e):
-        e.accept()
+        centralWidget.setLayout(self.grid)
+
 
 
 
@@ -45,12 +41,14 @@ class ChessSquare(QPushButton):
         self.col = col
         self.label = QLabel()
         self.setFixedSize(64, 64)
-        self.setIconSize(QSize(48, 48))
+        self.setIconSize(QSize(60, 60))
+        self.setAcceptDrops(True)
+   
 
         if (row + col) % 2 == 0:
-            self.setStyleSheet('background-color: #d7dbe0;')
+            self.setStyleSheet('background-color: #d7dbe0; border: none;')
         else:
-            self.setStyleSheet('background-color: #8c6e5a;')
+            self.setStyleSheet('background-color: #8c6e5a; border: none;')
 
         self.set_piece()
 
@@ -58,15 +56,36 @@ class ChessSquare(QPushButton):
 
     def set_piece(self):
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if self.piece is None:
+            self.setIcon(QIcon())
+            return
         icon = QIcon(os.path.join(base_path, 'Images', f'{self.piece.name}_{self.piece.color}.png'))
         self.setIcon(icon)
 
-    def MouseMoveEvent(self, e):
+    def mouseMoveEvent(self, e):
         if e.buttons() == Qt.LeftButton:
             drag = QDrag(self)
             mime = QMimeData()
+            mime.setText(f'{self.row},{self.col}')
             drag.setMimeData(mime)
             drag.exec_(Qt.MoveAction)
+
+    def dragEnterEvent(self, e):
+        if e.mimeData().hasText():
+            e.accept()
+
+    def dropEvent(self, e):
+
+        source_widget = e.source()
+        self.piece = source_widget.piece
+        source_widget.piece = None 
+
+        self.set_piece()
+        source_widget.set_piece()
+
+
+        e.accept()
+
 
         
     

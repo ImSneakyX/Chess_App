@@ -42,7 +42,7 @@ class MainWindow(QMainWindow):
     def initUI(self):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-
+        
         grid = QGridLayout()
         grid.setSpacing(0)
 
