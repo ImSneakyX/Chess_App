@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog, QFrame
 from PyQt5.QtGui import QIcon, QFont, QPixmap
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
 
 
 class MainWindow(QMainWindow):
@@ -33,17 +33,26 @@ class Dialog(QDialog):
         self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setFixedSize(400, 400)
+        bg_color = '#2b2b2b'
 
         frame = QFrame(self)
         frame.setGeometry(0, 0, 400, 400)
         frame.setStyleSheet('background-color: #1e1e1f; border-radius: 20px;')
 
         self.label_top = QLabel(self)
-        self.label_top.setStyleSheet('background-color: #2b2b2b; border-top-right-radius: 20px; border-top-left-radius: 20px;')
+        self.label_top.setStyleSheet(f'background-color: {bg_color}; border-top-right-radius: 20px; border-top-left-radius: 20px;')
         self.label_top.setGeometry(0, 0, 400, 100)
+        
 
-        self.button_close = QPushButton('ok', self)
-        self.button_close.move(140, 160)
+        self.button_close = QPushButton(self)
+        self.button_close.setGeometry(self.label_top.width() - 40, 0, 40, 40)
+        self.button_close.setStyleSheet(f'background-color: {bg_color}')
+        icon = QIcon(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'pawn.png'))
+        self.button_close.setIcon(icon)
+        self.button_close.setIconSize(QSize(40, 40))
+
+
+
 
 
 class DialogWin(Dialog):
