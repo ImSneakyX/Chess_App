@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog, QFrame
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 from PyQt5.QtCore import Qt
 
@@ -24,30 +24,187 @@ class MainWindow(QMainWindow):
 
 
     def show_dialog(self):
-        d = Dialog_Mate(self)
+        d = DialogRemisFiftyMoves(self)
         d.exec_()
 
-class Dialog_Mate(QDialog):
+class Dialog(QDialog):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setFixedSize(400, 400)
-        self.setStyleSheet('background-color: #3d3c39; border-radius: 20px;')
 
-        label_top = QLabel(self)
-        label_top.setStyleSheet('background-color: #696762;')
-        label_top.setGeometry(0, 0, 400, 100)
+        frame = QFrame(self)
+        frame.setGeometry(0, 0, 400, 400)
+        frame.setStyleSheet('background-color: #1e1e1f; border-radius: 20px;')
 
-        self.button1 = QPushButton('ok', self)
-        self.button1.move(140, 160)
+        self.label_top = QLabel(self)
+        self.label_top.setStyleSheet('background-color: #2b2b2b; border-top-right-radius: 20px; border-top-left-radius: 20px;')
+        self.label_top.setGeometry(0, 0, 400, 100)
 
-        label_trophy = QLabel(label_top)
-        label_trophy.setGeometry(20, 20, 60, 60)
+        self.button_close = QPushButton('ok', self)
+        self.button_close.move(140, 160)
+
+
+class DialogWin(Dialog):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        self.label_text_top = QLabel(self)
+        self.label_text_top.setGeometry(self.label_top.x() + self.label_top.width() // 4, self.label_top.y() + 10, self.label_top.width() // 2, (3 * self.label_top.height()) // 5)
+        self.label_text_top.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px;')
+        self.label_text_top.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignBottom)
+        self.label_text_top.setText('Du hast gewonnen!')
+        self.label_text_top.setWordWrap(True)
+
+        self.label_trophy = QLabel(self)
+        self.label_trophy.setGeometry(self.label_top.x(), self.label_top.y(), self.label_top.width() // 4, self.label_top.height())
         pixmap = QPixmap(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'trophy.png'))
-        pixmap = pixmap.scaled(60, 60, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        label_trophy.setPixmap(pixmap)
+        pixmap = pixmap.scaled(self.label_top.width() // 4, self.label_top.height(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.label_trophy.setPixmap(pixmap)
 
+
+class DialogWinMate(DialogWin):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('durch Schachmatt')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogWinTime(DialogWin):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('auf Zeit')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogWinResignation(DialogWin):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('durch Aufgabe')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogLose(Dialog):
+    def __init__(self, player_color, parent = None):
+        super().__init__(parent)
+        self.label_text_top = QLabel(self)
+        self.label_text_top.setGeometry(self.label_top.x(), self.label_top.y() + 10, self.label_top.width(), (3 * self.label_top.height()) // 5)
+        self.label_text_top.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px;')
+        self.label_text_top.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        if player_color == 'w':
+            self.label_text_top.setText('Schwarz hat gewonnen')
+        else: 
+            self.label_text_top.setText('Weiß hat gewonnen')
+        self.label_text_top.setWordWrap(True)
+
+class DialogLoseMate(DialogLose):
+    def __init__(self, player_color, parent = None):
+        super().__init__(player_color, parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('durch Schachmatt')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogLoseTime(DialogLose):
+    def __init__(self, player_color, parent = None):
+        super().__init__(player_color, parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('auf Zeit')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogLoseResignation(DialogLose):
+    def __init__(self, player_color, parent = None):
+        super().__init__(player_color, parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('durch Aufgabe')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogRemis(Dialog):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        self.label_text_top = QLabel(self)
+        self.label_text_top.setGeometry(self.label_top.x(), self.label_top.y() + 10, self.label_top.width(), (3 * self.label_top.height()) // 5)
+        self.label_text_top.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px;')
+        self.label_text_top.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_text_top.setText('Remis')
+        self.label_text_top.setWordWrap(True)
+
+class DialogRemisRepetition(DialogRemis):
+    def __init__(self, player_color, parent = None):
+        super().__init__(player_color, parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('durch Stellungswiederholung')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogRemisRepetition(DialogRemis):
+    def __init__(self, player_color, parent = None):
+        super().__init__(player_color, parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('durch Stellungswiederholung')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogRemisMaterialTime(DialogRemis):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('Zeitüberschreitung bei unzureichendem Material')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogRemisMaterial(DialogRemis):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('wegen unzureichendem Material')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogRemisPatt(DialogRemis):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('wegen Patt')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogRemisAgreement(DialogRemis):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('durch Einigung')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class DialogRemisFiftyMoves(DialogRemis):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        label = QLabel(self)
+        label.setGeometry(self.label_text_top.x(), self.label_text_top.y() + self.label_text_top.height(), self.label_text_top.width(), self.label_top.height() - self.label_text_top.height())
+        label.setText('wegen 50 Zug-Regel')
+        label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
+        label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+    
+    
+    
         
 
 
