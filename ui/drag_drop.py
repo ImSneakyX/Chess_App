@@ -15,7 +15,6 @@ class MainWindow(QMainWindow):
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
 
-        #Game Logic
         self.brett = Board()
         self.start_pos = self.brett.start_position()
 
@@ -90,6 +89,7 @@ class ChessSquare(QPushButton):
 
 
     def dragEnterEvent(self, e):
+        
         e.accept()
 
     def dropEvent(self, e):
