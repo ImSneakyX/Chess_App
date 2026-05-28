@@ -86,14 +86,18 @@ class ChessSquare(QPushButton):
 
                 drag.exec_(Qt.MoveAction)
 
+    
+
+
     def dragEnterEvent(self, e):
         e.accept()
 
     def dropEvent(self, e):
 
         source_widget = e.source()
-        self.piece = source_widget.piece
+        piece = source_widget.piece
         source_widget.piece = None
+        self.piece = piece
         self.set_piece()
 
 
