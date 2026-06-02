@@ -57,7 +57,7 @@ class Dialog(QDialog):
         self.button_close.clicked.connect(self.close)
 
         self.button_new = QPushButton(self)
-        self.button_new.setGeometry(self.frame.x() + 20, self.frame.y() + (5 * self.frame.height()) // 8, self.frame.width() - 40, (self.frame.height() // 4)- 20)
+        self.button_new.setGeometry(self.frame.x() + 20, self.frame.y() + ((5 * self.frame.height()) // 8)-15, self.frame.width() - 40, (self.frame.height() // 4)- 20)
         self.button_new.setText('Play Again')
         self.button_new.setStyleSheet(f'''
                                     QPushButton {{
@@ -76,7 +76,7 @@ class Dialog(QDialog):
         self.button_review.clicked.connect(self.review)
 
         self.button_menu = QPushButton(self)
-        self.button_menu.setGeometry(self.button_new.x(), self.frame.y() + ((7 * self.frame.height()) // 8)-7, self.button_new.width(), (self.button_new.height()//2))
+        self.button_menu.setGeometry(self.button_new.x(), self.frame.y() + ((7 * self.frame.height()) // 8)-13, self.button_new.width(), (self.button_new.height()//2))
         self.button_menu.setText('Back to Menu')
         self.button_menu.setStyleSheet(f'''
                                          QPushButton {{font-family: Arial; font-size: 18px; border-radius: 5px; background-color: {bg_color}; border-radius: 5px;}}
