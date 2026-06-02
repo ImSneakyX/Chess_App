@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QApplication, QHBoxLayout, QWidget, QLabel, QMainWin
 from PyQt5.QtCore import Qt, QMimeData, pyqtSignal, QSize
 from PyQt5.QtGui import QDrag, QPixmap, QIcon
 from chessboard.board import Board
+from chessboard.move import Move_White, Move_Black
 
 
 class MainWindow(QMainWindow):
@@ -38,6 +39,13 @@ class ChessSquare(QPushButton):
         self.piece = piece
         self.row = row 
         self.col = col
+        self.square = (row, col)
+        self.legal = None
+
+        self.brett = Board()
+        self.start_pos = self.brett.start_position()
+        self.boardstate = self.start_pos
+
         self.label = QLabel()
         self.setFixedSize(64, 64)
         self.setIconSize(QSize(60, 60))
@@ -59,7 +67,10 @@ class ChessSquare(QPushButton):
             self.setIcon(QIcon())
             return
         image_path = os.path.join(base_path, 'Images', f'{self.piece.name}_{self.piece.color}.png')
-        icon = QIcon(image_path)
+        pixmap = QPixmap(image_path)
+        pixmap = pixmap.scaled(120, 120, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        pixmap.setDevicePixelRatio(2.0)
+        icon = QIcon(pixmap)
         self.setIcon(icon)
 
     def mouseMoveEvent(self, e):
@@ -84,21 +95,27 @@ class ChessSquare(QPushButton):
 
 
                 drag.exec_(Qt.MoveAction)
+                self.set_piece()
 
     
 
 
     def dragEnterEvent(self, e):
         
+        x = Move_White(self.boardstate, (e.source().row, e.source().col), self.square, self.start_pos)
+        self.boardstate = x.pos_new
+        x.display('name', x.pos_new)
+        self.legal = x.legal   
         e.accept()
 
     def dropEvent(self, e):
+        if self.legal == True:
+            source_widget = e.source()
+            piece = source_widget.piece
+            source_widget.piece = None
+            self.piece = piece
+            self.set_piece()
 
-        source_widget = e.source()
-        piece = source_widget.piece
-        source_widget.piece = None
-        self.piece = piece
-        self.set_piece()
 
 
 
