@@ -68,10 +68,12 @@ class ChessGame(QMainWindow):
 
         if self.white_to_move == True:
             x = Move_White(self.position, start_square, end_square, self.start_pos)
+            self.position = x.pos_new
             self.white_to_move = False
         else:
 
             x = Move_Black(self.position, start_square, end_square, self.start_pos)
+            self.position = x.pos_new
             self.white_to_move = True
 
     def show_mate(self):

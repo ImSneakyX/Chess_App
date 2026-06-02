@@ -106,8 +106,8 @@ class ChessSquare(QPushButton):
 
     def dragEnterEvent(self, e):
         
-        #x = Move_White(self.boardstate, (e.source().row, e.source().col), self.square, self.start_pos)
-        #self.legal = x.legal   
+        x = Move_White(self.boardstate, (e.source().row, e.source().col), self.square, self.start_pos)
+        self.legal = x.legal   
         e.accept()
 
 
