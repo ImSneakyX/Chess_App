@@ -35,9 +35,9 @@ class Dialog(QDialog):
         self.setFixedSize(400, 400)
         bg_color = '#2b2b2b'
 
-        frame = QFrame(self)
-        frame.setGeometry(0, 0, 400, 400)
-        frame.setStyleSheet('background-color: #1e1e1f; border-radius: 20px;')
+        self.frame = QFrame(self)
+        self.frame.setGeometry(0, 0, 400, 400)
+        self.frame.setStyleSheet('background-color: #1e1e1f; border-radius: 20px;')
 
         self.label_top = QLabel(self)
         self.label_top.setStyleSheet(f'background-color: {bg_color}; border-top-right-radius: 20px; border-top-left-radius: 20px;')
@@ -46,13 +46,37 @@ class Dialog(QDialog):
 
         self.button_close = QPushButton(self)
         self.button_close.setGeometry(self.label_top.width() - 40, 0, 40, 40)
-        self.button_close.setStyleSheet(f'background-color: {bg_color}')
-        icon = QIcon(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'pawn.png'))
+        self.button_close.setStyleSheet(f'background-color: {bg_color}; border-top-right-radius: 20px; border: none')
+        icon = QIcon(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'cross.png'))
         self.button_close.setIcon(icon)
-        self.button_close.setIconSize(QSize(40, 40))
+        self.button_close.setIconSize(QSize(30, 30))
+        self.button_close.clicked.connect(self.close)
+
+        self.button_new = QPushButton(self)
+        self.button_new.setGeometry(self.frame.x() + 20, self.frame.y() + (3 * self.frame.height()) // 4, self.frame.width() - 40, (self.frame.height() // 4)- 20)
+        self.button_new.setText('Play Again')
+        self.button_new.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px; background-color: #327535; border-radius: 20px')
+        self.button_new.clicked.connect(self.play_again)
+
+        self.button_review = QPushButton(self)
+        self.button_review.setGeometry(self.button_new.x(), self.frame.y() + (2 * self.frame.height()) // 4, self.button_new.width(), self.button_new.height())
+        self.button_review.setText('Game Review')
+        self.button_review.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px; border-radius: 20px')
+        self.button_review.clicked.connect(self.review)
+
+    def showEvent(self, event):
+        self.button_close.raise_()
+        super().showEvent(event)
+    
+    def close(self):
+        self.accept()
 
 
+    def play_again(self):
+        pass
 
+    def review(self):
+        pass
 
 
 class DialogWin(Dialog):
