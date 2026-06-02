@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
 
 
     def show_dialog(self):
-        d = DialogRemisFiftyMoves(self)
+        d = DialogWinMate(self)
         d.exec_()
 
 class Dialog(QDialog):
@@ -34,6 +34,7 @@ class Dialog(QDialog):
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setFixedSize(400, 400)
         bg_color = '#2b2b2b'
+        bg_color_hover = "#3E3D3D"
 
         self.frame = QFrame(self)
         self.frame.setGeometry(0, 0, 400, 400)
@@ -46,23 +47,42 @@ class Dialog(QDialog):
 
         self.button_close = QPushButton(self)
         self.button_close.setGeometry(self.label_top.width() - 40, 0, 40, 40)
-        self.button_close.setStyleSheet(f'background-color: {bg_color}; border-top-right-radius: 20px; border: none')
-        icon = QIcon(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'cross.png'))
-        self.button_close.setIcon(icon)
-        self.button_close.setIconSize(QSize(30, 30))
+        cross = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'cross.png')
+        cross_hover = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'cross_hover.png')
+        self.button_close.setStyleSheet(f'''
+                QPushButton {{background-color: transparent; border-top-right-radius: 20px; border: none; 
+                            image: url({cross}); padding: 5px}}
+                QPushButton:hover {{image: url({cross_hover});
+                }}''')
         self.button_close.clicked.connect(self.close)
 
         self.button_new = QPushButton(self)
-        self.button_new.setGeometry(self.frame.x() + 20, self.frame.y() + (3 * self.frame.height()) // 4, self.frame.width() - 40, (self.frame.height() // 4)- 20)
+        self.button_new.setGeometry(self.frame.x() + 20, self.frame.y() + (5 * self.frame.height()) // 8, self.frame.width() - 40, (self.frame.height() // 4)- 20)
         self.button_new.setText('Play Again')
-        self.button_new.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px; background-color: #327535; border-radius: 20px')
+        self.button_new.setStyleSheet(f'''
+                                    QPushButton {{
+                                      font-family: Arial; font-weight: bold; font-size: 26px; background-color: #327535; border-radius: 20px;}}
+                                    QPushButton:hover {{background-color: #519654;}}
+                                      ''')
         self.button_new.clicked.connect(self.play_again)
 
         self.button_review = QPushButton(self)
-        self.button_review.setGeometry(self.button_new.x(), self.frame.y() + (2 * self.frame.height()) // 4, self.button_new.width(), self.button_new.height())
+        self.button_review.setGeometry(self.button_new.x(), self.frame.y() + (1 * self.frame.height()) // 3, self.button_new.width(), (self.button_new.height()))
         self.button_review.setText('Game Review')
-        self.button_review.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px; border-radius: 20px')
+        self.button_review.setStyleSheet(f'''
+                                         QPushButton {{font-family: Arial; font-weight: bold; font-size: 26px; border-radius: 20px; background-color: #41316e;}}
+                                         QPushButton:hover {{background-color: #564094;}}
+                                         ''')
         self.button_review.clicked.connect(self.review)
+
+        self.button_menu = QPushButton(self)
+        self.button_menu.setGeometry(self.button_new.x(), self.frame.y() + ((7 * self.frame.height()) // 8)-7, self.button_new.width(), (self.button_new.height()//2))
+        self.button_menu.setText('Back to Menu')
+        self.button_menu.setStyleSheet(f'''
+                                         QPushButton {{font-family: Arial; font-size: 18px; border-radius: 5px; background-color: {bg_color}; border-radius: 5px;}}
+                                         QPushButton:hover {{background-color: {bg_color_hover};}}
+                                         ''')
+        self.button_menu.clicked.connect(self.menu)
 
     def showEvent(self, event):
         self.button_close.raise_()
@@ -76,6 +96,9 @@ class Dialog(QDialog):
         pass
 
     def review(self):
+        pass
+
+    def menu(self):
         pass
 
 
