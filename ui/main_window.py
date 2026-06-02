@@ -49,85 +49,33 @@ class ChessGame(QMainWindow):
 
         self.brett = Board()
         self.start_pos = self.brett.start_position()
+        self.position = self.start_pos
+        self.white_to_move = True
 
         self.grid = QGridLayout()
         self.grid.setSpacing(0)
 
         for i in range(8):
             for j in range(8):
-                button = ChessSquare(i, j, self.start_pos[i, j])
+                button = ChessSquare(i, j, self.position, self.start_pos[i, j])
+                button.move_made.connect(self.process_move)
                 self.grid.addWidget(button, i, j)
 
 
         centralWidget.setLayout(self.grid)
 
-    def start_game(self):
-        while self.game == 0:
-            self.make_move_white()
-            if self.game == 0:
-                self.make_move_black()
-            else: 
-                break
-    def make_move_white(self):
+    def process_move(self, start_square, end_square):
 
-        x = Move_White(self.position, start_square, end_square, self.start_pos)
-        if x.mate == True:
-            print('Schachmatt, Weiß gewinnt!')
-            self.game = 1
-            return self.game
-        if x.stalemate == True:
-            print('Patt!')
-            self.game = 1
-            return self.game
-        if x.legal == True:
-            self.position = x.pos_new #wird wieder zu Brett umgewandelt
-        else: 
-            self.make_move_white()
-
-    def make_move_black(self):
-        start_square = input(f'Black, make a move! Select the square with the piece that you want to move: ')
-        end_square = input(f'and select the square you want to put the piece on: ')
-        for row, i in enumerate(self.brett.notation):
-            for col, j in enumerate(i):
-                if  self.brett.notation[row, col] == start_square:
-                        start_square = tuple((row, col))
-                if  self.brett.notation[row, col] == end_square:
-                        end_square = tuple((row, col))
-
-        if isinstance(start_square, str):
-            if isinstance(end_square, str):
-                print(f"Both selected squares don't exist! Please select exisitng squares")
-                return self.make_move_black()
-            else:
-                print(f"Selected start square doesn't exist! Please select an exisiting square")
-                return self.make_move_black()
-        if isinstance(end_square, str) and not isinstance(start_square, str):
-            print(f"Selected end square doesn't exist! Please select an exisitng square")
-            return self.make_move_black()
-
-
-        x = Move_Black(self.position, start_square, end_square, self.start_pos)
-        if x.mate == True:
-            print('Schachmatt, Schwarz gewinnt!')
-            self.game = 1
-            return self.game
-        if x.stalemate == True:
-            print('Patt!')
-            self.game = 1
-            return self.game
-        if x.legal == True:
-             self.position = x.pos_new
-             self.vision = x.vision
+        if self.white_to_move == True:
+            x = Move_White(self.position, start_square, end_square, self.start_pos)
+            self.white_to_move = False
         else:
-             self.make_move_black()
+
+            x = Move_Black(self.position, start_square, end_square, self.start_pos)
+            self.white_to_move = True
 
     def show_mate(self):
-        d = QDialog()
-        b1 = QPushButton('Erneut spielen', d)
-
-
-
-        d.exec_()
+        pass
 
         
 
