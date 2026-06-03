@@ -76,6 +76,24 @@ class Move(Board):
                             self.vision_white[(new_row, new_col)] = True
         return self.vision_white
 
+    def castling_white(self, boardstate):
+        self.king_start = self.find_piece(self.start_pos, King, 'w')[0]
+        self.king = self.start_pos[self.king_start]
+
+        self.rook_starts = self.find_piece(self.start_pos, Rook, 'w')
+        self.rook_l = self.start_pos[self.rook_starts[0]]
+        self.rook_r = self.start_pos[self.rook_starts[1]]
+        self.king.castling(boardstate, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision_black)
+
+    def castling_black(self, boardstate):
+        self.king_start = self.find_piece(self.start_pos, King, 'b')[0]
+        self.king = self.start_pos[self.king_start]
+
+        self.rook_starts = self.find_piece(self.start_pos, Rook, 'b')
+        self.rook_l = self.start_pos[self.rook_starts[0]]
+        self.rook_r = self.start_pos[self.rook_starts[1]]
+        self.king.castling(boardstate, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision_white)
+
     def get_legal_move_mask(self):
         pass
 
@@ -97,7 +115,7 @@ class Move_White(Move):
     def order(self):
         
         self.visions_black(self.start)
-        self.castling_white()
+        self.castling_white(self.start)
         self.get_legal_move_mask()
         self.move()
         self.mate, self.stalemate = self.mate_or_stalemate()
@@ -105,16 +123,6 @@ class Move_White(Move):
             return self.mate
         if self.stalemate == True:
             return self.stalemate
-
-
-    def castling_white(self):
-        self.king_start = self.find_piece(self.start_pos, King, 'w')[0]
-        self.king = self.start_pos[self.king_start]
-
-        self.rook_starts = self.find_piece(self.start_pos, Rook, 'w')
-        self.rook_l = self.start_pos[self.rook_starts[0]]
-        self.rook_r = self.start_pos[self.rook_starts[1]]
-        self.king.castling(self.start, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision_black)
 
         
 
@@ -176,15 +184,15 @@ class Move_White(Move):
             self.pos_new = self.start1
             self.visions_black(self.pos_new)
             if self.vision_black[self.find_piece(self.pos_new, King, 'w')[0]] == False:
-                print(f'Move is legal :)')
+                #print(f'Move is legal :)')
                 self.legal = True
-                self.display('name', self.pos_new)
+                #self.display('name', self.pos_new)
             else: 
-                print(f'Move is not legal! Try another one!')
+                #print(f'Move is not legal! Try another one!')
                 self.pos_new = self.start1
                 self.legal = False
         else: 
-            print(f'Move is not legal! Try another one!')
+            #print(f'Move is not legal! Try another one!')
             self.pos_new = self.start1
             self.legal = False
 
@@ -205,6 +213,7 @@ class Move_White(Move):
         stalemate = False
         moves = [0]
         self.visions_white(self.pos_new)
+        self.castling_black(self.pos_new)
         for row, i in enumerate(self.pos_new):
             for col, j in enumerate(i):
                 if self.pos_new[(row, col)].color == 'b':
@@ -236,7 +245,7 @@ class Move_Black(Move):
     def order(self):
         
         self.visions_white(self.start)
-        self.castling_black()
+        self.castling_black(self.start)
         self.get_legal_move_mask()
         self.move()
         self.mate, self.stalemate = self.mate_or_stalemate()
@@ -244,15 +253,6 @@ class Move_Black(Move):
             return self.mate
         if self.stalemate == True:
             return self.stalemate
-
-    def castling_black(self):
-        self.king_start = self.find_piece(self.start_pos, King, 'b')[0]
-        self.king = self.start_pos[self.king_start]
-
-        self.rook_starts = self.find_piece(self.start_pos, Rook, 'b')
-        self.rook_l = self.start_pos[self.rook_starts[0]]
-        self.rook_r = self.start_pos[self.rook_starts[1]]
-        self.king.castling(self.start, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision_white)
 
     def get_legal_move_mask(self):
         mask = np.zeros((8, 8), dtype = 'bool')
@@ -307,15 +307,15 @@ class Move_Black(Move):
             self.pos_new = self.start1
             self.visions_white(self.pos_new)
             if self.vision_white[self.find_piece(self.pos_new, King, 'b')[0]] == False:
-                print(f'Move is legal :)')
+                #print(f'Move is legal :)')
                 self.legal = True
-                self.display('name', self.pos_new)
+                #self.display('name', self.pos_new)
             else: 
-                print(f'Move is not legal! Try another one!')
+                #print(f'Move is not legal! Try another one!')
                 self.legal = False
                 self.pos_new = self.start1
         else: 
-            print(f'Move is not legal! Try another one!')
+            #print(f'Move is not legal! Try another one!')
             self.legal = False
             self.pos_new = self.start1
 
@@ -336,6 +336,7 @@ class Move_Black(Move):
         stalemate = False
         moves = [0]
         self.visions_black(self.pos_new)
+        self.castling_white(self.pos_new)
         for row, i in enumerate(self.pos_new):
             for col, j in enumerate(i):
                 if self.pos_new[(row, col)].color == 'w':

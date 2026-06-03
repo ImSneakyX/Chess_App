@@ -81,8 +81,12 @@ class ChessGame(QMainWindow):
         for i in range(8):
             for j in range(8):
 
-                self.squares[(i,j)].piece = self.engine.position[(i,j)]
-                self.squares[(i,j)].set_piece()
+                neue_figur = self.engine.position[(i,j)]
+                alte_figur = self.squares[(i,j)].piece
+
+                if alte_figur != neue_figur:
+                    self.squares[(i,j)].piece = self.engine.position[(i,j)]
+                    self.squares[(i,j)].set_piece()
 
 
 
