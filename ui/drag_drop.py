@@ -25,7 +25,7 @@ class MainWindow(QMainWindow):
 
         for i in range(8):
             for j in range(8):
-                button = ChessSquare(i, j, self.boardstate, self.start_pos[i, j])
+                button = ChessSquare(i, j, self.start_pos[i, j])
                 self.grid.addWidget(button, i, j)
 
 
@@ -38,17 +38,13 @@ class MainWindow(QMainWindow):
 
 class ChessSquare(QPushButton):
     move_made = pyqtSignal(tuple, tuple)
-    def __init__(self, row, col, boardstate, piece = None):
+    def __init__(self, row, col, piece = None):
         super().__init__()
         self.piece = piece
         self.row = row 
         self.col = col
         self.square = (row, col)
-        self.legal = True
-
-        self.brett = Board()
-        self.start_pos = self.brett.start_position()
-        self.boardstate = boardstate
+ 
 
         self.label = QLabel()
         self.setFixedSize(64, 64)
@@ -104,31 +100,23 @@ class ChessSquare(QPushButton):
     
 
 
-    def dragEnterEvent(self, e):
-        
-        x = Move_White(self.boardstate, (e.source().row, e.source().col), self.square, self.start_pos)
-        self.legal = x.legal   
+    def dragEnterEvent(self, e):  
         e.accept()
 
 
 
     def dropEvent(self, e):
-        if self.legal == True:
-            source_widget = e.source()
-            piece = source_widget.piece
-            source_widget.piece = None
-            self.piece = piece
-            self.set_piece()
 
-            self.move_made.emit(source_widget.square, self.square)
+        source_widget = e.source()
+        self.move_made.emit(source_widget.square, self.square)
 
 
 
 
         e.accept()
 
-    def boardstate_update(self):
-        return self.boardstate
+    def get_boardstate(self):
+        return self.brett.new_boardstate
 
         
     
