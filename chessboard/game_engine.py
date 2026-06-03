@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.move import Move_White, Move_Black
 from chessboard.board import Board
 
-class Game_Engine:
+class GameEngine:
     def __init__(self):
         self.white_to_move = True
         self.brett = Board()

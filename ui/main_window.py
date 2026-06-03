@@ -3,10 +3,11 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
 from PyQt5.QtGui import QIcon, QFont, QPixmap
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from chessboard.board import Board
 from chessboard.move import Move_White, Move_Black
 from drag_drop import ChessSquare
+from chessboard.game_engine import GameEngine
 
 
 class Launcher(QMainWindow):
@@ -41,6 +42,7 @@ class Launcher(QMainWindow):
 class ChessGame(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.engine = GameEngine()
                 
         self.setWindowTitle('Schach')
         self.setGeometry(750, 450, 300, 300)
@@ -49,35 +51,41 @@ class ChessGame(QMainWindow):
 
         self.brett = Board()
         self.start_pos = self.brett.start_position()
-        self.position = self.start_pos
-        self.white_to_move = True
 
         self.grid = QGridLayout()
         self.grid.setSpacing(0)
 
+        self.squares = {}
+
         for i in range(8):
             for j in range(8):
-                button = ChessSquare(i, j, self.position, self.start_pos[i, j])
+                button = ChessSquare(i, j, self.start_pos[i, j])
                 button.move_made.connect(self.process_move)
                 self.grid.addWidget(button, i, j)
+                self.squares[(i, j)] = button
 
 
         centralWidget.setLayout(self.grid)
 
     def process_move(self, start_square, end_square):
 
-        if self.white_to_move == True:
-            x = Move_White(self.position, start_square, end_square, self.start_pos)
-            self.position = x.pos_new
-            self.white_to_move = False
-        else:
+        legal = self.engine.check_move(start_square, end_square)
 
-            x = Move_Black(self.position, start_square, end_square, self.start_pos)
-            self.position = x.pos_new
-            self.white_to_move = True
+        if legal == True:
+            self.update_board()
 
-    def show_mate(self):
-        pass
+        else: 
+            pass
+
+    def update_board(self):
+        for i in range(8):
+            for j in range(8):
+
+                self.squares[(i,j)].piece = self.engine.position[(i,j)]
+                self.squares[(i,j)].set_piece()
+
+
+
 
         
 
