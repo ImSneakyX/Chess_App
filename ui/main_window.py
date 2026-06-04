@@ -8,6 +8,7 @@ from chessboard.board import Board
 from chessboard.move import Move_White, Move_Black
 from drag_drop import ChessSquare
 from chessboard.game_engine import GameEngine
+from ui.dialogs import Promote
 import time
 
 
@@ -68,21 +69,17 @@ class ChessGame(QMainWindow):
 
         centralWidget.setLayout(self.grid)
 
-        self.squares[(0,0)].setIcon(QIcon())    # Icon kurz wegnehmen
-        QApplication.processEvents()            # OS zwingen, das sofort zu zeichnen
-        self.squares[(0,0)].set_piece()         # Icon wieder hinsetzen
-        QApplication.processEvents() 
+
 
     def process_move(self, start_square, end_square):
-        t1 = time.time()
         legal = self.engine.check_move(start_square, end_square)
-        t2 = time.time()
-
         if legal == True:
             self.update_board()
+            
+    def promote(self, color): 
+        promote_dialog = Promote(color, self)
+        promote_dialog.exec_()
 
-        t3 = time.time()
-        print(f'Logik-Check: {t2-t1:.5f} sek | GUI: Update: {t3 - t2:.5f} sek')
 
     def update_board(self):
         for i in range(8):

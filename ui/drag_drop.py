@@ -38,15 +38,13 @@ class MainWindow(QMainWindow):
 
 class ChessSquare(QPushButton):
     move_made = pyqtSignal(tuple, tuple)
-    def __init__(self, row, col, piece = None):
-        super().__init__()
+    def __init__(self, row, col, piece = None, parent = None):
+        super().__init__(parent)
         self.piece = piece
         self.row = row 
         self.col = col
         self.square = (row, col)
  
-
-        self.label = QLabel()
         self.setFixedSize(64, 64)
         self.setIconSize(QSize(60, 60))
         self.setAcceptDrops(True)
@@ -115,8 +113,6 @@ class ChessSquare(QPushButton):
 
         e.accept()
 
-    def get_boardstate(self):
-        return self.brett.new_boardstate
 
         
     

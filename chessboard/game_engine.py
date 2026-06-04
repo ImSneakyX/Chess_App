@@ -23,5 +23,9 @@ class GameEngine:
             self.white_to_move = not self.white_to_move
             return True
         return False
+    
+    def check_promotion(self):
+
+        pass
 
         
