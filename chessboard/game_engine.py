@@ -7,25 +7,45 @@ from chessboard.board import Board
 class GameEngine:
     def __init__(self):
         self.white_to_move = True
+        self.legal = None
+        self.promotion = None
         self.brett = Board()
         self.start_pos = self.brett.start_position()
         self.position = self.brett.start_position()
 
     def check_move(self, start_square, end_square):
         if self.white_to_move == True:
-            x = Move_White(self.position, start_square, end_square, self.start_pos)
+            x = Move_White(self.position, start_square, end_square, self.start_pos) 
+            if x.legal == True:
+                self.legal = True
+            else:
+                self.legal = False
+
+            if x.promotion == True:
+                self.promotion = True
+            else: 
+                self.promotion = False
 
         else:
             x = Move_Black(self.position, start_square, end_square, self.start_pos)
+            if x.legal == True:
+                self.legal = True
+            else:
+                self.legal = False
+
+            if x.promotion == True:
+                self.promotion = True
+
+            else: 
+                self.promotion = False
 
         if x.legal == True:
             self.position = x.pos_new
             self.white_to_move = not self.white_to_move
-            return True
-        return False
-    
-    def check_promotion(self):
 
-        pass
+    
+
+        
+        
 
         
