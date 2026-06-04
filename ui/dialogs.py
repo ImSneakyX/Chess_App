@@ -3,7 +3,9 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog, QFrame
 from PyQt5.QtGui import QIcon, QFont, QPixmap
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSize, pyqtSignal
+from ui.drag_drop import ChessSquare
+from chessboard.pieces import Knight, Queen, Bishop, Rook
 
 
 class MainWindow(QMainWindow):
@@ -24,8 +26,77 @@ class MainWindow(QMainWindow):
 
 
     def show_dialog(self):
-        d = DialogWinMate(self)
+        #d = DialogLoseTime(self)
+        d = Promote('w', self)
         d.exec_()
+
+class PromotionSquares(QPushButton):
+
+    selected = pyqtSignal(object)
+    def __init__(self, piece = None, parent = None):
+        super().__init__(parent)
+        self.piece = piece
+
+        self.setFixedSize(64, 64)
+        self.setIconSize(QSize(60, 60))
+        self.setAcceptDrops(True)
+   
+
+        self.setStyleSheet('background-color: white; border: none;')
+
+        self.clicked.connect(self.select_piece)
+        self.set_piece()
+
+        
+
+    def set_piece(self):
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if self.piece is None or self.piece.value == 0:
+            self.setIcon(QIcon())
+            return
+        image_path = os.path.join(base_path, 'Images', f'{self.piece.name}_{self.piece.color}.png')
+        pixmap = QPixmap(image_path)
+        pixmap = pixmap.scaled(120, 120, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        pixmap.setDevicePixelRatio(2.0)
+        icon = QIcon(pixmap)
+        self.setIcon(icon)
+
+    def select_piece(self):
+
+        self.selected.emit(self.piece)
+
+
+class Promote(QDialog):
+    def __init__(self, color, parent = None):
+        super().__init__(parent)
+        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+
+        promote_knight = PromotionSquares(Knight(color), self) 
+        promote_knight.setGeometry(0, 64, 64, 64)
+        promote_bishop = PromotionSquares(Bishop(color), self) 
+        promote_bishop.setGeometry(0, 128, 64, 64)
+        promote_rook = PromotionSquares(Rook(color, 'l'), self)
+        promote_rook.setGeometry(0, 192, 64, 64) 
+        promote_queen = PromotionSquares(Queen(color), self)
+        promote_queen.setGeometry(0, 0, 64, 64) 
+
+
+        #self.frame = QFrame(self)
+        #self.frame.setGeometry(0, 0, promote_bishop.width(), promote_bishop.height()*4)
+        #self.frame.setStyleSheet('background-color: #1e1e1f; border-radius: 20px;')
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Dialog(QDialog):
     def __init__(self, parent = None):
