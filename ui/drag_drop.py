@@ -37,7 +37,7 @@ class MainWindow(QMainWindow):
 
 
 class ChessSquare(QPushButton):
-    move_made = pyqtSignal(tuple, tuple)
+    move_made = pyqtSignal(tuple, tuple, str)
     def __init__(self, row, col, piece = None, parent = None):
         super().__init__(parent)
         self.piece = piece
@@ -106,7 +106,7 @@ class ChessSquare(QPushButton):
     def dropEvent(self, e):
 
         source_widget = e.source()
-        self.move_made.emit(source_widget.square, self.square)
+        self.move_made.emit(source_widget.square, self.square, source_widget.piece.color)
 
 
 

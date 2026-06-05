@@ -71,19 +71,25 @@ class ChessGame(QMainWindow):
 
 
 
-    def process_move(self, start_square, end_square):
+    def process_move(self, start_square, end_square, color):
         self.end_square = end_square
+
+        t1 = time.time()
+
         self.engine.check_move(start_square, end_square)
         if self.engine.legal == True and self.engine.promotion == False:
             self.update_board()
 
+        t2 = time.time()
+
         if self.engine.legal == True and self.engine.promotion == True:
-            promote_dialog = Promote('w', self)
+            promote_dialog = Promote(color, self)
 
             promote_dialog.selected_piece.connect(self.process_promotion)
             
             promote_dialog.exec_()
 
+        print(f'GUI Update: {t2-t1:.5f} sek')
             
 
     def process_promotion(self, object):

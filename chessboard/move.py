@@ -42,9 +42,9 @@ class Move(Board):
                     for x, y in moves_for_vision:
                         self.vision_black[(x, y)] = True
                 if boardstate[(row, col)].color == 'b' and isinstance(boardstate[(row, col)], Pawn):
-                    if 0 <= col - 1 < 8:
+                    if 0 <= col - 1 < 8 and 0 <= row + 1 < 8:
                         self.vision_black[(row + 1, col - 1)] = True
-                    if 0 <= col + 1 < 8:
+                    if 0 <= col + 1 < 8 and 0 <= row + 1 < 8:
                         self.vision_black[(row + 1, col + 1)] = True
                 if boardstate[(row, col)].color == 'b' and isinstance(boardstate[(row, col)], King):
                     offsets = [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
@@ -65,9 +65,9 @@ class Move(Board):
                     for x, y in moves_for_vision:
                         self.vision_white[(x, y)] = True
                 if boardstate[(row, col)].color == 'w' and isinstance(boardstate[(row, col)], Pawn):
-                    if 0 <= col - 1 < 8:
+                    if 0 <= col - 1 < 8 and 0 <= row - 1 < 8:
                         self.vision_white[(row - 1, col - 1)] = True
-                    if 0 <= col + 1 < 8:
+                    if 0 <= col + 1 < 8 and 0 <= row - 1 < 8:
                         self.vision_white[(row - 1, col + 1)] = True
                 if boardstate[(row, col)].color == 'w' and isinstance(boardstate[(row, col)], King):
                     offsets = [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
@@ -272,24 +272,9 @@ class Move_Black(Move):
                 self.start1[self.end_square] = self.pawn_b
                 self.pawn_b.two_steps()
 
+
             if isinstance(self.piece, Pawn) and self.end_square[0] == 7:
-                new_piece = input('What piece do you want to promote to? (Queen, Rook, Bishop, Knight):')
-                acceptable_input = ('Queen', 'Rook', 'Bishop', 'Knight')
-                while new_piece not in acceptable_input:
-                    new_piece = input('Please make a new input and only type Queen, Rook, Bishop or Knight:')
-
-                if new_piece == 'Queen':
-                    self.start1[self.end_square] = Queen('b')
-
-                if new_piece == 'Rook':
-                    self.start1[self.end_square] = Rook('b', 'l')
-
-                if new_piece == 'Knight':
-                    self.start1[self.end_square] = Knight('b')
-
-                if new_piece == 'Bishop':
-                    self.start1[self.end_square] = Bishop('b')
-                
+                self.promotion = True
 
             self.pos_new = self.start1
             self.visions_white(self.pos_new)
