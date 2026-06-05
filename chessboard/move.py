@@ -14,6 +14,7 @@ class Move(Board):
         self.end_square = end_square
         self.piece = self.start[self.start_square]
 
+        self.promotion = False
         self.mate = False
         self.stalemate = False
 
@@ -161,21 +162,7 @@ class Move_White(Move):
                 self.pawn_w.two_steps()
 
             if isinstance(self.piece, Pawn) and self.end_square[0] == 0:
-                new_piece = input('What piece do you want to promote to? (Queen, Rook, Bishop, Knight):')
-                acceptable_input = ('Queen', 'Rook', 'Bishop', 'Knight')
-                while new_piece not in acceptable_input:
-                    new_piece = input('Please make a new input and only type Queen, Rook, Bishop or Knight:')
-                if new_piece == 'Queen':
-                    self.start1[self.end_square] = Queen('w')
-
-                if new_piece == 'Rook':
-                    self.start1[self.end_square] = Rook('w', 'l')
-
-                if new_piece == 'Knight':
-                    self.start1[self.end_square] = Knight('w')
-
-                if new_piece == 'Bishop':
-                    self.start1[self.end_square] = Bishop('w')
+                self.promotion = True
 
 
 

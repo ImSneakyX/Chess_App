@@ -43,6 +43,13 @@ class GameEngine:
             self.position = x.pos_new
             self.white_to_move = not self.white_to_move
 
+    def promote_pawns(self, piece, square_of_promotion):
+
+        self.position[square_of_promotion] = piece
+        
+
+            
+
     
 
         

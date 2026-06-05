@@ -31,8 +31,6 @@ class MainWindow(QMainWindow):
         d.exec_()
 
 class PromotionSquares(QPushButton):
-
-    selected = pyqtSignal(object)
     def __init__(self, piece = None, parent = None):
         super().__init__(parent)
         self.piece = piece
@@ -44,7 +42,6 @@ class PromotionSquares(QPushButton):
 
         self.setStyleSheet('background-color: white; border: none;')
 
-        self.clicked.connect(self.select_piece)
         self.set_piece()
 
         
@@ -61,12 +58,10 @@ class PromotionSquares(QPushButton):
         icon = QIcon(pixmap)
         self.setIcon(icon)
 
-    def select_piece(self):
-
-        self.selected.emit(self.piece)
 
 
 class Promote(QDialog):
+    selected_piece = pyqtSignal(object)
     def __init__(self, color, parent = None):
         super().__init__(parent)
         self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
@@ -81,10 +76,16 @@ class Promote(QDialog):
         promote_queen = PromotionSquares(Queen(color), self)
         promote_queen.setGeometry(0, 0, 64, 64) 
 
+        promote_knight.clicked.connect(lambda: self.signal_piece_to_main(promote_knight.piece))
+        promote_bishop.clicked.connect(lambda: self.signal_piece_to_main(promote_bishop.piece))
+        promote_rook.clicked.connect(lambda: self.signal_piece_to_main(promote_rook.piece))
+        promote_queen.clicked.connect(lambda: self.signal_piece_to_main(promote_queen.piece))
 
-        #self.frame = QFrame(self)
-        #self.frame.setGeometry(0, 0, promote_bishop.width(), promote_bishop.height()*4)
-        #self.frame.setStyleSheet('background-color: #1e1e1f; border-radius: 20px;')
+    def signal_piece_to_main(self, object):
+
+        self.selected_piece.emit(object)
+        self.accept()
+
 
 
 
