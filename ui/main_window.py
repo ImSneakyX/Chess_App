@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
 from PyQt5.QtGui import QIcon, QFont, QPixmap
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal, QTimer
 from chessboard.board import Board
 from chessboard.move import Move_White, Move_Black
 from drag_drop import ChessSquare
@@ -63,13 +63,20 @@ class ChessGame(QMainWindow):
             for j in range(8):
                 button = ChessSquare(i, j, self.start_pos[i, j])
                 button.move_made.connect(self.process_move)
+                button.clear_highlight.connect(self.clear)
                 self.grid.addWidget(button, i, j)
                 self.squares[(i, j)] = button
 
 
         centralWidget.setLayout(self.grid)
 
+    def clear(self):
 
+        for sq in self.squares.values():
+            sq.setProperty('highlight', False)
+            sq.style().unpolish(sq)
+            sq.style().polish(sq)
+            
 
     def process_move(self, start_square, end_square, color):
         self.end_square = end_square
@@ -88,24 +95,26 @@ class ChessGame(QMainWindow):
             promote_dialog.selected_piece.connect(self.process_promotion)
             
             promote_dialog.exec_()
-        
-        if self.engine.mate == True:
-            if self.engine.white_to_move == True:
-                mate_dialog_win = DialogWinMate(self)
-                time.sleep(3)
-                mate_dialog_win.exec_()
-            else:
-                mate_dialog_lose = DialogLoseMate(self)
-                time.sleep(3)
-                mate_dialog_lose.exec_()
-
-        if self.engine.stalemate == True:
-            dialog_stalemate = DialogRemisPatt(self)
-            time.sleep(3)
-            dialog_stalemate.exec_()
 
 
         print(f'GUI Update: {t2-t1:.5f} sek')
+
+        if self.engine.mate == True:
+            if self.engine.white_to_move == True:
+                mate_dialog_win = DialogWinMate(self)
+                QTimer.singleShot(1500, lambda: mate_dialog_win.exec_())
+            else:
+                mate_dialog_lose = DialogLoseMate(self)
+                QTimer.singleShot(1500, lambda: mate_dialog_lose.exec_())
+
+
+        if self.engine.stalemate == True:
+            dialog_stalemate = DialogRemisPatt(self)
+            QTimer.singleShot(1500, lambda: dialog_stalemate.exec_())
+            
+
+
+        
             
 
     def process_promotion(self, object):

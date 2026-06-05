@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
 
 class ChessSquare(QPushButton):
     move_made = pyqtSignal(tuple, tuple, str)
+    clear_highlight = pyqtSignal()
     def __init__(self, row, col, piece = None, parent = None):
         super().__init__(parent)
         self.piece = piece
@@ -48,13 +49,19 @@ class ChessSquare(QPushButton):
         self.setFixedSize(64, 64)
         self.setIconSize(QSize(60, 60))
         self.setAcceptDrops(True)
+        self.setFlat(True)
+        self.setFocusPolicy(Qt.NoFocus)
    
 
         if (row + col) % 2 == 0:
-            self.setStyleSheet('background-color: #d7dbe0; border: none;')
+            self.setStyleSheet('''ChessSquare {background-color: #d7dbe0; border: none;}
+                               
+                               ChessSquare[highlight='true'] {background: #bd4242;}
+                               ''')
         else:
-            self.setStyleSheet('background-color: #8c6e5a; border: none;')
-
+            self.setStyleSheet('''ChessSquare {background-color: #8c6e5a; border: none;}
+                               ChessSquare[highlight='true'] {background: #bf2c2c;}
+                               ''')
         self.set_piece()
 
         
@@ -71,6 +78,17 @@ class ChessSquare(QPushButton):
         icon = QIcon(pixmap)
         self.setIcon(icon)
 
+
+
+    def mousePressEvent(self, e):
+        if e.button() == Qt.RightButton:
+            self.setProperty('highlight', True)
+            self.style().unpolish(self)
+            self.style().polish(self)
+        
+        if e.button() == Qt.LeftButton:
+            self.clear_highlight.emit()
+ 
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.LeftButton:
             if self.piece is not None and self.piece.value != 0:
