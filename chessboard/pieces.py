@@ -27,10 +27,10 @@ class Pawn(Piece):
 
         if self.color == 'w':
          
-            if 0 <= col - 1 < 8:
+            if 0 <= col - 1 < 8 and 0 <= row - 1 < 8:
                 if boardstate[(row - 1, col - 1)].color != self.color and boardstate[(row - 1, col -1)].color != None: 
                     moves.append((row - 1, col -1))
-            if 0 <= col + 1 < 8:
+            if 0 <= col + 1 < 8 and 0 <= row - 1 < 8:
                 if boardstate[(row - 1, col + 1)].color != None and boardstate[(row - 1, col + 1)].color != self.color: 
                         moves.append((row - 1, col + 1))
 
@@ -42,20 +42,20 @@ class Pawn(Piece):
             elif row > 0 and boardstate[row-1, col].value == 0:
                     moves.append((row-1, col))
 
-            if 0 <= col - 1 < 8:
+            if 0 <= col - 1 < 8 and 0 <= row - 1 < 8:
                 if row == 3 and isinstance(boardstate[row, col - 1], Pawn) and boardstate[row, col - 1].moved_two_steps == True:
                     moves.append((row - 1, col - 1))
-                    
-            if 0 <= col + 1 < 8:
+
+            if 0 <= col + 1 < 8 and 0 <= row - 1 < 8:
                 if row == 3 and isinstance(boardstate[row, col + 1], Pawn) and boardstate[row, col + 1].moved_two_steps == True:
                     moves.append((row - 1, col + 1))
 
 
         else:
-            if 0 <= col - 1 < 8:
+            if 0 <= col - 1 < 8 and 0 <= row + 1 < 8:
                 if boardstate[(row + 1, col - 1)].color != None and boardstate[(row + 1, col - 1)].color != self.color: 
                     moves.append((row + 1, col -1))
-            if 0 <= col + 1 < 8:
+            if 0 <= col + 1 < 8 and 0 <= row + 1 < 8:
                 if boardstate[(row + 1, col + 1)].color != None and boardstate[(row + 1, col + 1)].color != self.color: 
                     moves.append((row + 1, col + 1))
 
@@ -68,11 +68,11 @@ class Pawn(Piece):
             elif row < 7 and boardstate[row+1, col].value == 0:
                     moves.append((row+1, col))
 
-            if 0 <= col - 1 < 8:
+            if 0 <= col - 1 < 8 and 0 <= row + 1 < 8:
                 if row == 4 and isinstance(boardstate[row, col - 1], Pawn) and boardstate[row, col -1].moved_two_steps == True:
                     moves.append((row + 1, col - 1))
                                  
-            if 0 <= col + 1 < 8:
+            if 0 <= col + 1 < 8 and 0 <= row + 1 < 8:
                 if row == 4 and isinstance(boardstate[row, col + 1], Pawn) and boardstate[row, col +1].moved_two_steps == True:
                     moves.append((row + 1, col + 1))
         return moves, moves_for_vision
