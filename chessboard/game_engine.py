@@ -9,6 +9,10 @@ class GameEngine:
         self.white_to_move = True
         self.legal = None
         self.promotion = None
+        
+        self.mate = None
+        self.stalemate = None
+
         self.brett = Board()
         self.start_pos = self.brett.start_position()
         self.position = self.brett.start_position()
@@ -26,6 +30,9 @@ class GameEngine:
             else: 
                 self.promotion = False
 
+            self.mate = x.mate
+            self.stalemate = x.stalemate
+
         else:
             x = Move_Black(self.position, start_square, end_square, self.start_pos)
             if x.legal == True:
@@ -38,6 +45,9 @@ class GameEngine:
 
             else: 
                 self.promotion = False
+
+            self.mate = x.mate
+            self.stalemate = x.stalemate
 
         if x.legal == True:
             self.position = x.pos_new

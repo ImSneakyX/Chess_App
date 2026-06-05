@@ -8,7 +8,7 @@ from chessboard.board import Board
 from chessboard.move import Move_White, Move_Black
 from drag_drop import ChessSquare
 from chessboard.game_engine import GameEngine
-from ui.dialogs import Promote
+from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt
 import time
 
 
@@ -88,6 +88,22 @@ class ChessGame(QMainWindow):
             promote_dialog.selected_piece.connect(self.process_promotion)
             
             promote_dialog.exec_()
+        
+        if self.engine.mate == True:
+            if self.engine.white_to_move == True:
+                mate_dialog_win = DialogWinMate(self)
+                time.sleep(3)
+                mate_dialog_win.exec_()
+            else:
+                mate_dialog_lose = DialogLoseMate(self)
+                time.sleep(3)
+                mate_dialog_lose.exec_()
+
+        if self.engine.stalemate == True:
+            dialog_stalemate = DialogRemisPatt(self)
+            time.sleep(3)
+            dialog_stalemate.exec_()
+
 
         print(f'GUI Update: {t2-t1:.5f} sek')
             
