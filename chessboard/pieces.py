@@ -42,11 +42,13 @@ class Pawn(Piece):
             elif row > 0 and boardstate[row-1, col].value == 0:
                     moves.append((row-1, col))
 
-            if row == 3 and isinstance(boardstate[row, col - 1], Pawn) and boardstate[row, col - 1].moved_two_steps == True:
-                moves.append((row - 1, col - 1))
-
-            if row == 3 and isinstance(boardstate[row, col + 1], Pawn) and boardstate[row, col + 1].moved_two_steps == True:
-                moves.append((row - 1, col + 1))
+            if 0 <= col - 1 < 8:
+                if row == 3 and isinstance(boardstate[row, col - 1], Pawn) and boardstate[row, col - 1].moved_two_steps == True:
+                    moves.append((row - 1, col - 1))
+                    
+            if 0 <= col + 1 < 8:
+                if row == 3 and isinstance(boardstate[row, col + 1], Pawn) and boardstate[row, col + 1].moved_two_steps == True:
+                    moves.append((row - 1, col + 1))
 
 
         else:
@@ -66,11 +68,13 @@ class Pawn(Piece):
             elif row < 7 and boardstate[row+1, col].value == 0:
                     moves.append((row+1, col))
 
-            if row == 4 and isinstance(boardstate[row, col - 1], Pawn) and boardstate[row, col -1].moved_two_steps == True:
-                moves.append((row + 1, col - 1))
-
-            if row == 4 and isinstance(boardstate[row, col + 1], Pawn) and boardstate[row, col +1].moved_two_steps == True:
-                moves.append((row + 1, col + 1))
+            if 0 <= col - 1 < 8:
+                if row == 4 and isinstance(boardstate[row, col - 1], Pawn) and boardstate[row, col -1].moved_two_steps == True:
+                    moves.append((row + 1, col - 1))
+                                 
+            if 0 <= col + 1 < 8:
+                if row == 4 and isinstance(boardstate[row, col + 1], Pawn) and boardstate[row, col +1].moved_two_steps == True:
+                    moves.append((row + 1, col + 1))
         return moves, moves_for_vision
     
     def two_steps(self):
