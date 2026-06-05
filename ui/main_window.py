@@ -79,14 +79,14 @@ class ChessGame(QMainWindow):
 
         if self.engine.legal == True and self.engine.promotion == True:
             promote_dialog = Promote('w', self)
+
+            promote_dialog.selected_piece.connect(self.process_promotion)
             
-            if promote_dialog.exec_() == QDialog.Accepted:
-                promote_dialog.selected_piece.connect(self.process_promotion)
+            promote_dialog.exec_()
 
             
 
     def process_promotion(self, object):
-
         self.engine.promote_pawns(object, self.end_square)
         self.update_board()
 
