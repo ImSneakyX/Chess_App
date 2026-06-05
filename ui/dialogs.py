@@ -26,8 +26,7 @@ class MainWindow(QMainWindow):
 
 
     def show_dialog(self):
-        #d = DialogLoseTime(self)
-        d = Promote('w', self)
+        d = DialogLoseTime(self)
         d.exec_()
 
 class PromotionSquares(QPushButton):
@@ -44,8 +43,7 @@ class PromotionSquares(QPushButton):
 
         self.set_piece()
 
-        
-
+    
     def set_piece(self):
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         if self.piece is None or self.piece.value == 0:
@@ -121,9 +119,11 @@ class Dialog(QDialog):
         self.button_close.setGeometry(self.label_top.width() - 40, 0, 40, 40)
         cross = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'cross.png')
         cross_hover = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'cross_hover.png')
+        cross = cross.replace('\\', '/')
+        cross_hover = cross_hover.replace('\\', '/')
         self.button_close.setStyleSheet(f'''
                 QPushButton {{background-color: transparent; border-top-right-radius: 20px; border: none; 
-                            image: url({cross}); padding: 5px}}
+                            image: url({cross}); padding: 5px;}}
                 QPushButton:hover {{image: url({cross_hover});
                 }}''')
         self.button_close.clicked.connect(self.close)
@@ -133,7 +133,7 @@ class Dialog(QDialog):
         self.button_new.setText('Play Again')
         self.button_new.setStyleSheet(f'''
                                     QPushButton {{
-                                      font-family: Arial; font-weight: bold; font-size: 26px; background-color: #327535; border-radius: 20px;}}
+                                      font-family: Arial; font-weight: bold; font-size: 26px; background-color: #327535; border-radius: 20px; color: white;}}
                                     QPushButton:hover {{background-color: #519654;}}
                                       ''')
         self.button_new.clicked.connect(self.play_again)
@@ -142,7 +142,7 @@ class Dialog(QDialog):
         self.button_review.setGeometry(self.button_new.x(), self.frame.y() + (1 * self.frame.height()) // 3, self.button_new.width(), (self.button_new.height()))
         self.button_review.setText('Game Review')
         self.button_review.setStyleSheet(f'''
-                                         QPushButton {{font-family: Arial; font-weight: bold; font-size: 26px; border-radius: 20px; background-color: #41316e;}}
+                                         QPushButton {{font-family: Arial; font-weight: bold; font-size: 26px; border-radius: 20px; background-color: #41316e; color: white;}}
                                          QPushButton:hover {{background-color: #564094;}}
                                          ''')
         self.button_review.clicked.connect(self.review)
@@ -151,7 +151,7 @@ class Dialog(QDialog):
         self.button_menu.setGeometry(self.button_new.x(), self.frame.y() + ((7 * self.frame.height()) // 8)-13, self.button_new.width(), (self.button_new.height()//2))
         self.button_menu.setText('Back to Menu')
         self.button_menu.setStyleSheet(f'''
-                                         QPushButton {{font-family: Arial; font-size: 18px; border-radius: 5px; background-color: {bg_color}; border-radius: 5px;}}
+                                         QPushButton {{font-family: Arial; font-size: 18px; border-radius: 5px; background-color: {bg_color}; border-radius: 5px; color: white;}}
                                          QPushButton:hover {{background-color: {bg_color_hover};}}
                                          ''')
         self.button_menu.clicked.connect(self.menu)
@@ -179,7 +179,7 @@ class DialogWin(Dialog):
         super().__init__(parent)
         self.label_text_top = QLabel(self)
         self.label_text_top.setGeometry(self.label_top.x() + self.label_top.width() // 4, self.label_top.y() + 10, self.label_top.width() // 2, (3 * self.label_top.height()) // 5)
-        self.label_text_top.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px;')
+        self.label_text_top.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px; color: white')
         self.label_text_top.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignBottom)
         self.label_text_top.setText('Du hast gewonnen!')
         self.label_text_top.setWordWrap(True)
@@ -223,7 +223,7 @@ class DialogLose(Dialog):
         super().__init__(parent)
         self.label_text_top = QLabel(self)
         self.label_text_top.setGeometry(self.label_top.x(), self.label_top.y() + 10, self.label_top.width(), (3 * self.label_top.height()) // 5)
-        self.label_text_top.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px;')
+        self.label_text_top.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px; color: white')
         self.label_text_top.setAlignment(Qt.AlignmentFlag.AlignCenter)
         if player_color == 'w':
             self.label_text_top.setText('Schwarz hat gewonnen')
@@ -263,7 +263,7 @@ class DialogRemis(Dialog):
         super().__init__(parent)
         self.label_text_top = QLabel(self)
         self.label_text_top.setGeometry(self.label_top.x(), self.label_top.y() + 10, self.label_top.width(), (3 * self.label_top.height()) // 5)
-        self.label_text_top.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px;')
+        self.label_text_top.setStyleSheet('font-family: Arial; font-weight: bold; font-size: 26px; color: white')
         self.label_text_top.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label_text_top.setText('Remis')
         self.label_text_top.setWordWrap(True)
