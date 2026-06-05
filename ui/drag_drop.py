@@ -35,7 +35,6 @@ class MainWindow(QMainWindow):
 
 
 
-
 class ChessSquare(QPushButton):
     move_made = pyqtSignal(tuple, tuple, str)
     clear_highlight = pyqtSignal()
@@ -45,6 +44,8 @@ class ChessSquare(QPushButton):
         self.row = row 
         self.col = col
         self.square = (row, col)
+
+        self.start_right_click = None
  
         self.setFixedSize(64, 64)
         self.setIconSize(QSize(60, 60))
@@ -82,10 +83,9 @@ class ChessSquare(QPushButton):
 
     def mousePressEvent(self, e):
         if e.button() == Qt.RightButton:
-            self.setProperty('highlight', True)
-            self.style().unpolish(self)
-            self.style().polish(self)
-        
+            self.start_right_click = self.square 
+
+
         if e.button() == Qt.LeftButton:
             self.clear_highlight.emit()
  
@@ -112,8 +112,28 @@ class ChessSquare(QPushButton):
 
                 drag.exec_(Qt.MoveAction)
                 self.set_piece()
-
     
+
+
+    def mouseReleaseEvent(self, e):
+        widget = QApplication.widgetAt(e.globalPos())
+        if e.button() == Qt.RightButton:
+            if self.square == widget.square:
+                self.setProperty('highlight', True)
+                self.style().unpolish(self)
+                self.style().polish(self)
+
+            else:
+                self.draw_arrow(self.start_right_click, self.square)
+
+
+        
+
+
+    def draw_arrow(self, start_square, end_square):
+
+        pass
+
 
 
     def dragEnterEvent(self, e):  
@@ -125,9 +145,6 @@ class ChessSquare(QPushButton):
 
         source_widget = e.source()
         self.move_made.emit(source_widget.square, self.square, source_widget.piece.color)
-
-
-
 
         e.accept()
 
