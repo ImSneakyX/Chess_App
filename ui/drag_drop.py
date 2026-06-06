@@ -2,8 +2,8 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QWidget, QLabel, QMainWindow, QVBoxLayout, QPushButton, QGridLayout
-from PyQt5.QtCore import Qt, QMimeData, pyqtSignal, QSize
-from PyQt5.QtGui import QDrag, QPixmap, QIcon
+from PyQt5.QtCore import Qt, QMimeData, pyqtSignal, QSize, QPoint
+from PyQt5.QtGui import QDrag, QPixmap, QIcon, QPainter, QPen
 from chessboard.board import Board
 from chessboard.move import Move_White, Move_Black
 
@@ -46,6 +46,7 @@ class ChessSquare(QPushButton):
         self.square = (row, col)
 
         self.start_right_click = None
+        self.arrows = []
  
         self.setFixedSize(64, 64)
         self.setIconSize(QSize(60, 60))
@@ -82,8 +83,6 @@ class ChessSquare(QPushButton):
 
 
     def mousePressEvent(self, e):
-        if e.button() == Qt.RightButton:
-            self.start_right_click = self.square 
 
 
         if e.button() == Qt.LeftButton:
@@ -124,15 +123,46 @@ class ChessSquare(QPushButton):
                 self.style().polish(self)
 
             else:
-                self.draw_arrow(self.start_right_click, self.square)
+                self.arrows.append((self.square, widget.square))
+                self.update()
 
 
         
+    def paintEvent(self, event):
+        super().paintEvent(event)
+
+        pen = QPen()
+        pen.setWidth(5)
+        painter = QPainter(self)
+        painter.setPen(pen)
+
+        for start, end in self.arrows:
+            self.draw_arrow(start, end, painter)
 
 
-    def draw_arrow(self, start_square, end_square):
 
-        pass
+
+    def draw_arrow(self, start_square, end_square, painter):
+
+        p1 = self.get_center(start_square)
+        p2 = self.get_center(end_square)
+        print('it works')
+
+        print(p1, p2)
+
+        painter.drawLine(p1, p2)
+
+    def get_center(self, square):
+        
+        row, col = square
+
+        x = row * self.width() + self.width() // 2
+        y = col * self.height() + self.height() // 2
+
+        return QPoint(x, y)
+
+
+        
 
 
 
