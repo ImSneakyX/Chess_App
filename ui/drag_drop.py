@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
 class ChessSquare(QPushButton):
     move_made = pyqtSignal(tuple, tuple, str)
     clear_highlight = pyqtSignal()
+    arrows_signal = pyqtSignal(list)
     def __init__(self, row, col, piece = None, parent = None):
         super().__init__(parent)
         self.piece = piece
@@ -124,47 +125,7 @@ class ChessSquare(QPushButton):
 
             else:
                 self.arrows.append((self.square, widget.square))
-                self.update()
-
-
-        
-    def paintEvent(self, event):
-        super().paintEvent(event)
-
-        pen = QPen()
-        pen.setWidth(5)
-        painter = QPainter(self)
-        painter.setPen(pen)
-
-        for start, end in self.arrows:
-            self.draw_arrow(start, end, painter)
-
-
-
-
-    def draw_arrow(self, start_square, end_square, painter):
-
-        p1 = self.get_center(start_square)
-        p2 = self.get_center(end_square)
-        print('it works')
-
-        print(p1, p2)
-
-        painter.drawLine(p1, p2)
-
-    def get_center(self, square):
-        
-        row, col = square
-
-        x = row * self.width() + self.width() // 2
-        y = col * self.height() + self.height() // 2
-
-        return QPoint(x, y)
-
-
-        
-
-
+                self.arrows_signal.emit(self.arrows)
 
     def dragEnterEvent(self, e):  
         e.accept()

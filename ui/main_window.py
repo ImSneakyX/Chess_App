@@ -2,8 +2,8 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
-from PyQt5.QtGui import QIcon, QFont, QPixmap
-from PyQt5.QtCore import Qt, pyqtSignal, QTimer
+from PyQt5.QtGui import QIcon, QFont, QPixmap, QPen, QPainter
+from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QPoint
 from chessboard.board import Board
 from chessboard.move import Move_White, Move_Black
 from drag_drop import ChessSquare
@@ -58,12 +58,14 @@ class ChessGame(QMainWindow):
         self.grid.setSpacing(0)
 
         self.squares = {}
+        self.arrows = []
 
         for i in range(8):
             for j in range(8):
                 button = ChessSquare(i, j, self.start_pos[i, j])
                 button.move_made.connect(self.process_move)
                 button.clear_highlight.connect(self.clear)
+                button.arrows_signal.connect(self.get_arrows)
                 self.grid.addWidget(button, i, j)
                 self.squares[(i, j)] = button
 
@@ -132,6 +134,45 @@ class ChessGame(QMainWindow):
                 if alte_figur != neue_figur:
                     self.squares[(i,j)].piece = self.engine.position[(i,j)]
                     self.squares[(i,j)].set_piece()
+
+    def get_arrows(self, arrows):
+
+        self.arrows = arrows
+
+    def paintEvent(self, event):
+        super().paintEvent(event)
+
+        pen = QPen(Qt.yellow)
+        pen.setWidth(5)
+        painter = QPainter(self)
+        painter.setPen(pen)
+        
+    
+
+        for start, end in self.arrows:
+            self.draw_arrow(start, end, painter)
+
+
+
+
+    def draw_arrow(self, start_square, end_square, painter):
+
+        p1 = self.get_center(start_square)
+        p2 = self.get_center(end_square)
+        print('it works')
+
+        print(p1, p2)
+
+        painter.drawLine(p1, p2)
+
+    def get_center(self, square):
+        
+        row, col = square
+
+        x = row * self.squares[(0, 0)].width() + self.squares[(0, 0)].width() // 2
+        y = col * self.squares[(0, 0)].height() + self.squares[(0, 0)].height() // 2
+
+        return QPoint(x, y)
 
 
 
