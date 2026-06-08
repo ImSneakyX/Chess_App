@@ -1,15 +1,15 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
-from PyQt5.QtGui import QIcon, QFont, QPixmap, QPen, QPainter, QPolygon
+from PyQt5.QtWidgets import QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
+from PyQt5.QtGui import QPen, QPainter, QPolygon, QBrush, QColor
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QPoint
 from chessboard.board import Board
-from chessboard.move import Move_White, Move_Black
 from drag_drop import ChessSquare
 from chessboard.game_engine import GameEngine
 from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt
 import time
+from math import sin, cos, pi, atan2
 
 
 class ChessBoard(QWidget):
@@ -126,10 +126,13 @@ class ArrowOverlay(QWidget):
     def paintEvent(self, event):
         super().paintEvent(event)
 
-        pen = QPen(Qt.yellow)
+        pen = QPen(QColor('#326e42'))
         pen.setWidth(5)
+        brush = QBrush(QColor('#326e42'))
         painter = QPainter(self)
         painter.setPen(pen)
+        painter.setBrush(brush)
+        painter.setRenderHint(QPainter.Antialiasing)
 
         
     
@@ -141,12 +144,12 @@ class ArrowOverlay(QWidget):
 
         p1 = self.get_center(start_square)
         p2 = self.get_center(end_square)
-        p3 = self.get_corners()
-        p4 = self.get_corners()
-        p5 = self.get_corners()
+        p3 = self.get_corners(p1, p2, self.square_size.width() // 2, -pi/8)
+        p4 = self.get_corners(p1, p2, self.square_size.width() // 4, 0)
+        p5 = self.get_corners(p1, p2, self.square_size.width() // 2, pi/8)
         painter.drawLine(p1, p2)
 
-        corners = [p2, p3, p4]
+        corners = [p2, p3, p4, p5]
         tip = QPolygon(corners)
         painter.drawPolygon(tip)
 
@@ -160,5 +163,11 @@ class ArrowOverlay(QWidget):
 
         return QPoint(x, y)
     
-    def get_corners():
-        pass
+    def get_corners(self, start_point, end_point, radius, phase_shift):
+        
+        dy = start_point.y() - end_point.y()
+        dx = start_point.x() - end_point.x()
+        angle = atan2(dy, dx)
+
+
+        return QPoint(int(end_point.x() + radius * cos(angle + phase_shift)), int(end_point.y() + radius * sin(angle + phase_shift)))
