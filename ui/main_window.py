@@ -8,7 +8,7 @@ from chessboard.board import Board
 from chessboard.move import Move_White, Move_Black
 from drag_drop import ChessSquare
 from chessboard.game_engine import GameEngine
-from ui.board_gui import ChessBoard
+from ui.board_gui import ChessBoard, ArrowOverlay
 from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt
 import time
 
@@ -44,12 +44,31 @@ class Launcher(QMainWindow):
 
 class ChessGame(QMainWindow):
     def __init__(self):
+        self.arrows = []
         super().__init__()
                 
         self.setWindowTitle('Schach')
-        self.setGeometry(750, 450, 500, 500)
-        centralWidget = ChessBoard()
+        self.setGeometry(350, 450, 700, 700)
+        centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
+
+        self.board_widget = ChessBoard(self)
+        self.board_widget.arrow_signal.connect(self.get_arrow_signal)
+        self.board_widget.setGeometry(10, 10, 512, 512)
+
+        self.overlay = ArrowOverlay(self.arrows, self.board_widget.squares[(0,0)].size(), self.board_widget)
+        self.overlay.resize(self.board_widget.size())
+        print(self.overlay.size())
+
+
+
+    def get_arrow_signal(self, arrows):
+            self.arrows.append(arrows[0])
+            self.overlay.update()
+
+
+
+
 
 
 

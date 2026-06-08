@@ -13,9 +13,10 @@ import time
 
 
 class ChessBoard(QWidget):
-
-    def __init__(self):
-        super().__init__()
+    
+    arrow_signal = pyqtSignal(list)
+    def __init__(self, parent = None):
+        super().__init__(parent)
 
         self.engine = GameEngine()
 
@@ -106,6 +107,19 @@ class ChessBoard(QWidget):
     def get_arrows(self, arrows):
 
         self.arrows = arrows
+        self.arrow_signal.emit(self.arrows)
+
+
+
+    
+    
+class ArrowOverlay(QWidget):
+    def __init__(self, arrows, square_size, parent = None):
+        super().__init__(parent)
+
+        self.arrows = arrows
+        self.square_size = square_size
+        self.setAttribute(Qt.WA_TransparentForMouseEvents)
 
     def paintEvent(self, event):
         super().paintEvent(event)
@@ -134,7 +148,7 @@ class ChessBoard(QWidget):
         
         row, col = square
 
-        x = row * self.squares[(0, 0)].width() + self.squares[(0, 0)].width() // 2
-        y = col * self.squares[(0, 0)].height() + self.squares[(0, 0)].height() // 2
+        x = row * self.square_size.width() + self.square_size.width() // 2
+        y = col * self.square_size.height() + self.square_size.height() // 2
 
         return QPoint(x, y)
