@@ -126,11 +126,9 @@ class ArrowOverlay(QWidget):
     def paintEvent(self, event):
         super().paintEvent(event)
 
-        pen = QPen(QColor('#326e42'))
-        pen.setWidth(5)
+
         brush = QBrush(QColor('#326e42'))
         painter = QPainter(self)
-        painter.setPen(pen)
         painter.setBrush(brush)
         painter.setRenderHint(QPainter.Antialiasing)
 
@@ -144,13 +142,32 @@ class ArrowOverlay(QWidget):
 
         p1 = self.get_center(start_square)
         p2 = self.get_center(end_square)
-        p3 = self.get_corners(p1, p2, self.square_size.width() // 2, -pi/8)
-        p4 = self.get_corners(p1, p2, self.square_size.width() // 4, 0)
-        p5 = self.get_corners(p1, p2, self.square_size.width() // 2, pi/8)
-        painter.drawLine(p1, p2)
+
+        dy = p1.y() - p2.y()
+        dx = p1.x() -p2.x()
+        angle = atan2(dy, dx)
+
+        p3 = self.get_corners(p2, angle, self.square_size.width() / 2, -pi/8)
+        p4 = self.get_corners(p2, angle, self.square_size.width() / 4, 0)
+        p5 = self.get_corners(p2, angle, self.square_size.width() / 2, pi/8)
+
+
+
+        p2_modified = QPoint(int(p2.x() + (self.square_size.width() / 4) * cos(angle)), int(p2.y() + (self.square_size.width() / 4) * sin(angle)))
+
+        pen_line = QPen(QColor('#326e42'))
+        pen_line.setWidth(6)
+        painter.setPen(pen_line)
+
+        painter.drawLine(p1, p2_modified)
 
         corners = [p2, p3, p4, p5]
         tip = QPolygon(corners)
+
+        pen_tip = QPen(QColor('#326e42'))
+        pen_tip.setWidth(2)
+        painter.setPen(pen_tip)
+
         painter.drawPolygon(tip)
 
 
@@ -163,11 +180,7 @@ class ArrowOverlay(QWidget):
 
         return QPoint(x, y)
     
-    def get_corners(self, start_point, end_point, radius, phase_shift):
-        
-        dy = start_point.y() - end_point.y()
-        dx = start_point.x() - end_point.x()
-        angle = atan2(dy, dx)
-
+    def get_corners(self, end_point, angle, radius, phase_shift):
+    
 
         return QPoint(int(end_point.x() + radius * cos(angle + phase_shift)), int(end_point.y() + radius * sin(angle + phase_shift)))
