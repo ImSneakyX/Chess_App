@@ -25,13 +25,14 @@ class ChessBoard(QWidget):
 
         self.grid = QGridLayout()
         self.grid.setSpacing(0)
+        self.grid.setContentsMargins(0, 0, 0, 0)
 
         self.squares = {}
         self.arrows = []
 
         for i in range(8):
             for j in range(8):
-                button = ChessSquare(i, j, self.start_pos[i, j])
+                button = ChessSquare(i, j, self.start_pos[i, j], self)
                 button.move_made.connect(self.process_move)
                 button.clear_highlight.connect(self.clear)
                 button.arrows_signal.connect(self.get_arrows)
@@ -40,6 +41,7 @@ class ChessBoard(QWidget):
 
 
         self.setLayout(self.grid)
+
 
     def clear(self):
 
@@ -128,6 +130,7 @@ class ArrowOverlay(QWidget):
         pen.setWidth(5)
         painter = QPainter(self)
         painter.setPen(pen)
+
         
     
 
@@ -138,17 +141,14 @@ class ArrowOverlay(QWidget):
 
         p1 = self.get_center(start_square)
         p2 = self.get_center(end_square)
-        print('it works')
-
-        print(p1, p2)
-
+        print(p1 ,p2)
         painter.drawLine(p1, p2)
 
     def get_center(self, square):
         
         row, col = square
 
-        x = row * self.square_size.width() + self.square_size.width() // 2
-        y = col * self.square_size.height() + self.square_size.height() // 2
+        x = col * self.square_size.width() + self.square_size.width() // 2
+        y = row * self.square_size.height() + self.square_size.height() // 2
 
         return QPoint(x, y)

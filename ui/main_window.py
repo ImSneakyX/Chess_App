@@ -52,13 +52,13 @@ class ChessGame(QMainWindow):
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
 
+
         self.board_widget = ChessBoard(self)
         self.board_widget.arrow_signal.connect(self.get_arrow_signal)
-        self.board_widget.setGeometry(10, 10, 512, 512)
+        self.board_widget.setGeometry(50, 50, 512, 512)
 
         self.overlay = ArrowOverlay(self.arrows, self.board_widget.squares[(0,0)].size(), self.board_widget)
-        self.overlay.resize(self.board_widget.size())
-        print(self.overlay.size())
+        self.overlay.setGeometry(0, 0, self.board_widget.width(), self.board_widget.height())
 
 
 

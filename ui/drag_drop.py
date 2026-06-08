@@ -45,12 +45,13 @@ class ChessSquare(QPushButton):
         self.row = row 
         self.col = col
         self.square = (row, col)
+        
 
         self.start_right_click = None
         self.arrows = []
- 
+        
         self.setFixedSize(64, 64)
-        self.setIconSize(QSize(60, 60))
+        self.setIconSize(QSize(int(self.width() * (15/16)), int(self.height() * (15/16))))
         self.setAcceptDrops(True)
         self.setFlat(True)
         self.setFocusPolicy(Qt.NoFocus)
@@ -118,14 +119,15 @@ class ChessSquare(QPushButton):
     def mouseReleaseEvent(self, e):
         widget = QApplication.widgetAt(e.globalPos())
         if e.button() == Qt.RightButton:
-            if self.square == widget.square:
-                self.setProperty('highlight', True)
-                self.style().unpolish(self)
-                self.style().polish(self)
+            if isinstance(widget, ChessSquare):
+                if self.square == widget.square:
+                    self.setProperty('highlight', True)
+                    self.style().unpolish(self)
+                    self.style().polish(self)
 
-            else:
-                self.arrows.append((self.square, widget.square))
-                self.arrows_signal.emit(self.arrows)
+                else:
+                    self.arrows.append((self.square, widget.square))
+                    self.arrows_signal.emit(self.arrows)
 
     def dragEnterEvent(self, e):  
         e.accept()
