@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
-from PyQt5.QtGui import QIcon, QFont, QPixmap, QPen, QPainter
+from PyQt5.QtGui import QIcon, QFont, QPixmap, QPen, QPainter, QPolygon
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QPoint
 from chessboard.board import Board
 from chessboard.move import Move_White, Move_Black
@@ -141,8 +141,15 @@ class ArrowOverlay(QWidget):
 
         p1 = self.get_center(start_square)
         p2 = self.get_center(end_square)
-        print(p1 ,p2)
+        p3 = self.get_corners()
+        p4 = self.get_corners()
+        p5 = self.get_corners()
         painter.drawLine(p1, p2)
+
+        corners = [p2, p3, p4]
+        tip = QPolygon(corners)
+        painter.drawPolygon(tip)
+
 
     def get_center(self, square):
         
@@ -152,3 +159,6 @@ class ArrowOverlay(QWidget):
         y = row * self.square_size.height() + self.square_size.height() // 2
 
         return QPoint(x, y)
+    
+    def get_corners():
+        pass
