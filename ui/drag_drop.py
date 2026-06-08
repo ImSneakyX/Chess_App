@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import QApplication, QHBoxLayout, QWidget, QLabel, QMainWin
 from PyQt5.QtCore import Qt, QMimeData, pyqtSignal, QSize, QPoint
 from PyQt5.QtGui import QDrag, QPixmap, QIcon, QPainter, QPen
 from chessboard.board import Board
-from chessboard.move import Move_White, Move_Black
 
 
 class MainWindow(QMainWindow):
@@ -89,6 +88,8 @@ class ChessSquare(QPushButton):
 
         if e.button() == Qt.LeftButton:
             self.clear_highlight.emit()
+
+
  
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.LeftButton:

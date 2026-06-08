@@ -15,6 +15,7 @@ from math import sin, cos, pi, atan2
 class ChessBoard(QWidget):
     
     arrow_signal = pyqtSignal(list)
+    delete_signal = pyqtSignal()
     def __init__(self, parent = None):
         super().__init__(parent)
 
@@ -49,6 +50,8 @@ class ChessBoard(QWidget):
             sq.setProperty('highlight', False)
             sq.style().unpolish(sq)
             sq.style().polish(sq)
+
+        self.delete_signal.emit()
             
 
     def process_move(self, start_square, end_square, color):
@@ -131,8 +134,6 @@ class ArrowOverlay(QWidget):
         painter = QPainter(self)
         painter.setBrush(brush)
         painter.setRenderHint(QPainter.Antialiasing)
-
-        
     
 
         for start, end in self.arrows:

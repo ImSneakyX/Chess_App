@@ -55,6 +55,7 @@ class ChessGame(QMainWindow):
 
         self.board_widget = ChessBoard(self)
         self.board_widget.arrow_signal.connect(self.get_arrow_signal)
+        self.board_widget.delete_signal.connect(self.delete_arrows)
         self.board_widget.setGeometry(50, 50, 512, 512)
 
         self.overlay = ArrowOverlay(self.arrows, self.board_widget.squares[(0,0)].size(), self.board_widget)
@@ -63,9 +64,12 @@ class ChessGame(QMainWindow):
 
 
     def get_arrow_signal(self, arrows):
-            self.arrows.append(arrows[0])
-            self.overlay.update()
+        self.arrows.append(arrows[0])
+        self.overlay.update()
 
+    def delete_arrows(self):
+        self.arrows.clear()
+        self.overlay.update()
 
 
 
