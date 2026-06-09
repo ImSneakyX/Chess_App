@@ -65,12 +65,12 @@ class ChessGame(QMainWindow):
         self.resign_button.setGeometry(40+ self.board_widget.width(), 40+ self.board_widget.height(), self.board_widget.width()//4, self.board_widget.width()//16)
         self.resign_button.setText('RESIGN')
         self.resign_button.setStyleSheet(f''' QPushButton {{border: none; font-family: Arial; font-weight: bold; font-size: 15px; color: white; background-color: #f54242;}}
-                                         QPusButton:hover {{background-color: #ff7a7a}}''')
+                                         QPushButton:hover {{background-color: #ff7a7a}}''')
         self.resign_button.clicked.connect(self.resign)
 
     def resign(self):
 
-        confirmation = Confirmation(self)
+        confirmation = Confirmation(self.resign_button)
         confirmation.exec_()
 
 
