@@ -330,6 +330,44 @@ class DialogRemisFiftyMoves(DialogRemis):
         label.setText('wegen 50 Zug-Regel')
         label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
         label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+
+class Confirmation(QDialog):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setGeometry(0, -100, 100, 75)
+
+        self.frame = QFrame(self)
+        self.frame.setGeometry(0, 0, 100, 75)
+        self.frame.setStyleSheet('background-color: #1e1e1f; border-radius: 10px;')
+
+        self.label = QLabel(self)
+        self.label.setGeometry(5, 5, 90, 20)
+        self.label.setText('Do you really want to resgin?')
+
+        self.resign = QPushButton(self)
+        self.resign.setGeometry(5, 30, 40, 30)
+        self.resign.setText('RESIGN')
+        self.resign.setStyleSheet(''' QPushButton {{border: none; font-family: Arial; font-weight: bold; font-size: 15px; color: white; background-color: #f54242;}}
+                                         QPusButton:hover {{background-color: #ff7a7a}}''')
+        self.resign.clicked.connect(self.resign_dialog)
+
+        self.cancel = QPushButton(self)
+        self.cancel.setGeometry(50, 30, 40, 30)
+        self.resign.setText('Cancel')
+        self.resign.setStyleSheet(''' QPushButton {{border: none; font-family: Arial; font-size: 15px; color: white; background-color: #615d5d;}}
+                                         QPusButton:hover {{background-color: #948a8a}}''')
+        self.resign.clicked.connect(self.canceling)
+
+    def resign_dialog(self):
+
+        resign_dialog = DialogLoseResignation('w')
+        self.accept()
+        resign_dialog.exec_()
+
+    def canceling(self):
+        self.accept()
     
     
     
