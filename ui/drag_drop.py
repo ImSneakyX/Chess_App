@@ -129,6 +129,7 @@ class ChessSquare(QPushButton):
                 else:
                     self.arrows.append((self.square, widget.square))
                     self.arrows_signal.emit(self.arrows)
+                    self.arrows.clear()
 
     def dragEnterEvent(self, e):  
         e.accept()

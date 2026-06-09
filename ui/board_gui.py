@@ -129,7 +129,6 @@ class ArrowOverlay(QWidget):
     def paintEvent(self, event):
         super().paintEvent(event)
 
-
         brush = QBrush(QColor('#326e42'))
         painter = QPainter(self)
         painter.setBrush(brush)
