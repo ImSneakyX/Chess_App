@@ -143,6 +143,12 @@ class ChessSquare(QPushButton):
 
         e.accept()
 
+    def resizeEvent(self, e):
+
+        super().resizeEvent(e)
+
+        side = min(self.width(), self.height())
+        self.setIconSize(QSize(side-4, side-4))
 
         
     

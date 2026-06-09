@@ -48,7 +48,7 @@ class ChessGame(QMainWindow):
         super().__init__()
                 
         self.setWindowTitle('Schach')
-        self.setGeometry(350, 450, 700, 700)
+        self.setGeometry(350, 450, 1024, 683)
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
 
@@ -56,7 +56,7 @@ class ChessGame(QMainWindow):
         self.board_widget = ChessBoard(self)
         self.board_widget.arrow_signal.connect(self.get_arrow_signal)
         self.board_widget.delete_signal.connect(self.delete_arrows)
-        self.board_widget.setGeometry(50, 50, 512, 512)
+        self.board_widget.setGeometry(20, 20, self.width() // 2, 3 * self.height() // 4)
 
         self.overlay = ArrowOverlay(self.arrows, self.board_widget.squares[(0,0)].size(), self.board_widget)
         self.overlay.setGeometry(0, 0, self.board_widget.width(), self.board_widget.height())
