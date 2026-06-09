@@ -119,15 +119,18 @@ class ChessBoard(QWidget):
     
     
 class ArrowOverlay(QWidget):
-    def __init__(self, arrows, square_size, parent = None):
+    def __init__(self, arrows, parent = None):
         super().__init__(parent)
 
         self.arrows = arrows
-        self.square_size = square_size
+        self.square_size = self.parent().width()/8
         self.setAttribute(Qt.WA_TransparentForMouseEvents)
+
+
 
     def paintEvent(self, event):
         super().paintEvent(event)
+        self.square_size = self.parent().width()/8
 
         brush = QBrush(QColor('#326e42'))
         painter = QPainter(self)
@@ -147,13 +150,13 @@ class ArrowOverlay(QWidget):
         dx = p1.x() -p2.x()
         angle = atan2(dy, dx)
 
-        p3 = self.get_corners(p2, angle, self.square_size.width() / 2, -pi/8)
-        p4 = self.get_corners(p2, angle, self.square_size.width() / 4, 0)
-        p5 = self.get_corners(p2, angle, self.square_size.width() / 2, pi/8)
+        p3 = self.get_corners(p2, angle, self.square_size / 2, -pi/8)
+        p4 = self.get_corners(p2, angle, self.square_size / 4, 0)
+        p5 = self.get_corners(p2, angle, self.square_size / 2, pi/8)
 
 
 
-        p2_modified = QPoint(int(p2.x() + (self.square_size.width() / 4) * cos(angle)), int(p2.y() + (self.square_size.width() / 4) * sin(angle)))
+        p2_modified = QPoint(int(p2.x() + (self.square_size / 4) * cos(angle)), int(p2.y() + (self.square_size / 4) * sin(angle)))
 
         pen_line = QPen(QColor('#326e42'))
         pen_line.setWidth(6)
@@ -175,10 +178,10 @@ class ArrowOverlay(QWidget):
         
         row, col = square
 
-        x = col * self.square_size.width() + self.square_size.width() // 2
-        y = row * self.square_size.height() + self.square_size.height() // 2
+        x = col * self.square_size + self.square_size // 2
+        y = row * self.square_size + self.square_size // 2
 
-        return QPoint(x, y)
+        return QPoint(int(x), int(y))
     
     def get_corners(self, end_point, angle, radius, phase_shift):
     

@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QWidget, QLabel, QMainWindow, QVBoxLayout, QPushButton, QGridLayout
+from PyQt5.QtWidgets import QApplication, QHBoxLayout, QWidget, QLabel, QMainWindow, QVBoxLayout, QPushButton, QGridLayout, QSizePolicy
 from PyQt5.QtCore import Qt, QMimeData, pyqtSignal, QSize, QPoint
 from PyQt5.QtGui import QDrag, QPixmap, QIcon, QPainter, QPen
 from chessboard.board import Board
@@ -49,7 +49,7 @@ class ChessSquare(QPushButton):
         self.start_right_click = None
         self.arrows = []
         
-        self.setFixedSize(64, 64)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setIconSize(QSize(int(self.width() * (15/16)), int(self.height() * (15/16))))
         self.setAcceptDrops(True)
         self.setFlat(True)
@@ -148,7 +148,7 @@ class ChessSquare(QPushButton):
         super().resizeEvent(e)
 
         side = min(self.width(), self.height())
-        self.setIconSize(QSize(side-4, side-4))
+        self.setIconSize(QSize(int(side * (15/16)), int(side * (15/16))))
 
         
     

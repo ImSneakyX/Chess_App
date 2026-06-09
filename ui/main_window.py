@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
 from PyQt5.QtGui import QIcon, QFont, QPixmap, QPen, QPainter
-from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QPoint
+from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QPoint, QSize
 from chessboard.board import Board
 from chessboard.move import Move_White, Move_Black
 from drag_drop import ChessSquare
@@ -58,8 +58,9 @@ class ChessGame(QMainWindow):
         self.board_widget.delete_signal.connect(self.delete_arrows)
         self.board_widget.setGeometry(20, 20, self.width() // 2, 3 * self.height() // 4)
 
-        self.overlay = ArrowOverlay(self.arrows, self.board_widget.squares[(0,0)].size(), self.board_widget)
+        self.overlay = ArrowOverlay(self.arrows, self.board_widget)
         self.overlay.setGeometry(0, 0, self.board_widget.width(), self.board_widget.height())
+
 
 
 
@@ -71,6 +72,16 @@ class ChessGame(QMainWindow):
         self.arrows.clear()
         self.overlay.update()
 
+
+    def resizeEvent(self, e):
+
+        super().resizeEvent(e)
+
+        size = min(self.width() // 2, 3 * self.height() // 4)
+        self.board_widget.resize(size, size)
+
+        self.overlay.resize(self.board_widget.size())
+        self.overlay.show()
 
 
 
