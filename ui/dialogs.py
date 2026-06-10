@@ -331,44 +331,45 @@ class DialogRemisFiftyMoves(DialogRemis):
         label.setStyleSheet('font-family: Arial; font-size: 12px; color: #9e9493;')
         label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
 
-class Confirmation(QDialog):
-    def __init__(self, parent = None):
+class Confirmation(QWidget):
+    def __init__(self, width, height, parent = None):
         super().__init__(parent)
-        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setGeometry(self.parent().x(), self.parent().y() + 100, self.parent().width(), 75)
+
 
         self.frame = QFrame(self)
-        self.frame.setGeometry(0, 0, self.width(), self.height())
-        self.frame.setStyleSheet('background-color: #1e1e1f; border-radius: 10px;')
+        self.frame.setGeometry(0, 0, width, height)
+        background_color = '#1e1e1f'
+        self.frame.setStyleSheet(f'background-color: {background_color}; border-radius: 10px;')
+
 
         self.label = QLabel(self)
-        self.label.setGeometry(5, 5, self.width(), self.height()//2)
+        self.label.setGeometry(5, 5, width, height//2)
         self.label.setText('Do you really want to resgin?')
         self.label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)
+        self.label.setStyleSheet(f'color: white;')
+        self.label.setWordWrap(True)
 
         self.resign = QPushButton(self)
-        self.resign.setGeometry(5, self.height()//2 + 10, (self.width()-15) // 2, self.height()//3)
+        self.resign.setGeometry(5, height//2 + 10, (width-15) // 2, height//3)
         self.resign.setText('RESIGN')
-        self.resign.setStyleSheet(f'''QPushButton {{border: none; font-family: Arial; font-weight: bold; font-size: 15px; color: white; background-color: #f54242;}}
+        self.resign.setStyleSheet(f'''QPushButton {{border: none; font-family: Arial; font-weight: bold; font-size: 15px; color: white; background-color: #f54242; border-radius: 5px;}}
                                          QPushButton:hover {{background-color: #ff7a7a}}''')
         self.resign.clicked.connect(self.resign_dialog)
 
         self.cancel = QPushButton(self)
-        self.cancel.setGeometry(10 + (self.width()-15) // 2 , self.height()//2 + 10, (self.width()-15) // 2, self.height()//3)
+        self.cancel.setGeometry(10 + (width-15) // 2 , height//2 + 10, (width-15) // 2, height//3)
         self.cancel.setText('Cancel')
-        self.cancel.setStyleSheet(f''' QPushButton {{border: none; font-family: Arial; font-size: 15px; color: white; background-color: #615d5d;}}
+        self.cancel.setStyleSheet(f''' QPushButton {{border: none; font-family: Arial; font-size: 15px; color: white; background-color: #615d5d; border-radius: 5px;}}
                                          QPushButton:hover {{background-color: #948a8a}}''')
-        self.cancel.clicked.connect(self.canceling)
+        self.cancel.clicked.connect(lambda: self.close())
 
     def resign_dialog(self):
 
         resign_dialog = DialogLoseResignation('w')
-        self.accept()
+        self.close()
         resign_dialog.exec_()
 
-    def canceling(self):
-        self.accept()
+
     
     
     

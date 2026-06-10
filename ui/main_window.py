@@ -47,10 +47,13 @@ class ChessGame(QMainWindow):
         self.arrows = []
         super().__init__()
                 
+        self.resign_button_pressed = False
         self.setWindowTitle('Schach')
         self.setGeometry(350, 450, 1024, 683)
-        centralWidget = QWidget()
-        self.setCentralWidget(centralWidget)
+        self.central_widget = QWidget()
+        self.central_widget.setStyleSheet(f'background-color: #28292b;')
+        self.setCentralWidget(self.central_widget)
+        self.setMinimumSize(600, 350)
 
 
         self.board_widget = ChessBoard(self)
@@ -68,10 +71,20 @@ class ChessGame(QMainWindow):
                                          QPushButton:hover {{background-color: #ff7a7a}}''')
         self.resign_button.clicked.connect(self.resign)
 
+        self.label = QLabel(self)
+        self.label.setText(f'{self.resign_button.width()}, {self.resign_button.height()}')
+        self.label.setStyleSheet('color: white;')
+        self.label.move(self.width() // 2 + 50, self.height() // 2)
+        self.label.resize(100, 100)
+
     def resign(self):
 
-        confirmation = Confirmation(self.resign_button)
-        confirmation.exec_()
+        self.resign_button_pressed = True
+        width = 256
+        height = 130
+        self.confirmation = Confirmation(width, height, self)
+        self.confirmation.setGeometry(self.resign_button.x(), self.resign_button.y() - 150 , width, height)
+        self.confirmation.show()
 
 
 
@@ -96,6 +109,17 @@ class ChessGame(QMainWindow):
         self.overlay.show()
 
         self.resign_button.setGeometry(40+ self.board_widget.width(), 40+ self.board_widget.height(), self.board_widget.width()//4, self.board_widget.width()//16)
+
+
+        self.label.move(self.width() // 2 + 50, self.height() // 2)
+        self.label.setText(f'{self.resign_button.width()}, {self.resign_button.height()}')
+
+        if self.resign_button_pressed == True:
+
+            self.confirmation.close()
+            self.resign_button_pressed = False
+
+        
 
 
 
