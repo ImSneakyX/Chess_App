@@ -102,7 +102,7 @@ class ChessSquare(QPushButton):
                 image_path = os.path.join(base_path, 'Images', f'{self.piece.name}_{self.piece.color}.png')
                 pixmap = QPixmap(image_path)
 
-                pixmap = pixmap.scaled(120, 120, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+                pixmap = pixmap.scaled(2 * self.iconSize().width(), 2 * self.iconSize().width(), Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
                 pixmap.setDevicePixelRatio(2.0)
 
                 drag.setPixmap(pixmap)
