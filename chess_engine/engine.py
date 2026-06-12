@@ -4,6 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.move import Move_White, Move_Black
 from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 from chessboard.board import Board
+import time
 
 
 
@@ -13,12 +14,17 @@ class Ultimate:
         self.game_over = game_over
         self.child = []
         self.start_pos = start_pos
+        self.end_pos = None
+        self.played_moves = []
+        self.calculations = 0
 
 
 
 
     def minimax(self, position, depth, alpha, beta, maximizingPlayer):
         if depth == 0 or self.game_over:
+            self.calculations += 1
+            
             return self.static_evaluation(position)
         
         if maximizingPlayer == 'w':
@@ -74,6 +80,9 @@ class Ultimate:
                             for m in moves:
                                 child = Move_White(position, (i, j), m, self.start_pos)
                                 self.child.append(child.pos_new)
+
+                        elif isinstance(position[i, j], King):
+                            
         
         if maximizingPlayer == 'b':
 
@@ -89,10 +98,18 @@ class Ultimate:
 
 if __name__ == '__main__':
     board = Board()
+    test_board = board.start_position()
+    #test_board[0, 3] = Empty()
+    
+    engine = Ultimate(False, board.start_position())
 
-    engine = Ultimate(False, board.start_pos)
-    print(engine.minimax(board.start_pos, 3, 10000, 10000, 'w'))
+    t1 = time.time()
+    print(engine.minimax(test_board, 1, -10000, 10000, 'w'))
+    print(engine.calculations)
+    #board.display('name', engine.end_pos)
+    t2 = time.time()
 
+    print(f'{t2 - t1} sekunden')
 
 
 
