@@ -9,6 +9,7 @@ from drag_drop import ChessSquare
 from chessboard.game_engine import GameEngine
 from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt
 import time
+from chess_engine.engine import Ultimate
 from math import sin, cos, pi, atan2
 
 
@@ -20,6 +21,7 @@ class ChessBoard(QWidget):
         super().__init__(parent)
 
         self.engine = GameEngine()
+        self.position = self.engine.position
 
         self.brett = Board()
         self.start_pos = self.brett.start_position()
@@ -187,3 +189,22 @@ class ArrowOverlay(QWidget):
     
 
         return QPoint(int(end_point.x() + radius * cos(angle + phase_shift)), int(end_point.y() + radius * sin(angle + phase_shift)))
+    
+
+class EvalBar(QWidget):
+
+    def __init__(self, width, height, position):
+        super().__init__()
+        self.width = width
+        self.height = height
+        self.eval = Ultimate(position)
+
+
+    def paintEvent(self, event):
+        
+        h = self.height // 2 + self.eval * self.height // 8
+        painter = QPainter(self)
+        painter.fillRect(0, 0, self.width, h, QColor('black'))
+        painter.fillRect(0, h, self.width, self.height-h, QColor('white'))
+
+

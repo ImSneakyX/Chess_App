@@ -8,7 +8,7 @@ from chessboard.board import Board
 from chessboard.move import Move_White, Move_Black
 from drag_drop import ChessSquare
 from chessboard.game_engine import GameEngine
-from ui.board_gui import ChessBoard, ArrowOverlay
+from ui.board_gui import ChessBoard, ArrowOverlay, EvalBar
 from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt, Confirmation
 import time
 
@@ -76,6 +76,11 @@ class ChessGame(QMainWindow):
         self.label.setStyleSheet('color: white;')
         self.label.move(self.width() // 2 + 50, self.height() // 2)
         self.label.resize(100, 100)
+
+        self.eval_bar = EvalBar(self.board_widget.width() // 24, self.board_widget.height(), self.board_widget.position )
+        self.eval_bar.move(7*self.width() // 8, 20)
+        self.eval_bar.show()
+
 
     def resign(self):
 

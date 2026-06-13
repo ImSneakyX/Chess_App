@@ -10,7 +10,7 @@ import time
 
 class Ultimate:
 
-    def __init__(self, game_over, start_pos):
+    def __init__(self, start_pos, game_over = False):
         self.game_over = game_over
         self.child = []
         self.start_pos = start_pos
@@ -81,7 +81,7 @@ class Ultimate:
                                 child = Move_White(position, (i, j), m, self.start_pos)
                                 self.child.append(child.pos_new)
 
-                        elif isinstance(position[i, j], King):
+                        #elif isinstance(position[i, j], King):
                             
         
         if maximizingPlayer == 'b':
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     engine = Ultimate(False, board.start_position())
 
     t1 = time.time()
-    print(engine.minimax(test_board, 1, -10000, 10000, 'w'))
+    print(engine.minimax(test_board, 4, -10000, 10000, 'w'))
     print(engine.calculations)
     #board.display('name', engine.end_pos)
     t2 = time.time()
