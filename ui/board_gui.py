@@ -197,7 +197,9 @@ class EvalBar(QWidget):
         super().__init__()
         self.width = width
         self.height = height
-        self.eval = Ultimate(position)
+        self.board = Board()
+        ultimate= Ultimate(self.board.start_position())
+        self.eval = ultimate.minimax(position, 3, -10000, 10000, 'w')
 
 
     def paintEvent(self, event):
