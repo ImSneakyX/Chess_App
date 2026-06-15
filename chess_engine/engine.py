@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.move import Move_White, Move_Black
 from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 from chessboard.board import Board
-from chess_engine.fast_move import Move_White_kbqr, Move_Black_kbqr, Move_White_King, Move_Black_King
+from chess_engine.fast_move import Move_White_kbqr, Move_Black_kbqr, Move_White_King, Move_Black_King, Move_White_Pawn, Move_Black_Pawn, Move
 import time
 
 
@@ -18,6 +18,8 @@ class Ultimate:
         self.end_pos = None
         self.played_moves = []
         self.calculations = 0
+        self.move = Move(self.start_pos, (0, 0), (0, 0), self.start_pos)
+        
 
 
 
@@ -28,12 +30,12 @@ class Ultimate:
             
             return self.static_evaluation(position)
         
-        if maximizingPlayer == 'w':
+        if maximizingPlayer == True:
 
             maxEval = -100000
-            self.get_child_pos(position, 'w')
+            self.get_child_pos(position, True)
             for c in self.child:
-                eval = self.minimax(c, depth-1, alpha, beta, 'b')
+                eval = self.minimax(c, depth-1, alpha, beta, False)
                 maxEval = max(maxEval, eval)
                 alpha = max(alpha, eval)
                 if beta <= alpha:
@@ -41,9 +43,9 @@ class Ultimate:
             return maxEval
         else:
             minEval = 100000
-            self.get_child_pos(position, 'b')
+            self.get_child_pos(position, False)
             for c in self.child:
-                eval = self.minimax(c, depth-1, alpha, beta, 'w')
+                eval = self.minimax(c, depth-1, alpha, beta, True)
                 minEval = min(minEval, eval)
                 beta = min(beta, eval)
                 if beta <= alpha:
@@ -71,39 +73,53 @@ class Ultimate:
     
     def get_child_pos(self, position, maximizingPlayer):
         self.child.clear()
-        if maximizingPlayer == 'w':
+        if maximizingPlayer == True:
 
             for i in range(8):
                 for j in range(8):
                     if position[i, j].color == 'w':
-                        if not isinstance(position[i, j], King) or not isinstance(position[i, j], Pawn):
+                        if isinstance(position[i, j], Bishop) or isinstance(position[i, j], Knight) or isinstance(position[i, j], Queen) or isinstance(position[i, j], Rook):
                             moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
                             for m in moves:
                                 child = Move_White_kbqr(position, (i, j), m, self.start_pos)
                                 self.child.append(child.pos_new)
 
                         elif isinstance(position[i, j], King):
-                            moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
+                            vision = self.move.visions_black(position)
+                            moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), vision)
                             for m in moves:
                                 child = Move_White_King(position, (i, j), m, self.start_pos)
                                 self.child.append(child.pos_new)
+
+                        elif isinstance(position[i, j], Pawn):
+                            moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
+                            for m in moves:
+                                child = Move_White_Pawn(position, (i, j), m, self.start_pos)
+                                self.child.append(child.pos_new)
                             
         
-        if maximizingPlayer == 'b':
+        if maximizingPlayer == False:
 
             for i in range(8):
                 for j in range(8):
                     if position[i, j].color == 'b':
-                        if not isinstance(position[i, j], King) or not isinstance(position[i, j], Pawn):
+                        if isinstance(position[i, j], Bishop) or isinstance(position[i, j], Knight) or isinstance(position[i, j], Queen) or isinstance(position[i, j], Rook):
                             moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
                             for m in moves:
                                 child = Move_Black_kbqr(position, (i, j), m, self.start_pos)
                                 self.child.append(child.pos_new)
 
                         elif isinstance(position[i, j], King):
-                            moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
+                            vision = self.move.visions_black(position)
+                            moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), vision)
                             for m in moves:
                                 child = Move_Black_King(position, (i, j), m, self.start_pos)
+                                self.child.append(child.pos_new)
+
+                        elif isinstance(position[i, j], Pawn):
+                            moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
+                            for m in moves:
+                                child = Move_Black_Pawn(position, (i, j), m, self.start_pos)
                                 self.child.append(child.pos_new)
 
 
@@ -117,7 +133,7 @@ if __name__ == '__main__':
     engine = Ultimate(False, board.start_position())
 
     t1 = time.time()
-    print(engine.minimax(test_board, 4, -10000, 10000, 'w'))
+    print(engine.minimax(test_board, 4, -10000, 10000, True))
     print(engine.calculations)
     #board.display('name', engine.end_pos)
     t2 = time.time()

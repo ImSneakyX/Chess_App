@@ -15,7 +15,7 @@ from math import sin, cos, pi, atan2
 
 class ChessBoard(QWidget):
 
-    move_signal = pyqtSignal(object)
+    move_signal = pyqtSignal(tuple)
     arrow_signal = pyqtSignal(list)
     delete_signal = pyqtSignal()
     def __init__(self, parent = None):
@@ -23,6 +23,7 @@ class ChessBoard(QWidget):
 
         self.engine = GameEngine()
         self.position = self.engine.position
+        self.turn = self.engine.white_to_move
 
         self.brett = Board()
         self.start_pos = self.brett.start_position()
@@ -102,7 +103,6 @@ class ChessBoard(QWidget):
 
 
     def update_board(self):
-        self.move_signal.emit(self.engine.position)
         for i in range(8):
             for j in range(8):
 
@@ -112,6 +112,7 @@ class ChessBoard(QWidget):
                 if alte_figur != neue_figur:
                     self.squares[(i,j)].piece = self.engine.position[(i,j)]
                     self.squares[(i,j)].set_piece()
+        self.move_signal.emit((self.position, self.turn))
 
     def get_arrows(self, arrows):
 
@@ -195,13 +196,13 @@ class ArrowOverlay(QWidget):
 
 class EvalBar(QWidget):
 
-    def __init__(self, width, height, position, parent = None):
+    def __init__(self, width, height, position, maximizePlayer, parent = None):
         super().__init__(parent)
         self.width = width
         self.height = height
         self.board = Board()
         ultimate= Ultimate(self.board.start_position())
-        self.eval = ultimate.minimax(position, 3, -10000, 10000, 'w')
+        self.eval = ultimate.minimax(position, 3, -10000, 10000, maximizePlayer)
         print(self.eval)
 
 
