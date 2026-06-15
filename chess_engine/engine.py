@@ -4,6 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.move import Move_White, Move_Black
 from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 from chessboard.board import Board
+from chess_engine.fast_move import Move_White_kbqr, Move_Black_kbqr, Move_White_King, Move_Black_King
 import time
 
 
@@ -75,13 +76,17 @@ class Ultimate:
             for i in range(8):
                 for j in range(8):
                     if position[i, j].color == 'w':
-                        if not isinstance(position[i, j], King):
+                        if not isinstance(position[i, j], King) or not isinstance(position[i, j], Pawn):
                             moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
                             for m in moves:
-                                child = Move_White(position, (i, j), m, self.start_pos)
+                                child = Move_White_kbqr(position, (i, j), m, self.start_pos)
                                 self.child.append(child.pos_new)
 
-                        #elif isinstance(position[i, j], King):
+                        elif isinstance(position[i, j], King):
+                            moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
+                            for m in moves:
+                                child = Move_White_King(position, (i, j), m, self.start_pos)
+                                self.child.append(child.pos_new)
                             
         
         if maximizingPlayer == 'b':
@@ -89,11 +94,19 @@ class Ultimate:
             for i in range(8):
                 for j in range(8):
                     if position[i, j].color == 'b':
-                        if not isinstance(position[i, j], King):
+                        if not isinstance(position[i, j], King) or not isinstance(position[i, j], Pawn):
                             moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
                             for m in moves:
-                                child = Move_Black(position, (i, j), m, self.start_pos)
+                                child = Move_Black_kbqr(position, (i, j), m, self.start_pos)
                                 self.child.append(child.pos_new)
+
+                        elif isinstance(position[i, j], King):
+                            moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
+                            for m in moves:
+                                child = Move_Black_King(position, (i, j), m, self.start_pos)
+                                self.child.append(child.pos_new)
+
+
 
 
 if __name__ == '__main__':

@@ -59,6 +59,7 @@ class ChessGame(QMainWindow):
         self.board_widget = ChessBoard(self)
         self.board_widget.arrow_signal.connect(self.get_arrow_signal)
         self.board_widget.delete_signal.connect(self.delete_arrows)
+        self.board_widget.move_signal.connect(self.update_evalbar)
         self.board_widget.setGeometry(20, 20, self.width() // 2, 3 * self.height() // 4)
 
         self.overlay = ArrowOverlay(self.arrows, self.board_widget)
@@ -77,9 +78,10 @@ class ChessGame(QMainWindow):
         self.label.move(self.width() // 2 + 50, self.height() // 2)
         self.label.resize(100, 100)
 
-        self.eval_bar = EvalBar(self.board_widget.width() // 24, self.board_widget.height(), self.board_widget.position )
+        self.eval_bar = EvalBar(self.board_widget.width() // 24, self.board_widget.height(), self.board_widget.position, self)
         self.eval_bar.move(7*self.width() // 8, 20)
-        self.eval_bar.show()
+        self.eval_bar.resize(self.board_widget.width() // 24, self.board_widget.height())
+
 
 
     def resign(self):
@@ -92,6 +94,8 @@ class ChessGame(QMainWindow):
         self.confirmation.show()
 
 
+    def update_evalbar(self, position):
+        self.eval_bar = EvalBar(self.board_widget.width() // 24, self.board_widget.height(), position, self)
 
 
     def get_arrow_signal(self, arrows):
@@ -118,6 +122,8 @@ class ChessGame(QMainWindow):
 
         self.label.move(self.width() // 2 + 50, self.height() // 2)
         self.label.setText(f'{self.resign_button.width()}, {self.resign_button.height()}')
+
+        self.eval_bar.resize(self.board_widget.width() // 24, self.board_widget.height())
 
         if self.resign_button_pressed == True:
 
