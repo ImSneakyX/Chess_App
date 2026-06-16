@@ -9,7 +9,7 @@ from drag_drop import ChessSquare
 from chessboard.game_engine import GameEngine
 from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt
 import time
-from chess_engine.engine import Ultimate
+from chess_engine.ultimate import Ultimate
 from math import sin, cos, pi, atan2
 
 
@@ -18,10 +18,10 @@ class ChessBoard(QWidget):
     move_signal = pyqtSignal(tuple)
     arrow_signal = pyqtSignal(list)
     delete_signal = pyqtSignal()
-    def __init__(self, parent = None):
+    def __init__(self, engine, parent = None):
         super().__init__(parent)
 
-        self.engine = GameEngine()
+        self.engine = engine
         self.position = self.engine.position
 
 
@@ -196,14 +196,19 @@ class ArrowOverlay(QWidget):
 
 class EvalBar(QWidget):
 
-    def __init__(self, width, height, position, maximizePlayer, parent = None):
+    def __init__(self, width, height, parent = None):
         super().__init__(parent)
+        
         self.width = width
         self.height = height
         self.board = Board()
-        ultimate= Ultimate(self.board.start_position())
-        self.eval = ultimate.minimax(position, 1, -10000, 10000, maximizePlayer)
+
+
+    def setEval(self, value):
+        self.eval = value
         print(self.eval)
+        self.update()
+
 
 
     def paintEvent(self, event):
