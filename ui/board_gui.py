@@ -201,7 +201,7 @@ class EvalBar(QWidget):
         
         self.width = width
         self.height = height
-        self.board = Board()
+        self.eval = 0
 
 
     def setEval(self, value):
@@ -213,7 +213,7 @@ class EvalBar(QWidget):
 
     def paintEvent(self, event):
         
-        h = self.height // 2 + self.eval * self.height // 8
+        h = self.height // 2 - self.eval * self.height // 8
         painter = QPainter(self)
         painter.fillRect(0, 0, self.width, h, QColor('black'))
         painter.fillRect(0, h, self.width, self.height-h, QColor('white'))

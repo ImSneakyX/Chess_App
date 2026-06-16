@@ -10,7 +10,7 @@ from drag_drop import ChessSquare
 from chessboard.game_engine import GameEngine
 from ui.board_gui import ChessBoard, ArrowOverlay, EvalBar
 from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt, Confirmation
-from chess_engine.ultimate import Ultimate
+from chessboard.game_controller import GameController
 import time
 
 
@@ -57,9 +57,9 @@ class ChessGame(QMainWindow):
         self.setMinimumSize(600, 350)
 
 
-        self.GameEngine = GameEngine()
+        self.GameController = GameController()
 
-        self.board_widget = ChessBoard(self.GameEngine, self)
+        self.board_widget = ChessBoard(self.GameController.gameEngine, self)
         self.board_widget.arrow_signal.connect(self.get_arrow_signal)
         self.board_widget.delete_signal.connect(self.delete_arrows)
         self.board_widget.move_signal.connect(self.update_evalbar)
@@ -99,7 +99,7 @@ class ChessGame(QMainWindow):
 
 
     def update_evalbar(self, position):
-        new_value = self.ultimate.minimax(position, 1, -10000, 10000, maximizePlayer)
+        new_value = self.GameController.ultimate.minimax(position[0], 1, -10000, 10000, position[1])
         self.eval_bar.setEval(new_value)
 
 
