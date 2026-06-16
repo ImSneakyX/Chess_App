@@ -23,7 +23,7 @@ class ChessBoard(QWidget):
 
         self.engine = GameEngine()
         self.position = self.engine.position
-        self.turn = self.engine.white_to_move
+
 
         self.brett = Board()
         self.start_pos = self.brett.start_position()
@@ -112,7 +112,7 @@ class ChessBoard(QWidget):
                 if alte_figur != neue_figur:
                     self.squares[(i,j)].piece = self.engine.position[(i,j)]
                     self.squares[(i,j)].set_piece()
-        self.move_signal.emit((self.position, self.turn))
+        self.move_signal.emit((self.engine.position, self.engine.white_to_move))
 
     def get_arrows(self, arrows):
 
@@ -202,7 +202,7 @@ class EvalBar(QWidget):
         self.height = height
         self.board = Board()
         ultimate= Ultimate(self.board.start_position())
-        self.eval = ultimate.minimax(position, 3, -10000, 10000, maximizePlayer)
+        self.eval = ultimate.minimax(position, 1, -10000, 10000, maximizePlayer)
         print(self.eval)
 
 
