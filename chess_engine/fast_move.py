@@ -105,8 +105,11 @@ class Move_White_kbqr(Move):
         self.pos_new = self.start1
         self.visions_black(self.pos_new)
         if self.vision_black[self.find_piece(self.pos_new, King, 'w')[0]] == False:
-                self.legal = True 
+            self.legal = True 
 
+        else:
+            self.pos_new = self.start
+            self.legal = False
         # Move-Tracker 
         if self.legal == True and isinstance(self.piece, Rook):
             self.rook_starts = self.find_piece(self.start_pos, Rook, 'w')
@@ -143,7 +146,7 @@ class Move_Black_kbqr(Move):
 
         else: 
             self.legal = False
-
+            self.pos_new = self.start
         # Move-Tracker 
         if self.legal == True and isinstance(self.piece, Rook):
             self.rook_starts = self.find_piece(self.start_pos, Rook, 'w')
@@ -196,6 +199,7 @@ class Move_White_King(Move):
 
         else: 
             self.legal = False
+            self.pos_new = self.start
 
         # Move-Tracker 
         if self.legal == True:
@@ -251,6 +255,7 @@ class Move_Black_King(Move):
         else: 
 
                 self.legal = False
+                self.pos_new = self.start
 
 
 
@@ -306,6 +311,7 @@ class Move_White_Pawn(Move):
         else: 
 
                 self.legal = False
+                self.pos_new = self.start
 
         # Move-Tracker 
         if self.legal == True:
@@ -360,6 +366,7 @@ class Move_Black_Pawn(Move):
         else: 
 
             self.legal = False
+            self.pos_new = self.start
 
 
         # Move-Tracker 
