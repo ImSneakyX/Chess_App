@@ -99,7 +99,7 @@ class ChessGame(QMainWindow):
 
 
     def update_evalbar(self, position):
-        new_value = self.GameController.ultimate.minimax(position[0], 3, -10000, 10000, position[1])
+        new_value = self.GameController.ultimate.minimax(position[0], 1, -10000, 10000, position[1])
         self.eval_bar.setEval(new_value)
 
 
