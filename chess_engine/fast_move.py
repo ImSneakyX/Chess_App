@@ -4,11 +4,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.board import Board
 from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 import numpy as np
+import copy
 
 class Move(Board):
     def __init__(self, boardstate, start_square, end_square, start_pos): 
         Board.__init__(self)
-        self.start = boardstate
+        self.start = copy.deepcopy(boardstate)
         self.start_pos = start_pos
         self.start_square = start_square
         self.end_square = end_square
@@ -113,10 +114,12 @@ class Move_White_kbqr(Move):
         # Move-Tracker 
         if self.legal == True and isinstance(self.piece, Rook):
             self.rook_starts = self.find_piece(self.start_pos, Rook, 'w')
-            self.rook_l = self.start_pos[self.rook_starts[0]]
-            self.rook_r = self.start_pos[self.rook_starts[1]]
-            self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
-            self.moved_rook_r = self.rook_r.move_tracker(self.rook_starts[1], self.start_square)
+            if self.piece.side == 'l':
+
+                self.moved_rook_l = self.piece.move_tracker(self.rook_starts[0], self.start_square)
+
+            elif self.piece.side == 'r':
+                self.moved_rook_r = self.piece.move_tracker(self.rook_starts[1], self.start_square)
 
         return self.pos_new     
 
@@ -147,13 +150,14 @@ class Move_Black_kbqr(Move):
         else: 
             self.legal = False
             self.pos_new = self.start
-        # Move-Tracker 
+ # Move-Tracker 
         if self.legal == True and isinstance(self.piece, Rook):
-            self.rook_starts = self.find_piece(self.start_pos, Rook, 'w')
-            self.rook_l = self.start_pos[self.rook_starts[0]]
-            self.rook_r = self.start_pos[self.rook_starts[1]]
-            self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
-            self.moved_rook_r = self.rook_r.move_tracker(self.rook_starts[1], self.start_square)
+            self.rook_starts = self.find_piece(self.start_pos, Rook, 'b')
+            if self.piece.side == 'l':
+                self.moved_rook_l = self.piece.move_tracker(self.rook_starts[0], self.start_square)
+
+            elif self.piece.side == 'r':
+                self.moved_rook_r = self.piece.move_tracker(self.rook_starts[1], self.start_square)
 
         return self.pos_new
     
@@ -170,12 +174,11 @@ class Move_White_King(Move):
 
     def castling_white(self, boardstate):
         self.king_start = self.find_piece(self.start_pos, King, 'w')[0]
-        self.king = self.start_pos[self.king_start]
 
         self.rook_starts = self.find_piece(self.start_pos, Rook, 'w')
         self.rook_l = self.start_pos[self.rook_starts[0]]
         self.rook_r = self.start_pos[self.rook_starts[1]]
-        self.king.castling(boardstate, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision_black)
+        self.piece.castling(boardstate, self.rook_l.moved, self.rook_r.moved, self.piece.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision_black)
     
     
     def move(self):
@@ -206,9 +209,8 @@ class Move_White_King(Move):
 
         # Move-Tracker 
         if self.legal == True:
-            self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
-            self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
-            self.moved_rook_r = self.rook_r.move_tracker(self.rook_starts[1], self.start_square)
+            self.moved_king = self.piece.move_tracker(self.king_start, self.start_square)
+
 
         return self.pos_new
 
@@ -229,12 +231,11 @@ class Move_Black_King(Move):
 
     def castling_black(self, boardstate):
         self.king_start = self.find_piece(self.start_pos, King, 'b')[0]
-        self.king = self.start_pos[self.king_start]
 
         self.rook_starts = self.find_piece(self.start_pos, Rook, 'b')
         self.rook_l = self.start_pos[self.rook_starts[0]]
         self.rook_r = self.start_pos[self.rook_starts[1]]
-        self.king.castling(boardstate, self.rook_l.moved, self.rook_r.moved, self.king.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision_white)
+        self.piece.castling(boardstate, self.rook_l.moved, self.rook_r.moved, self.piece.moved, self.king_start, self.rook_starts[0], self.rook_starts[1], self.vision_white)
     
     
     def move(self):
@@ -264,9 +265,7 @@ class Move_Black_King(Move):
 
         # Move-Tracker 
         if self.legal == True:
-            self.moved_king = self.king.move_tracker(self.king_start, self.start_square)
-            self.moved_rook_l = self.rook_l.move_tracker(self.rook_starts[0], self.start_square)
-            self.moved_rook_r = self.rook_r.move_tracker(self.rook_starts[1], self.start_square)
+            self.moved_king = self.piece.move_tracker(self.king_start, self.start_square)
 
         return self.pos_new
     
