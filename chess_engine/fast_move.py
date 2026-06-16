@@ -357,7 +357,6 @@ class Move_Black_Pawn(Move):
             self.promotion = True
 
         self.pos_new = self.start1
-        self.display('name', self.pos_new)
         self.visions_white(self.pos_new)
         if self.vision_white[self.find_piece(self.pos_new, King, 'b')[0]] == False:
 

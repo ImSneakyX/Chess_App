@@ -13,7 +13,6 @@ class Ultimate:
 
     def __init__(self, start_pos, game_over = False):
         self.game_over = game_over
-        self.child = []
         self.start_pos = start_pos
         self.end_pos = None
         self.played_moves = []
@@ -30,11 +29,12 @@ class Ultimate:
             
             return self.static_evaluation(position)
         
+        children = self.get_child_pos(position, maximizingPlayer)
+
         if maximizingPlayer == True:
 
             maxEval = -100000
-            self.get_child_pos(position, True)
-            for c in self.child:
+            for c in children:
                 eval = self.minimax(c, depth-1, alpha, beta, False)
                 maxEval = max(maxEval, eval)
                 alpha = max(alpha, eval)
@@ -43,8 +43,7 @@ class Ultimate:
             return maxEval
         else:
             minEval = 100000
-            self.get_child_pos(position, False)
-            for c in self.child:
+            for c in children:
                 eval = self.minimax(c, depth-1, alpha, beta, True)
                 minEval = min(minEval, eval)
                 beta = min(beta, eval)
@@ -72,7 +71,7 @@ class Ultimate:
 
     
     def get_child_pos(self, position, maximizingPlayer):
-        self.child.clear()
+        children = []
         if maximizingPlayer == True:
 
             for i in range(8):
@@ -82,20 +81,20 @@ class Ultimate:
                             moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
                             for m in moves:
                                 child = Move_White_kbqr(position, (i, j), m, self.start_pos)
-                                self.child.append(child.pos_new)
+                                children.append(child.pos_new)
 
                         elif isinstance(position[i, j], King):
                             vision = self.move.visions_black(position)
                             moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), vision)
                             for m in moves:
                                 child = Move_White_King(position, (i, j), m, self.start_pos)
-                                self.child.append(child.pos_new)
+                                children.append(child.pos_new)
 
                         elif isinstance(position[i, j], Pawn):
                             moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
                             for m in moves:
                                 child = Move_White_Pawn(position, (i, j), m, self.start_pos)
-                                self.child.append(child.pos_new)
+                                children.append(child.pos_new)
                             
         
         if maximizingPlayer == False:
@@ -107,20 +106,21 @@ class Ultimate:
                             moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
                             for m in moves:
                                 child = Move_Black_kbqr(position, (i, j), m, self.start_pos)
-                                self.child.append(child.pos_new)
+                                children.append(child.pos_new)
 
                         elif isinstance(position[i, j], King):
                             vision = self.move.visions_black(position)
                             moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), vision)
                             for m in moves:
                                 child = Move_Black_King(position, (i, j), m, self.start_pos)
-                                self.child.append(child.pos_new)
+                                children.append(child.pos_new)
 
                         elif isinstance(position[i, j], Pawn):
                             moves, moves_for_vision = position[i, j].get_legal_moves(position, (i, j), None)
                             for m in moves:
                                 child = Move_Black_Pawn(position, (i, j), m, self.start_pos)
-                                self.child.append(child.pos_new)
+                                children.append(child.pos_new)
+        return children
 
 
 
