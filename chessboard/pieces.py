@@ -407,13 +407,18 @@ class King(Piece):
 
         if moved_rook_left == False and moved_king == False and all(isinstance(square, Empty) for square in boardstate[row, col_l + 1:col]) == True and vision[row, col_min_l:col_max_l+1].any() == False:
             self.castling_c = True
+
         else:
             self.castling_c = False
 
+
         if moved_rook_right == False and moved_king == False and all(isinstance(square, Empty) for square in boardstate[row, col + 1:col_r]) == True and vision[row, col:col_r].any() == False:
             self.castling_g = True
+            print(self.castling_g, 'True')
         else:
             self.castling_g = False
+            print(self.castling_g, 'False')
+
 
 
 

@@ -192,6 +192,8 @@ class Move_White_King(Move):
             self.start1[(7, 3)] = self.rook_l
 
         self.pos_new = self.start1
+        self.display('name', self.pos_new)
+        print(self.end_square)
         self.visions_black(self.pos_new)
         if self.vision_black[self.find_piece(self.pos_new, King, 'w')[0]] == False:
                 
