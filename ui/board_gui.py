@@ -9,7 +9,6 @@ from drag_drop import ChessSquare
 from chessboard.game_engine import GameEngine
 from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt
 import time
-from chess_engine.ultimate import Ultimate
 from math import sin, cos, pi, atan2
 
 

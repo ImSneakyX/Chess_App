@@ -3,8 +3,10 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.move import Move_White, Move_Black
 from chessboard.board import Board
+from PyQt5.QtCore import pyqtSignal
 
 class GameEngine:
+    position_update = pyqtSignal(tuple)
     def __init__(self):
         self.white_to_move = True
         self.legal = None
@@ -52,6 +54,8 @@ class GameEngine:
         if x.legal == True:
             self.position = x.pos_new
             self.white_to_move = not self.white_to_move
+            self.position_update.emit((self.position, self.white_to_move))
+
 
     def promote_pawns(self, piece, square_of_promotion):
 
