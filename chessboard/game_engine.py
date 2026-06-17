@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.move import Move_White, Move_Black
 from chessboard.board import Board
-from chessboard.pieces import Rook, King, Queen, Knight, Bishop, Pawn, Empty
+from chessboard.new_pieces import Rook, King, Queen, Knight, Bishop, Pawn, Empty
 from PyQt5.QtCore import pyqtSignal
 import numpy as np
 
@@ -129,17 +129,28 @@ class MoveGenerator:
             for i in range(8):
                 for j in range(8):
                     if self.position.boardstate[i, j].color == 'w':
-                        moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), None)
-                        for m in moves: 
-                            pseudo_moves.append(((i, j), m))
+                        if not isinstance(self.position.boardstate[i, j], King):
+                            moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
+                            for m in moves: 
+                                pseudo_moves.append(((i, j), m))
+                        else:
+                            moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), self.position.white_castle_c, self.position.white_castle_g)
+                            for m in moves: 
+                                pseudo_moves.append(((i, j), m))
+
         
         elif self.position.white_to_move == False:
                 for i in range(8):
                     for j in range(8):
                         if self.position.boardstate[i, j].color == 'b':
-                            moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), None)
-                            for m in moves: 
-                                pseudo_moves.append(((i, j), m))
+                            if not isinstance(self.position.boardstate[i, j], King):
+                                moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
+                                for m in moves: 
+                                    pseudo_moves.append(((i, j), m))
+                            else:
+                                moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), self.position.black_castle_c, self.position.black_castle_g)
+                                for m in moves: 
+                                    pseudo_moves.append(((i, j), m))
 
         return pseudo_moves
     
@@ -204,6 +215,7 @@ class MoveGenerator:
         return self.vision_white
     
     def generate_legal_moves(self):
+        legal_moves = []
         if self.position.white_to_move == True:
             moves = self.get_pseudo_legal_moves(self.position)
             for move in moves:
@@ -211,10 +223,8 @@ class MoveGenerator:
                 king_pos = self.find_piece(child.boardstate, King, 'w')[0]
                 self.visions_black(child.boardstate)
                 if self.vision_black[king_pos] == False:
-                    self.legal = True 
+                    legal_moves.append(move)
 
-                else:
-                    self.legal = False
 
         if self.position.white_to_move == False:
             moves = self.get_pseudo_legal_moves(self.position)
@@ -222,12 +232,11 @@ class MoveGenerator:
                 child = self.position.make_move(move)
                 king_pos = self.find_piece(child.boardstate, King, 'b')[0]
                 self.visions_black(child.boardstate)
-                if self.vision_black[king_pos] == False:
-                    self.legal = True 
 
-                else:
-                    self.legal = False
-                        
+                if self.vision_white[king_pos] == False:
+                    legal_moves.append(move)
+
+        return legal_moves
 
 
                     

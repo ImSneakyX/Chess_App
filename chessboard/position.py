@@ -2,8 +2,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.board import Board
-from chessboard.pieces import Empty
-from chessboard.pieces import Rook, King, Knight, Bishop, Queen, Pawn, Empty
+from chessboard.new_pieces import Rook, King, Knight, Bishop, Queen, Pawn, Empty
 import numpy as np
 import copy
 
@@ -21,7 +20,6 @@ class Position:
         self.black_castle_c = black_castle_c
         self.black_castle_g = black_castle_g
 
-        self.boardstate_new
         self.empty = Empty()
         self.piece = None
 
@@ -30,13 +28,52 @@ class Position:
 
     def make_move(self, move):
 
-        self.move = move
-        self.piece = self.boardstate[self.move.start_square]
-        self.boardstate_new = copy.deepcopy(self.boardstate)
-        self.boardstate_new[self.move.end_square] = self.piece
-        self.boardstate_new[self.move.start_square] = self.empty
+        new_pos = copy.deepcopy(self)
+        new_pos.piece = new_pos.boardstate[move.start_square]
+        new_pos.boardstate[move.end_square] = new_pos.piece
+        new_pos.boardstate[move.start_square] = new_pos.empty
 
-        self.boardstate = self.boardstate_new
+        new_pos.white_to_move = not new_pos.white_to_move
+
+        if move.start_square == (7, 4):
+            new_pos.white_castle_c = False
+            new_pos.white_castle_g = False
+
+        if move.start_square == (7, 7):
+            new_pos.white_castle_g = False
+
+        if move.start_square == (7, 0):
+            new_pos.white_castle_c = False
+
+        if move.start_square == (0, 4):
+            new_pos.black_castle_c = False
+            new_pos.black_castle_g = False
+
+        if move.start_square == (0, 7):
+            new_pos.black_castle_g = False
+
+        if move.start_square == (0, 0):
+            new_pos.black_castle_c = False 
+
+        if move.end_square == (7, 7):
+            new_pos.white_castle_g = False   
+
+        if move.end_square == (7, 0):
+            new_pos.white_castle_c = False
+
+        if move.end_square == (0, 7):
+            new_pos.black_castle_g = False
+
+        if move.end_square == (0, 0):
+            new_pos.black_castle_c = False 
+
+        
+
+
+        return new_pos
+
+
+
 
 
 
