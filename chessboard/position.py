@@ -67,6 +67,31 @@ class Position:
         if move.end_square == (0, 0):
             new_pos.black_castle_c = False 
 
+        if isinstance(new_pos.piece, King):
+
+            if move.end_square == (0, 2) and move.start_square == (0, 4):
+
+                new_pos.boardstate[0, 3] = new_pos.boardstate[0, 0]
+                new_pos.boardstate[0, 0] = new_pos.empty
+
+            elif move.end_square == (0, 6) and move.start_square == (0, 4):
+
+                new_pos.boardstate[0, 5] = new_pos.boardstate[0, 7]
+                new_pos.boardstate[0, 7] = new_pos.empty
+            
+
+            elif move.end_square == (7, 2) and move.start_square == (7, 4):
+
+                new_pos.boardstate[7, 3] = new_pos.boardstate[7, 0]
+                new_pos.boardstate[7, 0] = new_pos.empty
+
+            elif move.end_square == (7, 6) and move.start_square == (7, 4):
+
+                new_pos.boardstate[7, 5] = new_pos.boardstate[7, 7]
+                new_pos.boardstate[7, 7] = new_pos.empty
+
+
+
         
 
 

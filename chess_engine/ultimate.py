@@ -72,7 +72,8 @@ class Ultimate:
         move_gen = MoveGenerator(position)
         legal_moves = move_gen.generate_legal_moves()
         for move in legal_moves:
-            children.append(position.make_move(move))
+            new_pos = position.make_move(move)
+            children.append(new_pos)
 
                         
         return children

@@ -66,6 +66,8 @@ class MoveGenerator:
                                 move = Move((i, j), m)
                                 pseudo_moves.append(move)
                         else:
+                            white_castling_c = None
+                            white_castling_g = None
                             if self.position.white_castle_g:
                                     self.visions_black(self.position.boardstate)
                                     if all(isinstance(square, Empty) for square in self.position.boardstate[7, 5:7]) == True and self.vision_black[7, 4:7].any() == False:
@@ -98,6 +100,8 @@ class MoveGenerator:
                                     move = Move((i, j), m)
                                     pseudo_moves.append(move)
                             else:
+                                black_castling_c = None
+                                black_castling_g = None
                                 if self.position.black_castle_g:
                                     self.visions_white(self.position.boardstate)
                                     if all(isinstance(square, Empty) for square in self.position.boardstate[0, 5:7]) == True and self.vision_white[0, 4:7].any() == False:
@@ -199,7 +203,7 @@ class MoveGenerator:
             for move in moves:
                 child = self.position.make_move(move)
                 king_pos = self.find_piece(child.boardstate, King, 'b')[0]
-                self.visions_black(child.boardstate)
+                self.visions_white(child.boardstate)
 
                 if self.vision_white[king_pos] == False:
                     legal_moves.append(move)
