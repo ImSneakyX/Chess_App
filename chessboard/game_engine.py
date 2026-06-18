@@ -39,8 +39,15 @@ class GameEngine:
         
 
         if self.legal == True:
-            new_pos = self.position.make_move(move_made)
-            self.position = new_pos
+            if check_move[0].en_passant == True:
+                move_made.en_passant = True
+                new_pos = self.position.make_move(move_made)
+                self.position = new_pos
+
+
+            else:
+                new_pos = self.position.make_move(move_made)
+                self.position = new_pos
 
 
 
@@ -82,6 +89,10 @@ class MoveGenerator:
                                 else: 
                                     move = Move((i, j), m)
                                     pseudo_moves.append(move)
+                                
+                            if self.position.en_passant_square == (i - 1, j + 1) or self.position.en_passant_square == (i - 1, j - 1):
+                                move = Move((i, j), self.position.en_passant_square, None, True)
+                                pseudo_moves.append(move)
 
 
 
@@ -137,6 +148,10 @@ class MoveGenerator:
                                     else: 
                                         move = Move((i, j), m)
                                         pseudo_moves.append(move)
+
+                                if self.position.en_passant_square == (i + 1, j + 1) or self.position.en_passant_square == (i + 1, j - 1):
+                                    move = Move((i, j), self.position.en_passant_square, None, True)
+                                    pseudo_moves.append(move)
 
                             elif isinstance(self.position.boardstate[i, j], King):
                                 black_castling_c = None

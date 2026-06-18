@@ -9,7 +9,7 @@ import copy
 
 class Position: 
 
-    def __init__(self, boardstate, white_to_move, white_castle_c, white_castle_g, black_castle_c, black_castle_g):
+    def __init__(self, boardstate, white_to_move, white_castle_c, white_castle_g, black_castle_c, black_castle_g, en_passant_square = None):
         
         self.boardstate = boardstate
         self.white_to_move = white_to_move
@@ -20,6 +20,8 @@ class Position:
         self.black_castle_c = black_castle_c
         self.black_castle_g = black_castle_g
 
+        self.en_passant_square = en_passant_square
+
         self.empty = Empty()
         self.piece = None
 
@@ -29,6 +31,7 @@ class Position:
     def make_move(self, move):
 
         new_pos = copy.deepcopy(self)
+        new_pos.en_passant_square = None
         new_pos.piece = new_pos.boardstate[move.start_square]
         new_pos.boardstate[move.end_square] = new_pos.piece
         new_pos.boardstate[move.start_square] = new_pos.empty
@@ -101,6 +104,25 @@ class Position:
 
                 if move.promotion_piece == 'B':
                     new_pos.boardstate[move.end_square] = Bishop(new_pos.piece.color)
+
+            elif move.en_passant == True:
+                row_end, col_end = move.end_square
+                if row_end == 2:
+                    new_pos.boardstate[3, col_end] = self.empty
+
+                else:
+                    new_pos.boardstate[4, col_end] = self.empty
+
+            else: 
+                row_start, col_start = move.start_square
+                row_end, col_end = move.end_square
+
+                if abs(row_start - row_end) == 2:
+                    row_middle = (row_start + row_end) // 2
+
+                    new_pos.en_passant_square = (row_middle, col_start)
+                
+            
 
 
 
