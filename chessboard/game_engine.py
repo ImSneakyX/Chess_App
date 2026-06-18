@@ -64,56 +64,7 @@ class GameEngine:
         self.position[square_of_promotion] = piece
 
 
-        if self.white_to_move == True:
-            start_king = self.find_piece(self.start_boardstate, King, 'w')[0]
-            start_rook_l = self.find_piece(self.start_boardstate, Rook, 'w', 'l')[0]
-            start_rook_r = self.find_piece(self.start_boardstate, Rook, 'w', 'r')[0]
-            self.vision = self.visions_black(self.boardstate)
-            for i in range(8):
-                for j in range(8):
-
-                    if isinstance(self.boardstate[i, j], Rook):
-                        if self.boardstate[i, j].color == 'w' and self.boardstate[i, j].side == 'l':
-                            rook_l = self.boardstate[i, j]
-                        elif self.boardstate[i, j].color == 'w' and self.boardstate[i, j].side == 'r':
-                            rook_r = self.boardstate[i, j]
-                    
-                    elif isinstance(self.boardstate[i, j], King):
-                        if self.boardstate[i, j].color == 'w':
-                            king = self.boardstate[i, j]
-                        
-        else: 
-            start_king = self.find_piece(self.start_boardstate, King, 'b')[0]
-            start_rook_l = self.find_piece(self.start_boardstate, Rook, 'b', 'l')[0]
-            start_rook_r = self.find_piece(self.start_boardstate, Rook, 'b', 'r')[0]
-            self.vision = self.visions_white(self.boardstate)
-            for i in range(8):
-                for j in range(8):
-
-                    if isinstance(self.boardstate[i, j], Rook):
-                        if self.boardstate[i, j].color == 'b' and self.boardstate[i, j].side == 'l':
-                            rook_l = self.boardstate[i, j]
-                        elif self.boardstate[i, j].color == 'b' and self.boardstate[i, j].side == 'r':
-                            rook_r = self.boardstate[i, j]
-
-                    elif isinstance(self.boardstate[i, j], King):
-                        if self.boardstate[i, j].color == 'b':
-                            king = self.boardstate[i, j]
-
-        self.castling(self.boardstate, rook_l.moved, rook_r.moved, king.moved, start_king, start_rook_l, start_rook_r, self.vision)
-
-    def find_piece(self, boardstate, piece, color, side = None):
-        square = []
-        for row, i in enumerate(boardstate):
-            for col, j in enumerate(i):
-                if isinstance(boardstate[(row, col)], piece): 
-                    if boardstate[(row, col)].color == color:
-                        if piece == Rook:
-                            if boardstate[(row, col)].side == side:
-                                square.append((row, col))
-                        else: 
-                            square.append((row, col))
-        return square
+        
         
 
             
@@ -134,7 +85,23 @@ class MoveGenerator:
                             for m in moves: 
                                 pseudo_moves.append(((i, j), m))
                         else:
-                            moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), self.position.white_castle_c, self.position.white_castle_g)
+                            if self.position.white_castle_g:
+                                    self.visions_black(self.position.boardstate)
+                                    if all(isinstance(square, Empty) for square in self.position.boardstate[7, 5:7]) == True and self.vision_black[7, 4:7].any() == False:
+                                        white_castling_g = True
+
+                                    else:
+                                        white_castling_g = False
+                            
+
+                            if self.position.white_castle_c:
+                                    self.visions_black(self.position.boardstate)
+                                    if all(isinstance(square, Empty) for square in self.position.boardstate[7, 1:4]) == True and self.vision_black[7, 2:5].any() == False:
+                                        white_castling_c = True
+                                    else:
+                                        white_castling_c = False
+
+                            moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), white_castling_c, white_castling_g)
                             for m in moves: 
                                 pseudo_moves.append(((i, j), m))
 
@@ -148,7 +115,24 @@ class MoveGenerator:
                                 for m in moves: 
                                     pseudo_moves.append(((i, j), m))
                             else:
-                                moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), self.position.black_castle_c, self.position.black_castle_g)
+                                if self.position.black_castle_g:
+                                    self.visions_white(self.position.boardstate)
+                                    if all(isinstance(square, Empty) for square in self.position.boardstate[0, 5:7]) == True and self.vision_white[0, 4:7].any() == False:
+                                        black_castling_g = True
+
+                                    else:
+                                        black_castling_g = False
+                            
+
+                                if self.position.black_castle_c:
+                                    self.visions_white(self.position.boardstate)
+                                    if all(isinstance(square, Empty) for square in self.position.boardstate[0, 1:4]) == True and self.vision_white[0, 2:5].any() == False:
+                                        black_castling_c = True
+
+                                    else:
+                                        black_castling_c = False
+
+                                moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), black_castling_c, black_castling_g)
                                 for m in moves: 
                                     pseudo_moves.append(((i, j), m))
 

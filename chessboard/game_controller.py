@@ -16,8 +16,9 @@ class GameController:
         self.gameEngine = GameEngine()
         self.gameEngine.position_update.connect(self.update_position)
         self.board = Board()
-        self.ultimate = Ultimate(self.board.start_position())
-        self.position = Position((self.board.start_position(), True))
+        self.position = Position(self.board.start_position(), True, True, True, True, True)
+        self.ultimate = Ultimate()
+
 
     def update_position(self, position):
 
