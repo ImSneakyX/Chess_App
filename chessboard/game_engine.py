@@ -8,22 +8,23 @@ from PyQt5.QtCore import pyqtSignal
 import numpy as np
 
 class GameEngine:
-    position_update = pyqtSignal(tuple)
-    def __init__(self):
-        self.white_to_move = True
+    position_update = pyqtSignal(object)
+    def __init__(self, position):
+
+        self.position = position
         self.legal = None
         self.promotion = None
         
         self.mate = None
         self.stalemate = None
+        self.board = Board()
+        self.start_pos = self.board.start_position()
 
-        self.brett = Board()
-        self.start_pos = self.brett.start_position()
-        self.position = self.brett.start_position()
+
 
     def check_move(self, start_square, end_square):
-        if self.white_to_move == True:
-            x = Move_White(self.position, start_square, end_square, self.start_pos) 
+        if self.position.white_to_move == True:
+            x = Move_White(self.position.boardstate, start_square, end_square, self.start_pos) 
             if x.legal == True:
                 self.legal = True
             else:
@@ -38,7 +39,7 @@ class GameEngine:
             self.stalemate = x.stalemate
 
         else:
-            x = Move_Black(self.position, start_square, end_square, self.start_pos)
+            x = Move_Black(self.position.boardstate, start_square, end_square, self.start_pos)
             if x.legal == True:
                 self.legal = True
             else:
@@ -54,9 +55,9 @@ class GameEngine:
             self.stalemate = x.stalemate
 
         if x.legal == True:
-            self.position = x.pos_new
-            self.white_to_move = not self.white_to_move
-            self.position_update.emit((self.position, self.white_to_move))
+            self.position.boardstate = x.pos_new
+            self.position.white_to_move = not self.position.white_to_move
+            self.position_update.emit(self.position)
 
 
     def promote_pawns(self, piece, square_of_promotion):

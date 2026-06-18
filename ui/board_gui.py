@@ -14,7 +14,7 @@ from math import sin, cos, pi, atan2
 
 class ChessBoard(QWidget):
 
-    move_signal = pyqtSignal(tuple)
+    move_signal = pyqtSignal(object)
     arrow_signal = pyqtSignal(list)
     delete_signal = pyqtSignal()
     def __init__(self, engine, parent = None):
@@ -112,7 +112,7 @@ class ChessBoard(QWidget):
                 if alte_figur != neue_figur:
                     self.squares[(i,j)].piece = self.engine.position[(i,j)]
                     self.squares[(i,j)].set_piece()
-        self.move_signal.emit((self.engine.position, self.engine.white_to_move))
+        self.move_signal.emit(self.engine.position)
 
     def get_arrows(self, arrows):
 
