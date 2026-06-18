@@ -32,6 +32,7 @@ class GameEngine:
 
             else:
                 self.legal = True
+                self.promotion = False
 
         else:
             self.legal = False
