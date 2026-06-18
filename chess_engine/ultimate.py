@@ -32,7 +32,7 @@ class Ultimate:
 
             maxEval = -100000
             for c in children:
-                eval = self.minimax(c, depth-1, alpha, beta, False)
+                eval = self.minimax(c, depth-1, alpha, beta)
                 maxEval = max(maxEval, eval)
                 alpha = max(alpha, eval)
                 if beta <= alpha:
@@ -41,7 +41,7 @@ class Ultimate:
         else:
             minEval = 100000
             for c in children:
-                eval = self.minimax(c, depth-1, alpha, beta, True)
+                eval = self.minimax(c, depth-1, alpha, beta)
                 minEval = min(minEval, eval)
                 beta = min(beta, eval)
                 if beta <= alpha:

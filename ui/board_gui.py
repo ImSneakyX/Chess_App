@@ -65,6 +65,7 @@ class ChessBoard(QWidget):
         self.engine.check_move(move)
         if self.engine.legal == True and self.engine.promotion == False:
             self.update_board()
+            print('works')
 
 
         t2 = time.time()

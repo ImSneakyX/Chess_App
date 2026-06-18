@@ -11,27 +11,32 @@ class GameEngine:
 
         self.position = position
         self.legal = None
-        self.promotion = None
+        self.promotion = False
         
         self.mate = None
         self.stalemate = None
-        self.board = Board()
-        self.start_pos = self.board.start_position()
-
-
 
     def check_move(self, move_made):
 
+        check_move = []
         move_gen = MoveGenerator(self.position)
         legal_moves = move_gen.generate_legal_moves()
         for move in legal_moves:
             if move.start_square == move_made.start_square and move.end_square == move_made.end_square:
-                self.legal = True
+                check_move.append(1)
+
+        if len(check_move) == 1:
+
+            self.legal = True
+
+        else:
+            self.legal = False
         
 
         if self.legal == True:
-            self.position.make_move(move_made)
-            self.position.white_to_move = not self.position.white_to_move
+            new_pos = self.position.make_move(move_made)
+            self.position = new_pos
+
 
 
     def promote_pawns(self, piece, square_of_promotion):
