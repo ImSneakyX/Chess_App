@@ -21,7 +21,6 @@ class ChessBoard(QWidget):
         super().__init__(parent)
 
         self.engine = engine
-        self.position = self.engine.position
 
 
         self.brett = Board()
@@ -67,16 +66,15 @@ class ChessBoard(QWidget):
             self.update_board()
 
 
-        t2 = time.time()
+        elif self.engine.legal == True and self.engine.promotion == True:
 
-        if self.engine.legal == True and self.engine.promotion == True:
-            promote_dialog = Promote(self.engine.boardstate[move.end_square].color, self)
+            promote_dialog = Promote(self.engine.position.boardstate[move.end_square].color, self)
 
             promote_dialog.selected_piece.connect(self.process_promotion)
             
             promote_dialog.exec_()
 
-
+        t2 = time.time()
         print(f'GUI Update: {t2-t1:.5f} sek')
 
         if self.engine.mate == True:

@@ -33,8 +33,6 @@ class Position:
         new_pos.boardstate[move.end_square] = new_pos.piece
         new_pos.boardstate[move.start_square] = new_pos.empty
 
-        new_pos.white_to_move = not new_pos.white_to_move
-
         if move.start_square == (7, 4):
             new_pos.white_castle_c = False
             new_pos.white_castle_g = False
@@ -89,6 +87,27 @@ class Position:
 
                 new_pos.boardstate[7, 5] = new_pos.boardstate[7, 7]
                 new_pos.boardstate[7, 7] = new_pos.empty
+
+        elif isinstance(new_pos.piece, Pawn):
+            if move.promotion_piece != None:
+                if move.promotion_piece == 'Q':
+                    new_pos.boardstate[move.end_square] = Queen(new_pos.piece.color)
+                
+                if move.promotion_piece == 'R':
+                    new_pos.boardstate[move.end_square] = Rook(new_pos.piece.color, 'l')
+
+                if move.promotion_piece == 'K':
+                    new_pos.boardstate[move.end_square] = Knight(new_pos.piece.color)
+
+                if move.promotion_piece == 'B':
+                    new_pos.boardstate[move.end_square] = Bishop(new_pos.piece.color)
+
+
+
+        new_pos.white_to_move = not new_pos.white_to_move
+
+
+                
 
 
 

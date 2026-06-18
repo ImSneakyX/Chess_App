@@ -23,11 +23,15 @@ class GameEngine:
         legal_moves = move_gen.generate_legal_moves()
         for move in legal_moves:
             if move.start_square == move_made.start_square and move.end_square == move_made.end_square:
-                check_move.append(1)
+                check_move.append(move)
 
-        if len(check_move) == 1:
+        if len(check_move) >= 1:
+            if check_move[0].promotion_piece != None:
+                self.legal = True
+                self.promotion = True
 
-            self.legal = True
+            else:
+                self.legal = True
 
         else:
             self.legal = False
@@ -41,7 +45,7 @@ class GameEngine:
 
     def promote_pawns(self, piece, square_of_promotion):
 
-        self.position[square_of_promotion] = piece
+        self.position.boardstate[square_of_promotion] = piece
 
 
         
@@ -60,12 +64,29 @@ class MoveGenerator:
             for i in range(8):
                 for j in range(8):
                     if self.position.boardstate[i, j].color == 'w':
-                        if not isinstance(self.position.boardstate[i, j], King):
+                        if not isinstance(self.position.boardstate[i, j], King) and not isinstance(self.position.boardstate[i, j], Pawn):
                             moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
                             for m in moves: 
                                 move = Move((i, j), m)
                                 pseudo_moves.append(move)
-                        else:
+                        elif isinstance(self.position.boardstate[i, j], Pawn):
+                            moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
+                            for m in moves: 
+                                if m[0] == 0:
+                                    promotion_pieces = ['Q', 'R', 'K', 'B']
+                                    for piece in promotion_pieces:
+                                        move = Move((i, j), m, piece)
+                                        pseudo_moves.append(move)
+
+                                else: 
+                                    move = Move((i, j), m)
+                                    pseudo_moves.append(move)
+
+
+
+
+
+                        elif isinstance(self.position.boardstate[i, j], King):
                             white_castling_c = None
                             white_castling_g = None
                             if self.position.white_castle_g:
@@ -88,18 +109,35 @@ class MoveGenerator:
                             for m in moves: 
                                 move = Move((i, j), m)
                                 pseudo_moves.append(move)
+                        
+                        
 
         
         elif self.position.white_to_move == False:
                 for i in range(8):
                     for j in range(8):
                         if self.position.boardstate[i, j].color == 'b':
-                            if not isinstance(self.position.boardstate[i, j], King):
+                            if not isinstance(self.position.boardstate[i, j], King) and not isinstance(self.position.boardstate[i, j], Pawn):
                                 moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
                                 for m in moves: 
                                     move = Move((i, j), m)
                                     pseudo_moves.append(move)
-                            else:
+
+
+                            elif isinstance(self.position.boardstate[i, j], Pawn):
+                                moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
+                                for m in moves: 
+                                    if m[0] == 7:
+                                        promotion_pieces = ['Q', 'R', 'K', 'B']
+                                        for piece in promotion_pieces:
+                                            move = Move((i, j), m, piece)
+                                            pseudo_moves.append(move)
+
+                                    else: 
+                                        move = Move((i, j), m)
+                                        pseudo_moves.append(move)
+
+                            elif isinstance(self.position.boardstate[i, j], King):
                                 black_castling_c = None
                                 black_castling_g = None
                                 if self.position.black_castle_g:
