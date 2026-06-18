@@ -1,14 +1,12 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from chessboard.move import Move_White, Move_Black
+from chess_engine.new_move import Move
 from chessboard.board import Board
 from chessboard.new_pieces import Rook, King, Queen, Knight, Bishop, Pawn, Empty
-from PyQt5.QtCore import pyqtSignal
 import numpy as np
 
 class GameEngine:
-    position_update = pyqtSignal(object)
     def __init__(self, position):
 
         self.position = position
@@ -22,42 +20,18 @@ class GameEngine:
 
 
 
-    def check_move(self, start_square, end_square):
-        if self.position.white_to_move == True:
-            x = Move_White(self.position.boardstate, start_square, end_square, self.start_pos) 
-            if x.legal == True:
+    def check_move(self, move_made):
+
+        move_gen = MoveGenerator(self.position)
+        legal_moves = move_gen.generate_legal_moves()
+        for move in legal_moves:
+            if move.start_square == move_made.start_square and move.end_square == move_made.end_square:
                 self.legal = True
-            else:
-                self.legal = False
+        
 
-            if x.promotion == True:
-                self.promotion = True
-            else: 
-                self.promotion = False
-
-            self.mate = x.mate
-            self.stalemate = x.stalemate
-
-        else:
-            x = Move_Black(self.position.boardstate, start_square, end_square, self.start_pos)
-            if x.legal == True:
-                self.legal = True
-            else:
-                self.legal = False
-
-            if x.promotion == True:
-                self.promotion = True
-
-            else: 
-                self.promotion = False
-
-            self.mate = x.mate
-            self.stalemate = x.stalemate
-
-        if x.legal == True:
-            self.position.boardstate = x.pos_new
+        if self.legal == True:
+            self.position.make_move(move_made)
             self.position.white_to_move = not self.position.white_to_move
-            self.position_update.emit(self.position)
 
 
     def promote_pawns(self, piece, square_of_promotion):
@@ -84,7 +58,8 @@ class MoveGenerator:
                         if not isinstance(self.position.boardstate[i, j], King):
                             moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
                             for m in moves: 
-                                pseudo_moves.append(((i, j), m))
+                                move = Move((i, j), m)
+                                pseudo_moves.append(move)
                         else:
                             if self.position.white_castle_g:
                                     self.visions_black(self.position.boardstate)
@@ -104,7 +79,8 @@ class MoveGenerator:
 
                             moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), white_castling_c, white_castling_g)
                             for m in moves: 
-                                pseudo_moves.append(((i, j), m))
+                                move = Move((i, j), m)
+                                pseudo_moves.append(move)
 
         
         elif self.position.white_to_move == False:
@@ -114,7 +90,8 @@ class MoveGenerator:
                             if not isinstance(self.position.boardstate[i, j], King):
                                 moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
                                 for m in moves: 
-                                    pseudo_moves.append(((i, j), m))
+                                    move = Move((i, j), m)
+                                    pseudo_moves.append(move)
                             else:
                                 if self.position.black_castle_g:
                                     self.visions_white(self.position.boardstate)
@@ -135,7 +112,8 @@ class MoveGenerator:
 
                                 moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), black_castling_c, black_castling_g)
                                 for m in moves: 
-                                    pseudo_moves.append(((i, j), m))
+                                    move = Move((i, j), m)
+                                    pseudo_moves.append(move)
 
         return pseudo_moves
     
@@ -202,7 +180,7 @@ class MoveGenerator:
     def generate_legal_moves(self):
         legal_moves = []
         if self.position.white_to_move == True:
-            moves = self.get_pseudo_legal_moves(self.position)
+            moves = self.get_pseudo_legal_moves()
             for move in moves:
                 child = self.position.make_move(move)
                 king_pos = self.find_piece(child.boardstate, King, 'w')[0]
@@ -212,7 +190,7 @@ class MoveGenerator:
 
 
         if self.position.white_to_move == False:
-            moves = self.get_pseudo_legal_moves(self.position)
+            moves = self.get_pseudo_legal_moves()
             for move in moves:
                 child = self.position.make_move(move)
                 king_pos = self.find_piece(child.boardstate, King, 'b')[0]

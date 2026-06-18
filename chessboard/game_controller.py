@@ -13,12 +13,10 @@ class GameController:
 
     def __init__(self):
 
-  
-        self.gameEngine.position_update.connect(self.update_position)
+
         self.board = Board()
         self.position = Position(self.board.start_position(), True, True, True, True, True)
         self.gameEngine = GameEngine(self.position)
-        self.gameEngine.position_update.connect(self.update_position)
         self.ultimate = Ultimate()
 
 

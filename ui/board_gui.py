@@ -106,11 +106,11 @@ class ChessBoard(QWidget):
         for i in range(8):
             for j in range(8):
 
-                neue_figur = self.engine.position[(i,j)]
+                neue_figur = self.engine.position.boardstate[(i,j)]
                 alte_figur = self.squares[(i,j)].piece
 
                 if alte_figur != neue_figur:
-                    self.squares[(i,j)].piece = self.engine.position[(i,j)]
+                    self.squares[(i,j)].piece = self.engine.position.boardstate[(i,j)]
                     self.squares[(i,j)].set_piece()
         self.move_signal.emit(self.engine.position)
 

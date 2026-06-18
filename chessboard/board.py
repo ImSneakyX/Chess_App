@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
-from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
+from chessboard.new_pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 
 class Board:
     def __init__(self):
