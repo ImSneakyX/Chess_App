@@ -57,12 +57,12 @@ class ChessBoard(QWidget):
         self.delete_signal.emit()
             
 
-    def process_move(self, start_square, end_square, color):
-        self.end_square = end_square
+    def process_move(self, move):
+        self.end_square = move.end_square
 
         t1 = time.time()
 
-        self.engine.check_move(start_square, end_square)
+        self.engine.check_move(move)
         if self.engine.legal == True and self.engine.promotion == False:
             self.update_board()
 
@@ -70,7 +70,7 @@ class ChessBoard(QWidget):
         t2 = time.time()
 
         if self.engine.legal == True and self.engine.promotion == True:
-            promote_dialog = Promote(color, self)
+            promote_dialog = Promote(self.engine.boardstate[move.end_square].color, self)
 
             promote_dialog.selected_piece.connect(self.process_promotion)
             

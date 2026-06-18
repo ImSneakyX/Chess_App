@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QApplication, QHBoxLayout, QWidget, QLabel, QMainWin
 from PyQt5.QtCore import Qt, QMimeData, pyqtSignal, QSize, QPoint
 from PyQt5.QtGui import QDrag, QPixmap, QIcon, QPainter, QPen
 from chessboard.board import Board
+from chess_engine.new_move import Move
 
 
 class MainWindow(QMainWindow):
@@ -35,7 +36,7 @@ class MainWindow(QMainWindow):
 
 
 class ChessSquare(QPushButton):
-    move_made = pyqtSignal(tuple, tuple, str)
+    move_made = pyqtSignal(object)
     clear_highlight = pyqtSignal()
     arrows_signal = pyqtSignal(list)
     def __init__(self, row, col, piece = None, parent = None):
@@ -139,7 +140,8 @@ class ChessSquare(QPushButton):
     def dropEvent(self, e):
 
         source_widget = e.source()
-        self.move_made.emit(source_widget.square, self.square, source_widget.piece.color)
+        move = Move(source_widget.square, self.square)
+        self.move_made.emit(move)
 
         e.accept()
 

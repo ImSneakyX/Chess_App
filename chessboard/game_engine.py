@@ -136,7 +136,7 @@ class MoveGenerator:
         for row, i in enumerate(boardstate):
             for col, j in enumerate(i):
                 if boardstate[(row, col)].color == 'b' and isinstance(boardstate[(row, col)], (Knight, Rook, Queen, Bishop)):
-                    moves, moves_for_vision = boardstate[(row, col)].get_legal_moves(boardstate, (row, col), None)
+                    moves, moves_for_vision = boardstate[(row, col)].get_legal_moves(boardstate, (row, col))
                     for x, y in moves: 
                         self.vision_black[(x, y)] = True
                     for x, y in moves_for_vision:
@@ -159,7 +159,7 @@ class MoveGenerator:
         for row, i in enumerate(boardstate):
             for col, j in enumerate(i):
                 if boardstate[(row, col)].color == 'w' and isinstance(boardstate[(row, col)], (Rook, Knight, Bishop, Queen)):
-                    moves, moves_for_vision = boardstate[(row, col)].get_legal_moves(boardstate, (row, col), None)
+                    moves, moves_for_vision = boardstate[(row, col)].get_legal_moves(boardstate, (row, col))
                     for x, y in moves: 
                         self.vision_white[(x, y)] = True
                     for x, y in moves_for_vision:
