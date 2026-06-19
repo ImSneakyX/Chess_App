@@ -1,11 +1,8 @@
 import sys
 import os 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from chessboard.move import Move_White, Move_Black
 from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 from chessboard.board import Board
-from chess_engine.fast_move import Move_White_kbqr, Move_Black_kbqr, Move_White_King, Move_Black_King, Move_White_Pawn, Move_Black_Pawn, Move
-from chessboard.position import Position
 from chessboard.game_engine import MoveGenerator
 import time
 

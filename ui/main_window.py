@@ -4,10 +4,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
 from PyQt5.QtGui import QIcon, QFont, QPixmap, QPen, QPainter
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QPoint, QSize
-from chessboard.board import Board
-from chessboard.move import Move_White, Move_Black
-from drag_drop import ChessSquare
-from chessboard.game_engine import GameEngine
 from ui.board_gui import ChessBoard, ArrowOverlay, EvalBar
 from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt, Confirmation
 from chessboard.game_controller import GameController

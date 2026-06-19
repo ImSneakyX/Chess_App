@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QApplication, QHBoxLayout, QWidget, QLabel, QMainWin
 from PyQt5.QtCore import Qt, QMimeData, pyqtSignal, QSize, QPoint
 from PyQt5.QtGui import QDrag, QPixmap, QIcon, QPainter, QPen
 from chessboard.board import Board
-from chess_engine.new_move import Move
+from chessboard.move import Move
 
 
 class MainWindow(QMainWindow):

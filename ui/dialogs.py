@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLay
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 from PyQt5.QtCore import Qt, QSize, pyqtSignal
 from ui.drag_drop import ChessSquare
-from chessboard.new_pieces import Knight, Queen, Bishop, Rook
+from chessboard.pieces import Knight, Queen, Bishop, Rook
 
 
 class MainWindow(QMainWindow):

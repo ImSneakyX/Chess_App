@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.board import Board
-from chessboard.new_pieces import Rook, King, Knight, Bishop, Queen, Pawn, Empty
+from chessboard.pieces import Rook, King, Knight, Bishop, Queen, Pawn, Empty
 import numpy as np
 import copy
 
