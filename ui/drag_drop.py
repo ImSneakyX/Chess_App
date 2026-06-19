@@ -18,7 +18,6 @@ class MainWindow(QMainWindow):
 
         self.brett = Board()
         self.start_pos = self.brett.start_position()
-        self.boardstate = self.start_pos
 
         self.grid = QGridLayout()
         self.grid.setSpacing(0)

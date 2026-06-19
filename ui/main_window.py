@@ -49,7 +49,7 @@ class EngineWorker(QObject):
         self.position = position
 
     def run(self):
-        value = self.engine.minimax(self.position, 3,-100000, 100000)
+        value = self.engine.minimax(self.position, 0,-100000, 100000)
         self.finished.emit(value)
 
 
