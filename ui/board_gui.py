@@ -108,7 +108,7 @@ class ChessBoard(QWidget):
                 neue_figur = self.engine.position.boardstate[(i,j)]
                 alte_figur = self.squares[(i,j)].piece
 
-                if alte_figur != neue_figur:
+                if alte_figur.name != neue_figur.name:
                     a += 1
                     self.squares[(i,j)].piece = self.engine.position.boardstate[(i,j)]
                     t1 = time.time()
