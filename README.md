@@ -1,2 +1,2 @@
 # Schach_App
-Das ist der zweite Versuch an meiner Schach App. Ich werde alle Steps nachvollziehen und nicht einfach nur KI machen lassen, Das ist die Ambition. Die App soll eine Eröffnungsdatenbank sein und zusätzlich will ich eine eigene Engine bauen
+This is my second attempt at a chess app. I will meticulously recreate all the steps and not just let the AI ​​do the work; that's the ambition. The app is intended to be an opening database, and I also plan to build my own engine. First, I implemented an object-orientated representation without any help. Now I am trying to learn how to convert that into a data-orientated design.

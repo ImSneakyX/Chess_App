@@ -59,7 +59,7 @@ class ChessBoard(QWidget):
     def process_move(self, move):
         self.end_square = move.end_square
 
-        t1 = time.time()
+        
 
         self.engine.check_move(move)
         if self.engine.legal == True and self.engine.promotion == False:
@@ -74,8 +74,8 @@ class ChessBoard(QWidget):
             
             promote_dialog.exec_()
 
-        t2 = time.time()
-        print(f'GUI Update: {t2-t1:.5f} sek')
+   
+
 
         if self.engine.mate == True:
             if self.engine.white_to_move == True:
@@ -101,6 +101,7 @@ class ChessBoard(QWidget):
 
 
     def update_board(self):
+        a = 0
         for i in range(8):
             for j in range(8):
 
@@ -108,9 +109,18 @@ class ChessBoard(QWidget):
                 alte_figur = self.squares[(i,j)].piece
 
                 if alte_figur != neue_figur:
+                    a += 1
                     self.squares[(i,j)].piece = self.engine.position.boardstate[(i,j)]
+                    t1 = time.time()
                     self.squares[(i,j)].set_piece()
+                    t2 = time.time()
+                    print(f'GUI Update: {t2-t1:.5f} sek')
+        print(a)
+
+  
         self.move_signal.emit(self.engine.position)
+
+
 
     def get_arrows(self, arrows):
 
