@@ -3,11 +3,12 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
 from PyQt5.QtGui import QIcon, QFont, QPixmap, QPen, QPainter
-from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QPoint, QSize
+from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QPoint, QSize, QObject, QThread
 from ui.board_gui import ChessBoard, ArrowOverlay, EvalBar
 from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt, Confirmation
 from chessboard.game_controller import GameController
 import time
+import copy
 
 
 class Launcher(QMainWindow):
@@ -38,6 +39,20 @@ class Launcher(QMainWindow):
         self.window = ChessGame()
         self.window.show()
         self.hide()
+
+class EngineWorker(QObject):
+    finished = pyqtSignal(float)
+    def __init__(self, engine, position):
+        super().__init__()
+
+        self.engine = engine
+        self.position = position
+
+    def run(self):
+        value = self.engine.minimax(self.position, 3,-100000, 100000)
+        self.finished.emit(value)
+
+
 
 class ChessGame(QMainWindow):
     def __init__(self):
@@ -71,11 +86,6 @@ class ChessGame(QMainWindow):
                                          QPushButton:hover {{background-color: #ff7a7a}}''')
         self.resign_button.clicked.connect(self.resign)
 
-        self.label = QLabel(self)
-        self.label.setText(f'{self.resign_button.width()}, {self.resign_button.height()}')
-        self.label.setStyleSheet('color: white;')
-        self.label.move(self.width() // 2 + 50, self.height() // 2)
-        self.label.resize(100, 100)
 
         self.eval_bar = EvalBar(self.board_widget.width() // 24, self.board_widget.height(), self)
         self.eval_bar.move(7*self.width() // 8, 20)
@@ -93,10 +103,26 @@ class ChessGame(QMainWindow):
         self.confirmation.setGeometry(self.resign_button.x(), self.resign_button.y() - 150 , width, height)
         self.confirmation.show()
 
+    def analysis_finished(self, value):
+
+        print(self.GameController.ultimate.calculations)
+        self.GameController.ultimate.calculations = 0
+        self.eval_bar.setEval(value)
+
+
 
     def update_evalbar(self, position):
-        new_value = self.GameController.ultimate.minimax(position, 3, -10000, 10000)
-        self.eval_bar.setEval(new_value)
+
+        self.thread = QThread()
+        self.worker = EngineWorker(self.GameController.ultimate, copy.deepcopy(position))
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.analysis_finished)
+        self.worker.finished.connect(self.thread.quit)
+        self.thread.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.thread.start()
+
 
 
     def get_arrow_signal(self, arrows):
@@ -120,9 +146,6 @@ class ChessGame(QMainWindow):
 
         self.resign_button.setGeometry(40+ self.board_widget.width(), 40+ self.board_widget.height(), self.board_widget.width()//4, self.board_widget.width()//16)
 
-
-        self.label.move(self.width() // 2 + 50, self.height() // 2)
-        self.label.setText(f'{self.resign_button.width()}, {self.resign_button.height()}')
 
         self.eval_bar.resize(self.board_widget.width() // 24, self.board_widget.height())
 

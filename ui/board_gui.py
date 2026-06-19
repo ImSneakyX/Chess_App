@@ -202,18 +202,27 @@ class EvalBar(QWidget):
         self.eval = 0
 
 
+
     def setEval(self, value):
         self.eval = value
-        print(self.eval)
         self.update()
 
 
 
     def paintEvent(self, event):
         
-        h = self.height // 2 - self.eval * self.height // 8
+        h = int(self.height // 2 - self.eval * self.height // 8)
         painter = QPainter(self)
         painter.fillRect(0, 0, self.width, h, QColor('black'))
         painter.fillRect(0, h, self.width, self.height-h, QColor('white'))
+        if self.eval >= 0:
+            painter.setPen(QColor('black'))
+            painter.drawText(0, self.height - 20, self.width, 20, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignBottom, str(self.eval))
+        else:
+            painter.setPen(QColor('white'))
+            painter.drawText(0, 0, self.width, 20, Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop, str(self.eval))
 
+
+
+            
 
