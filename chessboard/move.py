@@ -28,5 +28,12 @@ class Undo:
         self.old_en_passant = None
 
         self.promotion = None
-        
-        self.rook_move = None
+
+        self.ep_captured_square = None
+        self.ep_captured_piece = None
+
+        self.rook_from = None
+        self.rook_to = None
+        self.rook = None
+
+
