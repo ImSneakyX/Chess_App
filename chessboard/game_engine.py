@@ -249,9 +249,8 @@ class MoveGenerator:
             for move in moves:
                 
                 child = self.position.make_move(move)
-                king_pos = self.find_piece(child.boardstate, King, 'w')[0]
                 self.visions_black(child.boardstate)
-                if self.vision_black[king_pos] == False:
+                if self.vision_black[self.position.king_w_pos] == False:
                     legal_moves.append(move)
     
 
@@ -260,10 +259,9 @@ class MoveGenerator:
             moves = self.get_pseudo_legal_moves()
             for move in moves:
                 child = self.position.make_move(move)
-                king_pos = self.find_piece(child.boardstate, King, 'b')[0]
                 self.visions_white(child.boardstate)
 
-                if self.vision_white[king_pos] == False:
+                if self.vision_white[self.position.king_b_pos] == False:
                     legal_moves.append(move)
 
         return legal_moves

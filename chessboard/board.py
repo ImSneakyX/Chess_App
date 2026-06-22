@@ -10,6 +10,8 @@ class Board:
         self.board = np.zeros((8,8), 'object')
         self.start_pos = None
         self.notation = None
+        self.king_b_start = None
+        self.king_w_start = None
 
         #weiße Figuren
         self.pawn_w = Pawn('w')
@@ -74,6 +76,8 @@ class Board:
         #König
         self.start_pos[0, 4] = self.king_b
         self.start_pos[-1,4] = self.king_w
+        self.king_b_start = (0 ,4)
+        self.king_w_start = (7, 4)
 
         #leere Felder
         for i in range(2, 6):

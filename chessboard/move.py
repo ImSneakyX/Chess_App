@@ -7,3 +7,26 @@ class Move:
         self.end_square = end_square
         self.promotion_piece = promotion_piece
         self.en_passant = en_passant
+
+class Undo:
+
+    def __init__(self):
+
+
+        self.moved_piece = None
+        self.captured_piece = None
+        self.start_square = None
+        self.end_square = None
+
+        self.old_turn = None
+
+        self.old_castle_white_c = None
+        self.old_castle_white_g = None
+        self.old_castle_black_c = None
+        self.old_castle_black_g = None
+
+        self.old_en_passant = None
+
+        self.promotion = None
+        
+        self.rook_move = None

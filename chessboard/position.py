@@ -3,16 +3,18 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.board import Board
 from chessboard.pieces import Rook, King, Knight, Bishop, Queen, Pawn, Empty
-import time
-import copy
+from chessboard.move import Undo
 
 
 class Position: 
 
-    def __init__(self, boardstate, white_to_move, white_castle_c, white_castle_g, black_castle_c, black_castle_g, en_passant_square = None):
+    def __init__(self, boardstate, king_w_pos, king_b_pos, white_to_move, white_castle_c, white_castle_g, black_castle_c, black_castle_g, en_passant_square = None):
         
         self.boardstate = boardstate
         self.white_to_move = white_to_move
+
+        self.king_w_pos = king_w_pos        
+        self.king_b_pos = king_b_pos
 
         self.white_castle_c = white_castle_c
         self.white_castle_g = white_castle_g
@@ -23,95 +25,112 @@ class Position:
         self.en_passant_square = en_passant_square
 
         self.empty = Empty()
-        self.piece = None
 
   
     
 
     def make_move(self, move):
 
-        new_pos = copy.deepcopy(self)
-        new_pos.en_passant_square = None
-        new_pos.piece = new_pos.boardstate[move.start_square]
-        new_pos.boardstate[move.end_square] = new_pos.piece
-        new_pos.boardstate[move.start_square] = new_pos.empty
+        undo = Undo()
+
+        undo.old_castle_white_c = self.white_castle_c
+        undo.old_castle_white_g = self.white_castle_g
+        undo.old_castle_white_c = self.white_castle_c
+        undo.old_castle_black_g = self.black_castle_g
+
+        undo.old_en_passant = self.en_passant_square
+
+        undo.old_turn = self.white_to_move
+
+        undo.moved_piece = self.boardstate[move.start_square]
+        undo.captured_piece = self.boardstate[move.end_square]
+
+        piece = self.boardstate[move.start_square]
+        self.boardstate[move.end_square] = piece
+        self.boardstate[move.start_square] = self.empty
+
+        undo.promotion = piece
 
         if move.start_square == (7, 4):
-            new_pos.white_castle_c = False
-            new_pos.white_castle_g = False
+            self.white_castle_c = False
+            self.white_castle_g = False
 
         if move.start_square == (7, 7):
-            new_pos.white_castle_g = False
+            self.white_castle_g = False
 
         if move.start_square == (7, 0):
-            new_pos.white_castle_c = False
+            self.white_castle_c = False
 
         if move.start_square == (0, 4):
-            new_pos.black_castle_c = False
-            new_pos.black_castle_g = False
+            self.black_castle_c = False
+            self.black_castle_g = False
 
         if move.start_square == (0, 7):
-            new_pos.black_castle_g = False
+            self.black_castle_g = False
 
         if move.start_square == (0, 0):
-            new_pos.black_castle_c = False 
+            self.black_castle_c = False 
 
         if move.end_square == (7, 7):
-            new_pos.white_castle_g = False   
+            self.white_castle_g = False   
 
         if move.end_square == (7, 0):
-            new_pos.white_castle_c = False
+            self.white_castle_c = False
 
         if move.end_square == (0, 7):
-            new_pos.black_castle_g = False
+            self.black_castle_g = False
 
         if move.end_square == (0, 0):
-            new_pos.black_castle_c = False 
+            self.black_castle_c = False 
 
-        if isinstance(new_pos.piece, King):
+        if isinstance(piece, King):
+            if piece.color == 'w':
+                self.king_w_pos = move.end_square
+            else:
+                self.king_b_pos = move.end_square
 
             if move.end_square == (0, 2) and move.start_square == (0, 4):
 
-                new_pos.boardstate[0, 3] = new_pos.boardstate[0, 0]
-                new_pos.boardstate[0, 0] = new_pos.empty
+                self.boardstate[0, 3] = self.boardstate[0, 0]
+                self.boardstate[0, 0] = self.empty
 
             elif move.end_square == (0, 6) and move.start_square == (0, 4):
 
-                new_pos.boardstate[0, 5] = new_pos.boardstate[0, 7]
-                new_pos.boardstate[0, 7] = new_pos.empty
+                self.boardstate[0, 5] = self.boardstate[0, 7]
+                self.boardstate[0, 7] = self.empty
             
 
             elif move.end_square == (7, 2) and move.start_square == (7, 4):
 
-                new_pos.boardstate[7, 3] = new_pos.boardstate[7, 0]
-                new_pos.boardstate[7, 0] = new_pos.empty
+                self.boardstate[7, 3] = self.boardstate[7, 0]
+                self.boardstate[7, 0] = self.empty
 
             elif move.end_square == (7, 6) and move.start_square == (7, 4):
 
-                new_pos.boardstate[7, 5] = new_pos.boardstate[7, 7]
-                new_pos.boardstate[7, 7] = new_pos.empty
+                self.boardstate[7, 5] = self.boardstate[7, 7]
+                self.boardstate[7, 7] = self.empty
 
-        elif isinstance(new_pos.piece, Pawn):
+        elif isinstance(piece, Pawn):
             if move.promotion_piece != None:
                 if move.promotion_piece == 'Q':
-                    new_pos.boardstate[move.end_square] = Queen(new_pos.piece.color)
+                    self.boardstate[move.end_square] = Queen(self.piece.color)
                 
                 if move.promotion_piece == 'R':
-                    new_pos.boardstate[move.end_square] = Rook(new_pos.piece.color, 'l')
+                    self.boardstate[move.end_square] = Rook(self.piece.color, 'l')
 
                 if move.promotion_piece == 'K':
-                    new_pos.boardstate[move.end_square] = Knight(new_pos.piece.color)
+                    self.boardstate[move.end_square] = Knight(self.piece.color)
 
                 if move.promotion_piece == 'B':
-                    new_pos.boardstate[move.end_square] = Bishop(new_pos.piece.color)
+                    self.boardstate[move.end_square] = Bishop(self.piece.color)
 
             elif move.en_passant == True:
                 row_end, col_end = move.end_square
                 if row_end == 2:
-                    new_pos.boardstate[3, col_end] = self.empty
+                    self.boardstate[3, col_end] = self.empty
 
                 else:
-                    new_pos.boardstate[4, col_end] = self.empty
+                    self.boardstate[4, col_end] = self.empty
 
             else: 
                 row_start, col_start = move.start_square
@@ -120,23 +139,32 @@ class Position:
                 if abs(row_start - row_end) == 2:
                     row_middle = (row_start + row_end) // 2
 
-                    new_pos.en_passant_square = (row_middle, col_start)
+                    self.en_passant_square = (row_middle, col_start)
                 
             
 
 
 
-        new_pos.white_to_move = not new_pos.white_to_move
+        self.white_to_move = not self.white_to_move
 
+        return undo
+    
+    def unmake_move(self, move, undo):
 
-                
+        piece = self.boardstate[move.end_square]
+        self.boardstate[move.start_square] = piece
+        self.boardstate[move.end_square] = undo.captured_piece
 
+        self.white_castle_c = undo.old_castle_white_c
+        self.white_castle_g = undo.old_castle_white_g
+        self.black_castle_c = undo.old_castle_black_c
+        self.black_castle_g = undo.old_castle_black_g
 
+        self.en_passant_square = undo.old_en_passant
+
+        self.white_to_move = undo.old_turn
 
         
-
-
-        return new_pos
 
 
 
