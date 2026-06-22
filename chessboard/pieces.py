@@ -1,10 +1,9 @@
 class Piece:
     def __init__(self, name, value, color):
-        self.move = 'Can move'
         self.name = name
         self.value = value
         self.color = color
-        self.moved = False
+
         
 
     def get_legal_moves(self, boardstate, start_square, c_castling = None, g_castling = None):

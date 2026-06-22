@@ -7,7 +7,7 @@ from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 
 class Board:
     def __init__(self):
-        self.brett = np.zeros((8,8), 'object')
+        self.board = np.zeros((8,8), 'object')
         self.start_pos = None
         self.notation = None
 
@@ -35,7 +35,7 @@ class Board:
 
         
     def start_position(self):
-        self.start_pos = self.brett.copy()
+        self.start_pos = self.board.copy()
         #Bauern
         self.start_pos[1,:] = self.pawn_b
         self.start_pos[-2,:] = self.pawn_w
@@ -103,9 +103,9 @@ class Board:
         return square
     
     def chessboard_notation(self): 
-        row_name = self.brett.copy()
-        col_name = self.brett.copy()
-        self.notation = self.brett.copy()
+        row_name = self.board.copy()
+        col_name = self.board.copy()
+        self.notation = self.board.copy()
 
         rows = ['1', '2', '3', '4', '5', '6', '7', '8']
         cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
@@ -122,15 +122,4 @@ class Board:
 
         return self.notation
 
-
-
-
-    
-    
-
-if __name__ == '__main__':
-    brett = Board()
-    brett.start_position()
-    brett.display('name', brett.start_pos)
-    print(brett.start_pos)
   
