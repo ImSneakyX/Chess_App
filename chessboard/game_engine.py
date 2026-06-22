@@ -248,22 +248,22 @@ class MoveGenerator:
             moves = self.get_pseudo_legal_moves()
             for move in moves:
                 
-                child = self.position.make_move(move)
-                self.visions_black(child.boardstate)
+                undo = self.position.make_move(move)
+                self.visions_black(self.position.boardstate)
                 if self.vision_black[self.position.king_w_pos] == False:
                     legal_moves.append(move)
+                self.position.unmake_move(move, undo)
     
 
 
         if self.position.white_to_move == False:
             moves = self.get_pseudo_legal_moves()
             for move in moves:
-                child = self.position.make_move(move)
-                self.visions_white(child.boardstate)
-
+                undo = self.position.make_move(move)
+                self.visions_white(self.position.boardstate)
                 if self.vision_white[self.position.king_b_pos] == False:
                     legal_moves.append(move)
-
+                self.position.unmake_move(move, undo)
         return legal_moves
 
 

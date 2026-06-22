@@ -16,6 +16,7 @@ class Ultimate:
         self.calculations = 0
 
 
+
     
     def minimax(self, position, depth, alpha, beta):
         if depth == 0 or self.game_over:
@@ -23,13 +24,18 @@ class Ultimate:
             
             return self.static_evaluation(position)
         
-        children = self.get_child_pos(position)
+        move_gen = MoveGenerator(position)
+        
+        moves = move_gen.generate_legal_moves()
         if position.white_to_move == True:
 
             maxEval = -100000
             
-            for c in children:
-                eval = self.minimax(c, depth-1, alpha, beta)
+            for move in moves:
+                undo = position.make_move(move)
+                eval = self.minimax(position, depth-1, alpha, beta)
+                position.unmake_move(move, undo)
+
                 maxEval = max(maxEval, eval)
                 alpha = max(alpha, eval)
                 if beta <= alpha:
@@ -39,8 +45,11 @@ class Ultimate:
             return maxEval
         else:
             minEval = 100000
-            for c in children:
-                eval = self.minimax(c, depth-1, alpha, beta)
+            for move in moves:
+                undo = position.make_move(move)
+                eval = self.minimax(position, depth-1, alpha, beta)
+                position.unmake_move(move, undo)
+
                 minEval = min(minEval, eval)
                 beta = min(beta, eval)
                 if beta <= alpha:
@@ -66,16 +75,6 @@ class Ultimate:
         return evaluation
 
     
-    def get_child_pos(self, position):
-        children = []
-        move_gen = MoveGenerator(position)
-        legal_moves = move_gen.generate_legal_moves()
-        for move in legal_moves:
-            new_pos = position.make_move(move)
-            children.append(new_pos)
-
-                        
-        return children
 
 
 
