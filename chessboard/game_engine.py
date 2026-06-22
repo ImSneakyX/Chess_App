@@ -243,19 +243,17 @@ class MoveGenerator:
     
     def generate_legal_moves(self):
         legal_moves = []
+        
         if self.position.white_to_move == True:
-            t1 = time.time()
             moves = self.get_pseudo_legal_moves()
-            t2 = time.time()
             for move in moves:
+                
                 child = self.position.make_move(move)
                 king_pos = self.find_piece(child.boardstate, King, 'w')[0]
                 self.visions_black(child.boardstate)
                 if self.vision_black[king_pos] == False:
                     legal_moves.append(move)
-            
-
-            print(f'GUI Update: {t2-t1:.5f} sek')
+    
 
 
         if self.position.white_to_move == False:

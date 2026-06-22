@@ -24,16 +24,18 @@ class Ultimate:
             return self.static_evaluation(position)
         
         children = self.get_child_pos(position)
-
         if position.white_to_move == True:
 
             maxEval = -100000
+            
             for c in children:
                 eval = self.minimax(c, depth-1, alpha, beta)
                 maxEval = max(maxEval, eval)
                 alpha = max(alpha, eval)
                 if beta <= alpha:
                     break
+            
+            
             return maxEval
         else:
             minEval = 100000
