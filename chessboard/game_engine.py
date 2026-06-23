@@ -47,7 +47,7 @@ class GameEngine:
 
             else:
                 self.position.make_move(move_made)
-                print(self.position.boardstate)
+
 
 
 
@@ -247,43 +247,25 @@ class MoveGenerator:
         if self.position.white_to_move == True:
             moves = self.get_pseudo_legal_moves()
             for move in moves:
-                before_board = str(self.position.boardstate)
-                before_kw = self.position.king_w_pos
-                before_kb = self.position.king_b_pos
                 
                 undo = self.position.make_move(move)
                 self.visions_black(self.position.boardstate)
                 if self.vision_black[self.position.king_w_pos] == False:
                     legal_moves.append(move)
                 self.position.unmake_move(move, undo)
-                if (
-                    before_board != str(self.position.boardstate)
-                    or before_kw != self.position.king_w_pos
-                    or before_kb != self.position.king_b_pos
-                ):
-                    print("BUG BEI ZUG:", move.start_square, move.end_square)
-                    return []
+
     
 
 
         if self.position.white_to_move == False:
             moves = self.get_pseudo_legal_moves()
             for move in moves:
-                before_board = str(self.position.boardstate)
-                before_kw = self.position.king_w_pos
-                before_kb = self.position.king_b_pos
                 undo = self.position.make_move(move)
                 self.visions_white(self.position.boardstate)
                 if self.vision_white[self.position.king_b_pos] == False:
                     legal_moves.append(move)
                 self.position.unmake_move(move, undo)
-                if (
-                        before_board != str(self.position.boardstate)
-                        or before_kw != self.position.king_w_pos
-                        or before_kb != self.position.king_b_pos
-                    ):
-                        print("BUG BEI ZUG:", move.start_square, move.end_square)
-                        return []
+
         return legal_moves
 
 

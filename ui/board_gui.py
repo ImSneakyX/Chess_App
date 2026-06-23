@@ -60,7 +60,10 @@ class ChessBoard(QWidget):
         self.engine.check_move(move)
 
         if self.engine.legal == True and self.engine.promotion == False:
+            t1 = time.time()
             self.update_board()
+            t2 = time.time()
+            print(f'GUI Update: {t2-t1:.5f} sek')
 
 
         elif self.engine.legal == True and self.engine.promotion == True:
@@ -102,7 +105,7 @@ class ChessBoard(QWidget):
                 neue_figur = self.engine.position.boardstate[(i,j)]
                 alte_figur = self.squares[(i,j)].piece
 
-                if alte_figur.name != neue_figur.name:
+                if alte_figur.color != neue_figur.color:
                     self.squares[(i,j)].piece = self.engine.position.boardstate[(i,j)]
                     self.squares[(i,j)].set_piece()
 
