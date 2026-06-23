@@ -35,7 +35,7 @@ class Position:
 
         undo.old_castle_white_c = self.white_castle_c
         undo.old_castle_white_g = self.white_castle_g
-        undo.old_castle_white_c = self.white_castle_c
+        undo.old_castle_black_c = self.black_castle_c
         undo.old_castle_black_g = self.black_castle_g
 
         undo.old_en_passant = self.en_passant_square
@@ -49,7 +49,6 @@ class Position:
         self.boardstate[move.end_square] = piece
         self.boardstate[move.start_square] = self.empty
 
-        undo.promotion = piece
 
         if move.start_square == (7, 4):
             self.white_castle_c = False
@@ -127,29 +126,32 @@ class Position:
 
         elif isinstance(piece, Pawn):
             if move.promotion_piece != None:
+                undo.promotion = piece
                 if move.promotion_piece == 'Q':
-                    self.boardstate[move.end_square] = Queen(self.piece.color)
+                    self.boardstate[move.end_square] = Queen(piece.color)
                 
                 if move.promotion_piece == 'R':
-                    self.boardstate[move.end_square] = Rook(self.piece.color, 'l')
+                    self.boardstate[move.end_square] = Rook(piece.color, 'l')
 
                 if move.promotion_piece == 'K':
-                    self.boardstate[move.end_square] = Knight(self.piece.color)
+                    self.boardstate[move.end_square] = Knight(piece.color)
 
                 if move.promotion_piece == 'B':
-                    self.boardstate[move.end_square] = Bishop(self.piece.color)
+                    self.boardstate[move.end_square] = Bishop(piece.color)
 
             elif move.en_passant == True:
                 row_end, col_end = move.end_square
                 if row_end == 2:
+                    undo.ep_captured_piece = self.boardstate[3, col_end]
                     self.boardstate[3, col_end] = self.empty
                     undo.ep_captured_square = (3, col_end)
-                    undo.ep_captured_piece = self.boardstate[3, col_end]
+
 
                 else:
+                    undo.ep_captured_piece = self.boardstate[4, col_end]
                     self.boardstate[4, col_end] = self.empty
                     undo.ep_captured_square = (4, col_end)
-                    undo.ep_captured_piece = self.boardstate[4, col_end]
+                    
 
             else: 
                 row_start, col_start = move.start_square
@@ -183,8 +185,12 @@ class Position:
         self.black_castle_g = undo.old_castle_black_g
 
         if isinstance(piece, King):
-            self.king_b_pos = move.start_square
-            self.king_w_pos = move.start_square
+            if piece.color == 'b':
+
+                self.king_b_pos = move.start_square
+
+            else:
+                self.king_w_pos = move.start_square
 
         self.en_passant_square = undo.old_en_passant
 
