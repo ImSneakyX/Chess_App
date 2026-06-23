@@ -42,13 +42,11 @@ class GameEngine:
         if self.legal == True:
             if check_move[0].en_passant == True:
                 move_made.en_passant = True
-                new_pos = self.position.make_move(move_made)
-                self.position = new_pos
-
+                self.position.make_move(move_made)
 
             else:
-                new_pos = self.position.make_move(move_made)
-                self.position = new_pos
+                self.position.make_move(move_made)
+
 
 
 

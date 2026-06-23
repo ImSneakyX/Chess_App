@@ -22,7 +22,6 @@ class ChessBoard(QWidget):
 
         self.engine = engine
 
-
         self.brett = Board()
         self.start_pos = self.brett.start_position()
 
@@ -100,7 +99,6 @@ class ChessBoard(QWidget):
     def update_board(self):
         for i in range(8):
             for j in range(8):
-
                 neue_figur = self.engine.position.boardstate[(i,j)]
                 alte_figur = self.squares[(i,j)].piece
 
