@@ -60,10 +60,9 @@ class ChessBoard(QWidget):
         self.engine.check_move(move)
 
         if self.engine.legal == True and self.engine.promotion == False:
-            t1 = time.time()
+
             self.update_board()
-            t2 = time.time()
-            print(f'GUI Update: {t2-t1:.5f} sek')
+            
 
 
         elif self.engine.legal == True and self.engine.promotion == True:
