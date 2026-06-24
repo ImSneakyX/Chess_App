@@ -204,7 +204,71 @@ class Position:
             self.boardstate[undo.rook_to] = self.empty
 
 
-        
+    def calc_pins(self):
+
+        board = self.boardstate
+
+        self.checkers = []
+        self.pinned = {}
+
+        king = self.king_w_pos if self.white_to_move else self.king_b_pos
+
+        king_row, king_col =  king
+
+        enemy = 'b' if self.white_to_move else 'w'
+
+        directions =  [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
+
+        for dr, dc in directions:
+
+            possible_pin = None
+
+            r = king_row + dr
+            c = king_col + dc
+
+            while 0 <= r < 8 and 0 <= c < 8:
+
+                piece = self.boardstate[(r, c)]
+
+                if piece.name == 'empty':
+                    r += dr
+                    c += dc
+                    continue
+                if piece.color != enemy:
+
+                    if possible_pin is None:
+                        possible_pin = (r, c)
+
+                    else: 
+                        break
+                
+                else: 
+
+                    if dr == 0 or dc == 0:
+                        if piece.name in ('Rook','Queen'):
+                            if possible_pin:
+                                self.pinned[possible_pin] = (dr, dc)
+                        
+                            else:
+                                self.checkers.append((r, c))
+                    else:
+                        if piece.name in ('Bishop','Queen'):
+
+                            if possible_pin:
+                                self.pinned[possible_pin] = (dr, dc)
+                            
+                            else:
+                                self.checkers.append((r, c))            
+
+                r += dr
+                c += dc
+
+
+
+
+
+
+
 
 
 

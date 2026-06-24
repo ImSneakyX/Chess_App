@@ -69,17 +69,19 @@ class MoveGenerator:
 
     def get_pseudo_legal_moves(self):
         pseudo_moves = []
+        board = self.position.boardstate
         if self.position.white_to_move == True:
             for i in range(8):
                 for j in range(8):
-                    if self.position.boardstate[i, j].color == 'w':
-                        if not isinstance(self.position.boardstate[i, j], King) and not isinstance(self.position.boardstate[i, j], Pawn):
-                            moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
+                    piece = board[i, j]
+                    if piece.color == 'w':
+                        if piece.name != 'King' and piece.name != 'Pawn':
+                            moves, moves_vision = piece.get_legal_moves(board, (i, j))
                             for m in moves: 
                                 move = Move((i, j), m)
                                 pseudo_moves.append(move)
-                        elif isinstance(self.position.boardstate[i, j], Pawn):
-                            moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
+                        elif piece.name == 'Pawn':
+                            moves, moves_vision = piece.get_legal_moves(board, (i, j))
                             for m in moves: 
                                 if m[0] == 0:
                                     promotion_pieces = ['Q', 'R', 'K', 'B']
@@ -99,12 +101,11 @@ class MoveGenerator:
 
 
 
-                        elif isinstance(self.position.boardstate[i, j], King):
+                        elif piece.name == 'King':
                             white_castling_c = None
                             white_castling_g = None
                             if self.position.white_castle_g:
-                                    self.visions_black(self.position.boardstate)
-                                    if all(isinstance(square, Empty) for square in self.position.boardstate[7, 5:7]) == True and self.vision_black[7, 4:7].any() == False:
+                                    if all(isinstance(square, Empty) for square in board[7, 5:7]) == True and self.is_square_in_check([7, 4], 'b') == False and self.is_square_in_check([7, 5], 'b') == False and self.is_square_in_check([7, 6], 'b') == False:
                                         white_castling_g = True
 
                                     else:
@@ -112,13 +113,12 @@ class MoveGenerator:
                             
 
                             if self.position.white_castle_c:
-                                    self.visions_black(self.position.boardstate)
-                                    if all(isinstance(square, Empty) for square in self.position.boardstate[7, 1:4]) == True and self.vision_black[7, 2:5].any() == False:
+                                    if all(isinstance(square, Empty) for square in board[7, 1:4]) == True and self.is_square_in_check([7, 4], 'b') == False and self.is_square_in_check([7, 3], 'b') == False and self.is_square_in_check([7, 2], 'b') == False:
                                         white_castling_c = True
                                     else:
                                         white_castling_c = False
 
-                            moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), white_castling_c, white_castling_g)
+                            moves, moves_vision = piece.get_legal_moves(board, (i, j), white_castling_c, white_castling_g)
                             for m in moves: 
                                 move = Move((i, j), m)
                                 pseudo_moves.append(move)
@@ -129,16 +129,17 @@ class MoveGenerator:
         elif self.position.white_to_move == False:
                 for i in range(8):
                     for j in range(8):
-                        if self.position.boardstate[i, j].color == 'b':
-                            if not isinstance(self.position.boardstate[i, j], King) and not isinstance(self.position.boardstate[i, j], Pawn):
-                                moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
+                        piece = board[i, j]
+                        if piece.color == 'b':
+                            if piece.name != 'King' and piece.name != 'Pawn':
+                                moves, moves_vision = piece.get_legal_moves(board, (i, j))
                                 for m in moves: 
                                     move = Move((i, j), m)
                                     pseudo_moves.append(move)
 
 
-                            elif isinstance(self.position.boardstate[i, j], Pawn):
-                                moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j))
+                            elif piece.name == 'Pawn':
+                                moves, moves_vision = piece.get_legal_moves(board, (i, j))
                                 for m in moves: 
                                     if m[0] == 7:
                                         promotion_pieces = ['Q', 'R', 'K', 'B']
@@ -154,12 +155,11 @@ class MoveGenerator:
                                     move = Move((i, j), self.position.en_passant_square, None, True)
                                     pseudo_moves.append(move)
 
-                            elif isinstance(self.position.boardstate[i, j], King):
+                            elif piece.name == 'King':
                                 black_castling_c = None
                                 black_castling_g = None
                                 if self.position.black_castle_g:
-                                    self.visions_white(self.position.boardstate)
-                                    if all(isinstance(square, Empty) for square in self.position.boardstate[0, 5:7]) == True and self.vision_white[0, 4:7].any() == False:
+                                    if all(isinstance(square, Empty) for square in board[0, 5:7]) == True and self.is_square_in_check([0, 4], 'w') == False and self.is_square_in_check([0, 5], 'w') == False and self.is_square_in_check([0, 6], 'w') == False:
                                         black_castling_g = True
 
                                     else:
@@ -167,14 +167,13 @@ class MoveGenerator:
                             
 
                                 if self.position.black_castle_c:
-                                    self.visions_white(self.position.boardstate)
-                                    if all(isinstance(square, Empty) for square in self.position.boardstate[0, 1:4]) == True and self.vision_white[0, 2:5].any() == False:
+                                    if all(isinstance(square, Empty) for square in board[0, 1:4]) == True and self.is_square_in_check([0, 4], 'w') == False and self.is_square_in_check([0, 3], 'w') == False and self.is_square_in_check([0, 2], 'w') == False:
                                         black_castling_c = True
 
                                     else:
                                         black_castling_c = False
 
-                                moves, moves_vision = self.position.boardstate[i, j].get_legal_moves(self.position.boardstate, (i, j), black_castling_c, black_castling_g)
+                                moves, moves_vision = piece.get_legal_moves(board, (i, j), black_castling_c, black_castling_g)
                                 for m in moves: 
                                     move = Move((i, j), m)
                                     pseudo_moves.append(move)
@@ -392,6 +391,10 @@ class MoveGenerator:
            
 
         return legal_moves
+    
+    def generate_legal_moves_directly(self):
+
+        pass
 
 
                     

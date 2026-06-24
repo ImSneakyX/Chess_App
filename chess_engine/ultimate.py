@@ -59,17 +59,16 @@ class Ultimate:
 
 
     def static_evaluation(self, position):
-
         sum_value_white = 0
         sum_value_black = 0
 
         for i in range(8):
             for j in range(8):
-
-                if position.boardstate[i, j].color == 'w':
-                    sum_value_white += position.boardstate[i, j].value
-                elif position.boardstate[i, j].color == 'b':
-                    sum_value_black += position.boardstate[i, j].value
+                piece = position.boardstate[i, j]
+                if piece.color == 'w':
+                    sum_value_white += piece.value
+                elif piece.color == 'b':
+                    sum_value_black += piece.value
 
         evaluation = sum_value_white - sum_value_black
         return evaluation

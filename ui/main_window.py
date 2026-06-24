@@ -8,6 +8,7 @@ from ui.board_gui import ChessBoard, ArrowOverlay, EvalBar
 from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt, Confirmation
 from chessboard.game_controller import GameController
 import time
+from time import perf_counter_ns
 import copy
 
 
@@ -47,7 +48,7 @@ class EngineWorker(QObject):
 
         self.engine = engine
         self.position = position
-        self.depth = 1
+        self.depth = 5
 
     def run(self):
         t1 = time.time()
