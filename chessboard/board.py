@@ -130,17 +130,30 @@ class Board:
 
         sum_value_white = 0
         sum_value_black = 0
+        add_pawn_value = 0
 
         for i in range(8):
             for j in range(8):
                 piece = self.start_pos[i, j]
                 if piece.color == 'w':
                     sum_value_white += piece.value
+                    if piece.name == 'Pawn':
+                        add_pawn_value += -0.1 * i + 0,6
+
+
                 elif piece.color == 'b':
                     sum_value_black += piece.value
+                    if piece.name == 'Pawn':
+                        add_pawn_value -= 0.1 * i - 0,1
+
+                
 
         abs_value = sum_value_white - sum_value_black
 
-        return abs_value
+        return abs_value, add_pawn_value
+    
+
+
+
 
   

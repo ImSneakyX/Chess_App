@@ -8,7 +8,7 @@ from chessboard.move import Undo
 
 class Position: 
 
-    def __init__(self, boardstate, king_w_pos, king_b_pos, white_to_move, white_castle_c, white_castle_g, black_castle_c, black_castle_g, abs_piece_value, en_passant_square = None):
+    def __init__(self, boardstate, king_w_pos, king_b_pos, white_to_move, white_castle_c, white_castle_g, black_castle_c, black_castle_g, abs_piece_value, add_pawn_value, en_passant_square = None):
         
         self.boardstate = boardstate
         self.white_to_move = white_to_move
@@ -25,6 +25,7 @@ class Position:
         self.en_passant_square = en_passant_square
 
         self.abs_piece_value = abs_piece_value
+        self.add_pawn_value = add_pawn_value
 
         self.empty = Empty()
 
@@ -47,6 +48,7 @@ class Position:
         undo.old_turn = self.white_to_move
 
         undo.abs_piece_value = self.abs_piece_value
+        undo.add_pawn_value = self.add_pawn_value
 
         undo.moved_piece = self.boardstate[move.start_square]
         undo.captured_piece = self.boardstate[move.end_square]
@@ -94,7 +96,7 @@ class Position:
         if move.end_square == (0, 0):
             self.black_castle_c = False 
 
-        if isinstance(piece, King):
+        if piece.name == 'King':
             if piece.color == 'w':
                 self.king_w_pos = move.end_square
             else:
@@ -136,7 +138,11 @@ class Position:
                 undo.rook_to = (7, 5)
                 undo.rook = self.boardstate[7, 5]
 
-        elif isinstance(piece, Pawn):
+        elif piece.name == 'Pawn':
+
+            row_start, col_start = move.start_square
+            row_end, col_end = move.end_square
+            
             if move.promotion_piece != None:
                 undo.promotion = piece
                 if move.promotion_piece == 'Q':
@@ -150,6 +156,11 @@ class Position:
 
                 if move.promotion_piece == 'B':
                     self.boardstate[move.end_square] = Bishop(piece.color)
+
+                if piece.color == 'w':
+                    self.add_pawn_value -= 0,6
+                else: 
+                    self.add_pawn_value += 0,6
 
             elif move.en_passant == True:
                 row_end, col_end = move.end_square
@@ -166,13 +177,13 @@ class Position:
                     
 
             else: 
-                row_start, col_start = move.start_square
-                row_end, col_end = move.end_square
-
                 if abs(row_start - row_end) == 2:
                     row_middle = (row_start + row_end) // 2
 
                     self.en_passant_square = (row_middle, col_start)
+
+                
+            self.add_pawn_value += 0.1 * (row_start - row_end)
                 
             
 
@@ -189,6 +200,7 @@ class Position:
         self.boardstate[move.end_square] = undo.captured_piece
 
         self.abs_piece_value = undo.abs_piece_value
+        self.add_pawn_value = undo.add_pawn_value
 
         if undo.ep_captured_square is not None:
             self.boardstate[undo.ep_captured_square] = undo.ep_captured_piece
