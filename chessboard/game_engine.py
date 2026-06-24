@@ -241,6 +241,129 @@ class MoveGenerator:
                             self.vision_white[(new_row, new_col)] = True
         return self.vision_white
     
+    def is_square_in_check(self, square, color):
+        
+        board = self.position.boardstate
+        row, col = square
+
+        limit1 = row # oben
+        limit2 = col #links 
+        limit3 = 7 - row #unten
+        limit4 = 7 - col #rechts
+
+        limit5 = min(row, col) #oben links
+        limit6 = min(7-row, 7-col) #unten rechts
+        limit7 = min(7-row, col) #unten links
+        limit8 = min(row, 7-col) #oben rechts
+
+        
+        for i in range(1, limit1 + 1):
+            piece = board[(row - i, col)]
+            if piece.name != 'empty':
+                if piece.color == color and (piece.name == 'Queen' or piece.name == 'Rook'):
+                    return True
+                break
+
+        for i in range(1, limit2 + 1):
+            piece = board[(row, col - i)]
+            if piece.name != 'empty':
+                if piece.color == color and (piece.name == 'Queen' or piece.name == 'Rook'):
+                    return True
+                break
+
+        for i in range(1, limit3 + 1):
+            piece = board[(row + i, col)]
+            if piece.name != 'empty':
+                if piece.color == color and (piece.name == 'Queen' or piece.name == 'Rook'):
+                    return True
+                break
+
+        for i in range(1, limit4 + 1):
+            piece = board[(row, col + i)]
+            if piece.name != 'empty':
+                if piece.color == color and (piece.name == 'Queen' or piece.name == 'Rook'):
+                    return True
+                break
+
+
+        for i in range(1, limit5 + 1):
+            piece = board[(row - i, col - i)]
+            if piece.name != 'empty':
+                if piece.color == color and (piece.name == 'Queen' or piece.name == 'Bishop'):
+                    return True
+                break
+            
+        for i in range(1, limit6 + 1):
+            piece = board[(row + i, col + i)]
+            if piece.name != 'empty':
+                if piece.color == color and (piece.name == 'Queen' or piece.name == 'Bishop'):
+                    return True
+                break
+            
+        for i in range(1, limit7 + 1):
+            piece = board[(row + i, col - i)]
+            if piece.name != 'empty':
+                if piece.color == color and (piece.name == 'Queen' or piece.name == 'Bishop'):
+                    return True
+                break
+
+        for i in range(1, limit8 + 1):
+            piece = board[(row - i, col + i)]
+            if piece.name != 'empty':
+                if piece.color == color and (piece.name == 'Queen' or piece.name == 'Bishop'):
+                    return True
+                break
+            
+
+        offsets_knight = [(-2, 1), (-2, -1), (-1, -2), (1,-2), (2,-1), (2,1), (1,2), (-1, 2)]
+
+        for x, y in offsets_knight:
+            new_row, new_col = row + x, col + y
+            if 0 <= new_row <8 and 0 <= new_col <8: 
+                piece = board[(new_row, new_col)]
+                if piece.color == color and piece.name == 'Knight':
+                    return True
+        
+        offsets_king = [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
+
+        for x, y in offsets_king:
+            new_row, new_col = row + x, col + y
+            if 0 <= new_row <8 and 0 <= new_col <8: 
+                piece = board[(new_row, new_col)]
+                if piece.color == color and piece.name == 'King':
+                    return True
+        
+            
+        if color == 'b':
+
+            if 0 <= row - 1 < 8 and 0 <= col - 1 < 8:
+                piece = board[(row - 1, col - 1)]
+                if piece.color == color and piece.name == 'Pawn':
+                    return True
+            
+            if 0 <= row - 1 < 8 and 0 <= col + 1 < 8:
+                piece = board[(row - 1, col + 1)]
+                if piece.color == color and piece.name == 'Pawn':
+                    return True
+        
+        else: 
+            if 0 <= row + 1 < 8 and 0 <= col - 1 < 8:
+                piece = board[(row + 1, col - 1)]
+                if piece.color == color and piece.name == 'Pawn':
+                    return True
+            
+            if 0 <= row + 1 < 8 and 0 <= col + 1 < 8:
+                piece = board[(row + 1, col + 1)]
+                if piece.color == color and piece.name == 'Pawn':
+                    return True
+
+        return False
+
+
+
+
+
+    
     def generate_legal_moves(self):
         legal_moves = []
         
@@ -249,8 +372,7 @@ class MoveGenerator:
             for move in moves:
                 
                 undo = self.position.make_move(move)
-                self.visions_black(self.position.boardstate)
-                if self.vision_black[self.position.king_w_pos] == False:
+                if self.is_square_in_check(self.position.king_w_pos, 'b') == False:
                     legal_moves.append(move)
                 self.position.unmake_move(move, undo)
 
@@ -258,21 +380,16 @@ class MoveGenerator:
 
 
         if self.position.white_to_move == False:
-            t1 = time.time()
             moves = self.get_pseudo_legal_moves()
             for move in moves:
-                #t1 = time.time()
-                undo = self.position.make_move(move)
-                #t2 = time.time()
 
-                self.visions_white(self.position.boardstate)
-                #t3 = time.time()
-                if self.vision_white[self.position.king_b_pos] == False:
+                undo = self.position.make_move(move)
+  
+                if self.is_square_in_check(self.position.king_b_pos, 'w') == False:
                     legal_moves.append(move)
                 self.position.unmake_move(move, undo)
-            t2 = time.time()
-            print(f'move: {t2-t1:.7f}')
-            #print(f'vision: {t3-t2:.7f}')
+
+           
 
         return legal_moves
 
