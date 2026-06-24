@@ -258,13 +258,21 @@ class MoveGenerator:
 
 
         if self.position.white_to_move == False:
+            t1 = time.time()
             moves = self.get_pseudo_legal_moves()
             for move in moves:
+                #t1 = time.time()
                 undo = self.position.make_move(move)
+                #t2 = time.time()
+
                 self.visions_white(self.position.boardstate)
+                #t3 = time.time()
                 if self.vision_white[self.position.king_b_pos] == False:
                     legal_moves.append(move)
                 self.position.unmake_move(move, undo)
+            t2 = time.time()
+            print(f'move: {t2-t1:.7f}')
+            #print(f'vision: {t3-t2:.7f}')
 
         return legal_moves
 
