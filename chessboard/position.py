@@ -183,7 +183,7 @@ class Position:
                     self.en_passant_square = (row_middle, col_start)
 
                 
-            self.add_pawn_value += 0.1 * (row_start - row_end)
+            self.add_pawn_value += round(0.1 * (row_start - row_end), 1)
                 
             
 

@@ -48,7 +48,7 @@ class EngineWorker(QObject):
 
         self.engine = engine
         self.position = position
-        self.depth = 5
+        self.depth = 1
 
     def run(self):
         t1 = time.time()
