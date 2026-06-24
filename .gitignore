@@ -4,3 +4,4 @@ test.ipynb
 .DS_Store
 *.pyc
 .vscode/
+benchmark.py
