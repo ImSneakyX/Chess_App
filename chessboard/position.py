@@ -59,9 +59,13 @@ class Position:
 
         if undo.captured_piece.color == 'w':
             self.abs_piece_value -= undo.captured_piece.value
+            if undo.captured_piece.name == 'Pawn':
+                self.add_pawn_value -= round(-0.1 * move.end_square[0] + 0.6, 1)
 
         elif undo.captured_piece.color == 'b':
             self.abs_piece_value += undo.captured_piece.value
+            if undo.captured_piece.name == 'Pawn':
+                self.add_pawn_value += round(0.1 * move.end_square[0] - 0.1, 1)
 
 
         if move.start_square == (7, 4):
