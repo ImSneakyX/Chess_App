@@ -15,7 +15,8 @@ class GameController:
 
 
         self.board = Board()
-        self.position = Position(self.board.start_position(), self.board.king_w_start, self.board.king_b_start, True, True, True, True, True)
+
+        self.position = Position(self.board.start_position(), self.board.king_w_start, self.board.king_b_start, True, True, True, True, True, self.board.abs_piece_value())
         self.gameEngine = GameEngine(self.position)
         self.ultimate = Ultimate()
 

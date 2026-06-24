@@ -35,5 +35,7 @@ class Undo:
         self.rook_from = None
         self.rook_to = None
         self.rook = None
+        
+        self.abs_piece_value = None
 
 

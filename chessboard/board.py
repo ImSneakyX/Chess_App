@@ -125,5 +125,22 @@ class Board:
                 self.notation[row, col] = ''.join((col_name[row, col], row_name[row, col]))
 
         return self.notation
+    
+    def abs_piece_value(self):
+
+        sum_value_white = 0
+        sum_value_black = 0
+
+        for i in range(8):
+            for j in range(8):
+                piece = self.start_pos[i, j]
+                if piece.color == 'w':
+                    sum_value_white += piece.value
+                elif piece.color == 'b':
+                    sum_value_black += piece.value
+
+        abs_value = sum_value_white - sum_value_black
+
+        return abs_value
 
   

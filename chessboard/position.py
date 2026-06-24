@@ -8,7 +8,7 @@ from chessboard.move import Undo
 
 class Position: 
 
-    def __init__(self, boardstate, king_w_pos, king_b_pos, white_to_move, white_castle_c, white_castle_g, black_castle_c, black_castle_g, en_passant_square = None):
+    def __init__(self, boardstate, king_w_pos, king_b_pos, white_to_move, white_castle_c, white_castle_g, black_castle_c, black_castle_g, abs_piece_value, en_passant_square = None):
         
         self.boardstate = boardstate
         self.white_to_move = white_to_move
@@ -23,6 +23,8 @@ class Position:
         self.black_castle_g = black_castle_g
 
         self.en_passant_square = en_passant_square
+
+        self.abs_piece_value = abs_piece_value
 
         self.empty = Empty()
 
@@ -44,12 +46,20 @@ class Position:
 
         undo.old_turn = self.white_to_move
 
+        undo.abs_piece_value = self.abs_piece_value
+
         undo.moved_piece = self.boardstate[move.start_square]
         undo.captured_piece = self.boardstate[move.end_square]
 
         piece = self.boardstate[move.start_square]
         self.boardstate[move.end_square] = piece
         self.boardstate[move.start_square] = self.empty
+
+        if undo.captured_piece.color == 'w':
+            self.abs_piece_value -= undo.captured_piece.value
+
+        elif undo.captured_piece.color == 'b':
+            self.abs_piece_value += undo.captured_piece.value
 
 
         if move.start_square == (7, 4):
@@ -177,6 +187,8 @@ class Position:
         piece = self.boardstate[move.end_square]
         self.boardstate[move.start_square] = piece
         self.boardstate[move.end_square] = undo.captured_piece
+
+        self.abs_piece_value = undo.abs_piece_value
 
         if undo.ep_captured_square is not None:
             self.boardstate[undo.ep_captured_square] = undo.ep_captured_piece
