@@ -365,28 +365,31 @@ class MoveGenerator:
     
     def generate_legal_moves(self):
         legal_moves = []
-        
-        if self.position.white_to_move == True:
-            moves = self.get_pseudo_legal_moves()
-            for move in moves:
-                
-                undo = self.position.make_move(move)
-                if self.is_square_in_check(self.position.king_w_pos, 'b') == False:
-                    legal_moves.append(move)
-                self.position.unmake_move(move, undo)
+        self.position.calc_pins()
+        moves = self.get_pseudo_legal_moves()
+        for move in moves:
+            if move.start_square in self.position.pinned:
+                dr, dc = self.position.pinned[move.start_square]
+                sr, sc = move.start_square
+                er, ec = move.end_square
 
+                move_dr = er - sr
+                move_dc = ec - sc
+
+                if move_dr * dc != move_dc * dr:
+                    continue
+                    
+            undo = self.position.make_move(move)
+            if self.position.white_to_move == False:
+                legal = not self.is_square_in_check(self.position.king_w_pos, 'b')
+
+            else: 
+                legal = not self.is_square_in_check(self.position.king_b_pos, 'w')
     
+            self.position.unmake_move(move, undo)
 
-
-        if self.position.white_to_move == False:
-            moves = self.get_pseudo_legal_moves()
-            for move in moves:
-
-                undo = self.position.make_move(move)
-  
-                if self.is_square_in_check(self.position.king_b_pos, 'w') == False:
-                    legal_moves.append(move)
-                self.position.unmake_move(move, undo)
+            if legal:
+                legal_moves.append(move)
 
            
 
