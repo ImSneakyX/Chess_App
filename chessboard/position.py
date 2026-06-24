@@ -26,6 +26,8 @@ class Position:
 
         self.empty = Empty()
 
+        
+
   
     
 
@@ -210,6 +212,7 @@ class Position:
 
         self.checkers = []
         self.pinned = {}
+        self.check_mask = set()
 
         king = self.king_w_pos if self.white_to_move else self.king_b_pos
 
@@ -250,7 +253,7 @@ class Position:
                                 self.pinned[possible_pin] = (dr, dc)
                         
                             else:
-                                self.checkers.append((r, c))
+                                self.checkers.append((r, c, dr, dc))
                     else:
                         if piece.name in ('Bishop','Queen'):
 
@@ -258,10 +261,27 @@ class Position:
                                 self.pinned[possible_pin] = (dr, dc)
                             
                             else:
-                                self.checkers.append((r, c))            
+                                self.checkers.append((r, c, dr, dc))            
 
                 r += dr
                 c += dc
+        
+        if len(self.checkers) == 1:
+
+            checker_row, checker_col, dr, dc = self.checkers[0]
+
+            self.check_mask.add((checker_row, checker_col))
+
+            r = king_row + dr
+            c = king_col + dc
+
+            while (r, c) != (checker_row, checker_col):
+
+                self.check_mask.add((r, c))
+
+                r += dr
+                c += dc
+
 
 
 

@@ -368,6 +368,7 @@ class MoveGenerator:
         self.position.calc_pins()
         moves = self.get_pseudo_legal_moves()
         for move in moves:
+            piece = self.position.boardstate[move.start_square]
             if move.start_square in self.position.pinned:
                 dr, dc = self.position.pinned[move.start_square]
                 sr, sc = move.start_square
@@ -378,18 +379,34 @@ class MoveGenerator:
 
                 if move_dr * dc != move_dc * dr:
                     continue
-                    
-            undo = self.position.make_move(move)
-            if self.position.white_to_move == False:
-                legal = not self.is_square_in_check(self.position.king_w_pos, 'b')
 
-            else: 
-                legal = not self.is_square_in_check(self.position.king_b_pos, 'w')
-    
-            self.position.unmake_move(move, undo)
+            if len(self.position.checkers) == 1:
+
+                if piece.name != 'King':
+
+                    if move.end_square not in self.position.check_mask:
+                            continue
+
+            if len(self.position.checkers) >= 2:
+
+                if piece.name != 'King':
+                    continue
+                    
+            if piece.name == 'King':
+
+                undo = self.position.make_move(move)
+                if self.position.white_to_move == False:
+                    legal = not self.is_square_in_check(self.position.king_w_pos, 'b')
+
+                else: 
+                    legal = not self.is_square_in_check(self.position.king_b_pos, 'w')
+        
+                self.position.unmake_move(move, undo)
+            else:
+                legal = True
 
             if legal:
-                legal_moves.append(move)
+                    legal_moves.append(move)
 
            
 
