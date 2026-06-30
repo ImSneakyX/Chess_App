@@ -23,9 +23,6 @@ class GameController:
         self.ultimate = Ultimate()
 
 
-    def update_position(self, position):
-
-        self.position = Position(position[0], position[1])
 
 
 
