@@ -105,6 +105,7 @@ class Dialog(QDialog):
         self.setFixedSize(400, 400)
         bg_color = '#2b2b2b'
         bg_color_hover = "#3E3D3D"
+        self.action = None
 
         self.frame = QFrame(self)
         self.frame.setGeometry(0, 0, 400, 400)
@@ -165,13 +166,18 @@ class Dialog(QDialog):
 
 
     def play_again(self):
-        pass
+
+        self.action = 'play again'
+        self.accept()
+        
+        
 
     def review(self):
         pass
 
     def menu(self):
-        pass
+        self.action = 'menu'
+        self.accept()
 
 
 class DialogWin(Dialog):
@@ -332,6 +338,8 @@ class DialogRemisFiftyMoves(DialogRemis):
         label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
 
 class Confirmation(QWidget):
+    new_game_signal = pyqtSignal()
+    menu_signal = pyqtSignal()
     def __init__(self, width, height, parent = None):
         super().__init__(parent)
 
@@ -368,6 +376,18 @@ class Confirmation(QWidget):
         resign_dialog = DialogLoseResignation('w')
         self.close()
         resign_dialog.exec_()
+
+        match resign_dialog.action:
+            case 'play again':
+                self.new_game_signal.emit()
+
+            case 'menu':
+                self.menu_signal.emit()
+
+
+
+
+
 
 
     

@@ -38,6 +38,7 @@ class Launcher(QMainWindow):
 
     def game(self):
         self.window = ChessGame()
+        self.window.launcher_signal.connect(lambda: self.show())
         self.window.show()
         self.hide()
 
@@ -60,6 +61,7 @@ class EngineWorker(QObject):
 
 
 class ChessGame(QMainWindow):
+    launcher_signal = pyqtSignal()
     def __init__(self):
         self.arrows = []
         super().__init__()
@@ -105,8 +107,29 @@ class ChessGame(QMainWindow):
         width = 256
         height = 130
         self.confirmation = Confirmation(width, height, self)
+        self.confirmation.new_game_signal.connect(self.new_game)
+        self.confirmation.menu_signal.connect(self.back_to_menu)
         self.confirmation.setGeometry(self.resign_button.x(), self.resign_button.y() - 150 , width, height)
         self.confirmation.show()
+
+
+    
+    def back_to_menu(self):
+        self.launcher_signal.emit()
+        self.close()
+
+    def new_game(self):
+        self.GameController.gameEngine.position = self.GameController.position
+        self.board_widget.update_board()
+
+
+
+    
+    
+
+
+
+
 
     def analysis_finished(self, value):
 
