@@ -60,12 +60,12 @@ class Position:
         if undo.captured_piece.color == 'w':
             self.abs_piece_value -= undo.captured_piece.value
             if undo.captured_piece.name == 'Pawn':
-                self.add_pawn_value -= round(-0.1 * move.end_square[0] + 0.6, 1)
+                self.add_pawn_value -= -0.1 * move.end_square[0] + 0.6
 
         elif undo.captured_piece.color == 'b':
             self.abs_piece_value += undo.captured_piece.value
             if undo.captured_piece.name == 'Pawn':
-                self.add_pawn_value += round(0.1 * move.end_square[0] - 0.1, 1)
+                self.add_pawn_value += 0.1 * move.end_square[0] - 0.1
 
 
         if move.start_square == (7, 4):
@@ -187,7 +187,7 @@ class Position:
                     self.en_passant_square = (row_middle, col_start)
 
                 
-            self.add_pawn_value += round(0.1 * (row_start - row_end), 1)
+            self.add_pawn_value += 0.1 * (row_start - row_end)
                 
             
 

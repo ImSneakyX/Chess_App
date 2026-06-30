@@ -60,7 +60,7 @@ class Ultimate:
 
     def static_evaluation(self, position):
 
-        evaluation = position.abs_piece_value + position.add_pawn_value
+        evaluation = position.abs_piece_value + round(position.add_pawn_value, 1)
         return evaluation
 
     
