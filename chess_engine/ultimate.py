@@ -14,6 +14,7 @@ class Ultimate:
         self.game_over = game_over
         self.played_moves = []
         self.calculations = 0
+        self.best_move = None
 
 
 
@@ -22,39 +23,46 @@ class Ultimate:
         if depth == 0 or self.game_over:
             self.calculations += 1
             
-            return self.static_evaluation(position)
+            return self.static_evaluation(position), []
         
         move_gen = MoveGenerator(position)
         
         moves = move_gen.generate_legal_moves()
+        best_move = []
         if position.white_to_move == True:
 
             maxEval = -100000
             
             for move in moves:
                 undo = position.make_move(move)
-                eval = self.minimax(position, depth-1, alpha, beta)
-                position.unmake_move(move, undo)
+                eval, best_move_list = self.minimax(position, depth-1, alpha, beta)
 
-                maxEval = max(maxEval, eval)
+                position.unmake_move(move, undo)
+                if maxEval < eval:
+                    maxEval = eval
+                    best_move.clear()
+                    best_move.insert(0, move)
+
                 alpha = max(alpha, eval)
                 if beta <= alpha:
                     break
             
             
-            return maxEval
+            return maxEval, best_move
         else:
             minEval = 100000
             for move in moves:
                 undo = position.make_move(move)
-                eval = self.minimax(position, depth-1, alpha, beta)
+                eval, best_move_list = self.minimax(position, depth-1, alpha, beta)
                 position.unmake_move(move, undo)
-
-                minEval = min(minEval, eval)
+                if minEval > eval:
+                    minEval = eval
+                    best_move.clear()
+                    best_move.insert(0, move)
                 beta = min(beta, eval)
                 if beta <= alpha:
                     break
-            return minEval
+            return minEval, best_move
         
 
 

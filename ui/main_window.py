@@ -52,19 +52,21 @@ class Launcher(QMainWindow):
 
 class EngineWorker(QObject):
     finished = pyqtSignal(float)
+    best_move = pyqtSignal(list)
     def __init__(self, engine, position):
         super().__init__()
 
         self.engine = engine
         self.position = position
-        self.depth = 0
+        self.depth = 5
 
     def run(self):
         t1 = time.time()
-        value = self.engine.minimax(self.position, self.depth, -100000, 100000)
+        value, best_move = self.engine.minimax(self.position, self.depth, -100000, 100000)
         t2 = time.time()
         print(f'GUI Update: {t2-t1:.5f} sek')
         self.finished.emit(value)
+        self.best_move.emit(best_move)
 
 
 
@@ -282,9 +284,19 @@ class Computer_Game(QMainWindow):
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.analysis_finished)
         self.worker.finished.connect(self.thread.quit)
+        self.worker.best_move.connect(self.opponent)
         self.thread.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
         self.thread.start()
+
+    def opponent(self, best_move):
+
+
+        if self.GameController.gameEngine.position.white_to_move == False:
+
+            self.board_widget.process_move(best_move[0])
+
+
 
 
 
