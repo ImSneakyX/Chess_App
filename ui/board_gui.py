@@ -60,7 +60,6 @@ class ChessBoard(QWidget):
         self.engine.check_move(move)
 
         if self.engine.legal == True and self.engine.promotion == False:
-
             self.update_board()
             
 
@@ -110,6 +109,7 @@ class ChessBoard(QWidget):
 
   
         self.move_signal.emit(self.engine.position)
+
 
     def board_reset(self):
         for i in range(8):

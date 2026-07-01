@@ -277,24 +277,22 @@ class Computer_Game(QMainWindow):
 
 
     def update_evalbar(self, position):
-
-        self.thread = QThread()
-        self.worker = EngineWorker(self.GameController.ultimate, copy.deepcopy(position))
-        self.worker.moveToThread(self.thread)
-        self.thread.started.connect(self.worker.run)
-        self.worker.finished.connect(self.analysis_finished)
-        self.worker.finished.connect(self.thread.quit)
-        self.worker.best_move.connect(self.opponent)
-        self.thread.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
-        self.thread.start()
+        if self.GameController.gameEngine.position.white_to_move == False:
+            self.thread = QThread()
+            self.worker = EngineWorker(self.GameController.ultimate, copy.deepcopy(position))
+            self.worker.moveToThread(self.thread)
+            self.thread.started.connect(self.worker.run)
+            self.worker.finished.connect(self.analysis_finished)
+            self.worker.finished.connect(self.thread.quit)
+            self.worker.best_move.connect(self.opponent)
+            self.thread.finished.connect(self.worker.deleteLater)
+            self.thread.finished.connect(self.thread.deleteLater)
+            self.thread.start()
 
     def opponent(self, best_move):
 
-
-        if self.GameController.gameEngine.position.white_to_move == False:
-
             self.board_widget.process_move(best_move[0])
+            
 
 
 
