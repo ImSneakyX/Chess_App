@@ -120,9 +120,8 @@ class ChessGame(QMainWindow):
 
     def new_game(self):
         self.GameController.gameEngine.position = copy.deepcopy(self.GameController.position)
-        self.board_widget.update_board()
-        print('works')
-        print(self.GameController.position.white_castle_g)
+        self.board_widget.board_reset()
+
 
 
 
