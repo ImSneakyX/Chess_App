@@ -53,6 +53,7 @@ class Position:
         undo.moved_piece = self.boardstate[move.start_square]
         undo.captured_piece = self.boardstate[move.end_square]
 
+        self.en_passant_square = None
         piece = self.boardstate[move.start_square]
         self.boardstate[move.end_square] = piece
         self.boardstate[move.start_square] = self.empty
@@ -214,7 +215,7 @@ class Position:
         self.black_castle_c = undo.old_castle_black_c
         self.black_castle_g = undo.old_castle_black_g
 
-        if isinstance(piece, King):
+        if piece.name == 'King':
             if piece.color == 'b':
 
                 self.king_b_pos = move.start_square
