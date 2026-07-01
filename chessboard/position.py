@@ -236,7 +236,6 @@ class Position:
 
     def calc_pins(self):
 
-        board = self.boardstate
 
         self.checkers = []
         self.pinned = {}
@@ -289,7 +288,8 @@ class Position:
                                 self.pinned[possible_pin] = (dr, dc)
                             
                             else:
-                                self.checkers.append((r, c, dr, dc))            
+                                self.checkers.append((r, c, dr, dc))  
+                    break          
 
                 r += dr
                 c += dc

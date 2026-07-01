@@ -366,6 +366,7 @@ class MoveGenerator:
     def generate_legal_moves(self):
         legal_moves = []
         self.position.calc_pins()
+        print(self.position.pinned)
         moves = self.get_pseudo_legal_moves()
         for move in moves:
             piece = self.position.boardstate[move.start_square]
