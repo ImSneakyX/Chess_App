@@ -20,7 +20,6 @@ class GameEngine:
     def check_move(self, move_made):
 
         check_move = []
-        print(self.position.en_passant_square)
         move_gen = MoveGenerator(self.position)
         legal_moves = move_gen.generate_legal_moves()
         for move in legal_moves:
