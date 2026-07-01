@@ -162,9 +162,9 @@ class Position:
                     self.boardstate[move.end_square] = Bishop(piece.color)
 
                 if piece.color == 'w':
-                    self.add_pawn_value -= 0,6
+                    self.add_pawn_value -= 0.6
                 else: 
-                    self.add_pawn_value += 0,6
+                    self.add_pawn_value += 0.6
 
             elif move.en_passant == True:
                 row_end, col_end = move.end_square
