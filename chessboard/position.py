@@ -151,7 +151,7 @@ class Position:
             
             if move.promotion_piece != None:
                 undo.promotion = piece
-                if move.promotion_piece.name == 'Queen':
+                if move.promotion_piece== 'Q':
 
                     self.boardstate[move.end_square] = Queen(piece.color)
                     if piece.color == 'w':
@@ -161,21 +161,21 @@ class Position:
                         self.abs_piece_value -= self.boardstate[move.end_square].value
 
                 
-                if move.promotion_piece.name == 'Rook':
+                if move.promotion_piece == 'R':
                     self.boardstate[move.end_square] = Rook(piece.color, 'l')
                     if piece.color == 'w':
                         self.abs_piece_value += self.boardstate[move.end_square].value
                     else:
                         self.abs_piece_value -= self.boardstate[move.end_square].value
 
-                if move.promotion_piece.name == 'Knight':
+                if move.promotion_piece == 'K':
                     self.boardstate[move.end_square] = Knight(piece.color)
                     if piece.color == 'w':
                         self.abs_piece_value += self.boardstate[move.end_square].value
                     else:
                         self.abs_piece_value -= self.boardstate[move.end_square].value
 
-                if move.promotion_piece.name == 'Bishop':
+                if move.promotion_piece == 'B':
                     self.boardstate[move.end_square] = Bishop(piece.color)
                     if piece.color == 'w':
                         self.abs_piece_value += self.boardstate[move.end_square].value

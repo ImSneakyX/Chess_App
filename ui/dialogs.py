@@ -59,7 +59,7 @@ class PromotionSquares(QPushButton):
 
 
 class Promote(QDialog):
-    selected_piece = pyqtSignal(object)
+    selected_piece = pyqtSignal(str)
     def __init__(self, color, parent = None):
         super().__init__(parent)
         self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
@@ -74,14 +74,14 @@ class Promote(QDialog):
         promote_queen = PromotionSquares(Queen(color), self)
         promote_queen.setGeometry(0, 0, 64, 64) 
 
-        promote_knight.clicked.connect(lambda: self.signal_piece_to_main(promote_knight.piece))
-        promote_bishop.clicked.connect(lambda: self.signal_piece_to_main(promote_bishop.piece))
-        promote_rook.clicked.connect(lambda: self.signal_piece_to_main(promote_rook.piece))
-        promote_queen.clicked.connect(lambda: self.signal_piece_to_main(promote_queen.piece))
+        promote_knight.clicked.connect(lambda: self.signal_piece_to_main('K'))
+        promote_bishop.clicked.connect(lambda: self.signal_piece_to_main('B'))
+        promote_rook.clicked.connect(lambda: self.signal_piece_to_main('R'))
+        promote_queen.clicked.connect(lambda: self.signal_piece_to_main('Q'))
 
-    def signal_piece_to_main(self, object):
+    def signal_piece_to_main(self, piece):
 
-        self.selected_piece.emit(object)
+        self.selected_piece.emit(piece)
         self.accept()
 
 
