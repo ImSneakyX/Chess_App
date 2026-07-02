@@ -252,6 +252,39 @@ class Position:
 
         directions_knight = [(-2, 1), (-2, -1), (-1, -2), (1,-2), (2,-1), (2,1), (1,2), (-1, 2)]
 
+        if self.white_to_move:
+            directions_pawn = [(-1, -1), (-1, 1)]
+            for dr, dc in directions_pawn:
+
+                r = king_row + dr 
+                c = king_col + dc
+
+                if not (0 <= r < 8 and 0 <= c < 8) == True:
+                    continue
+
+                piece = self.boardstate[(r, c)]
+
+                if piece.name == 'Pawn' and piece.color == enemy:
+
+                    self.checkers.append((r, c, dr, dc))
+        else:
+            directions_pawn = [(1, -1), (1, 1)]
+            for dr, dc in directions_pawn:
+
+                r = king_row + dr 
+                c = king_col + dc
+
+                if not (0 <= r < 8 and 0 <= c < 8) == True:
+                    continue
+
+                piece = self.boardstate[(r, c)]
+
+                if piece.name == 'Pawn' and piece.color == enemy:
+
+                    self.checkers.append((r, c, dr, dc))
+
+
+
         for dr, dc in directions_knight:
 
             r = king_row + dr
@@ -259,7 +292,7 @@ class Position:
             if not (0 <= r < 8 and 0 <= c < 8) == True:
                 continue
             piece = self.boardstate[(r, c)]
-            
+
             if piece.name == 'Knight' and piece.color == enemy:
 
                 self.checkers.append((r, c, dr, dc))
@@ -298,13 +331,17 @@ class Position:
                             else:
                                 self.checkers.append((r, c, dr, dc))
                     else:
+                        
                         if piece.name in ('Bishop','Queen'):
 
                             if possible_pin:
                                 self.pinned[possible_pin] = (dr, dc)
                             
                             else:
-                                self.checkers.append((r, c, dr, dc))  
+                                self.checkers.append((r, c, dr, dc))
+
+                            
+                        
                     break          
 
                 r += dr
