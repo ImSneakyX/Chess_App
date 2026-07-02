@@ -61,20 +61,9 @@ class ChessBoard(QWidget):
         self.end_square = move.end_square
         self.engine.check_move(move)
 
-        if self.engine.legal == True and self.engine.promotion == False:
+        if self.engine.legal == True:
             self.update_board()
             
-
-
-        elif self.engine.legal == True and self.engine.promotion == True:
-
-            promote_dialog = Promote(self.engine.position.boardstate[move.end_square].color, self)
-
-            promote_dialog.selected_piece.connect(self.process_promotion)
-            
-            promote_dialog.exec_()
-
-
 
         if self.engine.mate == True:
             if self.engine.position.white_to_move == False:
@@ -102,14 +91,6 @@ class ChessBoard(QWidget):
             case 'menu':
                 self.menu_signal.emit()
 
-
-
-        
-            
-
-    def process_promotion(self, object):
-        self.engine.promote_pawns(object, self.end_square)
-        self.update_board()
 
 
     def update_board(self):

@@ -4,6 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.move import Move
 from chessboard.board import Board
 from chessboard.pieces import Rook, King, Queen, Knight, Bishop, Pawn, Empty
+from ui.dialogs import Promote
 import numpy as np
 import time
 
@@ -31,14 +32,17 @@ class GameEngine:
             if check_move[0].promotion_piece != None:
                 if move_made.promotion_piece != None:
                     self.legal = True
-                    self.promotion = False
                 else:
                     self.legal = True
-                    self.promotion = True
+                    promote_dialog = Promote('w' if self.position.white_to_move else 'b')
+
+                    promote_dialog.selected_piece.connect(lambda piece: setattr(move_made, 'promotion_piece', piece))
+            
+                    promote_dialog.exec_()
 
             else:
                 self.legal = True
-                self.promotion = False
+
 
         else:
             self.legal = False
@@ -68,20 +72,6 @@ class GameEngine:
                         self.mate = True
                     else:
                         self.stalemate = True
-
-            
-
-
-
-
-
-    def promote_pawns(self, piece, square_of_promotion):
-
-        self.position.boardstate[square_of_promotion] = piece
-
-
-        
-        
 
             
 class MoveGenerator:

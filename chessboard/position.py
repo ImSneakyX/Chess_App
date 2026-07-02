@@ -145,33 +145,37 @@ class Position:
 
         elif piece.name == 'Pawn':
 
+
             row_start, col_start = move.start_square
             row_end, col_end = move.end_square
             
             if move.promotion_piece != None:
                 undo.promotion = piece
-                if move.promotion_piece == 'Q':
+                if move.promotion_piece.name == 'Queen':
+
                     self.boardstate[move.end_square] = Queen(piece.color)
                     if piece.color == 'w':
                         self.abs_piece_value += self.boardstate[move.end_square].value
+
                     else:
                         self.abs_piece_value -= self.boardstate[move.end_square].value
+
                 
-                if move.promotion_piece == 'R':
+                if move.promotion_piece.name == 'Rook':
                     self.boardstate[move.end_square] = Rook(piece.color, 'l')
                     if piece.color == 'w':
                         self.abs_piece_value += self.boardstate[move.end_square].value
                     else:
                         self.abs_piece_value -= self.boardstate[move.end_square].value
 
-                if move.promotion_piece == 'K':
+                if move.promotion_piece.name == 'Knight':
                     self.boardstate[move.end_square] = Knight(piece.color)
                     if piece.color == 'w':
                         self.abs_piece_value += self.boardstate[move.end_square].value
                     else:
                         self.abs_piece_value -= self.boardstate[move.end_square].value
 
-                if move.promotion_piece == 'B':
+                if move.promotion_piece.name == 'Bishop':
                     self.boardstate[move.end_square] = Bishop(piece.color)
                     if piece.color == 'w':
                         self.abs_piece_value += self.boardstate[move.end_square].value
@@ -180,8 +184,12 @@ class Position:
 
                 if piece.color == 'w':
                     self.add_pawn_value -= 0.6
+                    self.abs_piece_value -= 1
+
                 else: 
                     self.add_pawn_value += 0.6
+                    self.abs_piece_value += 1
+
 
             elif move.en_passant == True:
                 row_end, col_end = move.end_square
