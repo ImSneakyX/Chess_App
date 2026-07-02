@@ -237,7 +237,7 @@ class Position:
 
     def calc_pins(self):
 
-
+        board = self.boardstate
         self.checkers = []
         self.pinned = {}
         self.check_mask = set()
@@ -254,34 +254,23 @@ class Position:
 
         if self.white_to_move:
             directions_pawn = [(-1, -1), (-1, 1)]
-            for dr, dc in directions_pawn:
-
-                r = king_row + dr 
-                c = king_col + dc
-
-                if not (0 <= r < 8 and 0 <= c < 8) == True:
-                    continue
-
-                piece = self.boardstate[(r, c)]
-
-                if piece.name == 'Pawn' and piece.color == enemy:
-
-                    self.checkers.append((r, c, dr, dc))
         else:
             directions_pawn = [(1, -1), (1, 1)]
-            for dr, dc in directions_pawn:
 
-                r = king_row + dr 
-                c = king_col + dc
+        
+        for dr, dc in directions_pawn:
 
-                if not (0 <= r < 8 and 0 <= c < 8) == True:
-                    continue
+            r = king_row + dr 
+            c = king_col + dc
 
-                piece = self.boardstate[(r, c)]
+            if not (0 <= r < 8 and 0 <= c < 8) == True:
+                continue
 
-                if piece.name == 'Pawn' and piece.color == enemy:
+            piece = board[(r, c)]
 
-                    self.checkers.append((r, c, dr, dc))
+            if piece.name == 'Pawn' and piece.color == enemy:
+
+                self.checkers.append((r, c, dr, dc))
 
 
 
@@ -291,7 +280,7 @@ class Position:
             c = king_col + dc
             if not (0 <= r < 8 and 0 <= c < 8) == True:
                 continue
-            piece = self.boardstate[(r, c)]
+            piece = board[(r, c)]
 
             if piece.name == 'Knight' and piece.color == enemy:
 
@@ -307,7 +296,7 @@ class Position:
 
             while 0 <= r < 8 and 0 <= c < 8:
 
-                piece = self.boardstate[(r, c)]
+                piece = board[(r, c)]
 
                 if piece.name == 'empty':
                     r += dr
