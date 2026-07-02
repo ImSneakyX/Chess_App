@@ -233,7 +233,7 @@ class DialogLose(Dialog):
         self.label_text_top.setAlignment(Qt.AlignmentFlag.AlignCenter)
         if player_color == 'w':
             self.label_text_top.setText('Schwarz hat gewonnen')
-        else: 
+        elif player_color == 'b': 
             self.label_text_top.setText('Weiß hat gewonnen')
         self.label_text_top.setWordWrap(True)
 

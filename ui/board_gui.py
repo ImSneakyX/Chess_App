@@ -75,11 +75,11 @@ class ChessBoard(QWidget):
 
 
         if self.engine.mate == True:
-            if self.engine.white_to_move == True:
+            if self.engine.position.white_to_move == False:
                 mate_dialog_win = DialogWinMate(self)
                 QTimer.singleShot(1500, lambda: mate_dialog_win.exec_())
             else:
-                mate_dialog_lose = DialogLoseMate(self)
+                mate_dialog_lose = DialogLoseMate('w', self)
                 QTimer.singleShot(1500, lambda: mate_dialog_lose.exec_())
 
 

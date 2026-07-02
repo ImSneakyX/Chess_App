@@ -22,6 +22,7 @@ class GameEngine:
         check_move = []
         move_gen = MoveGenerator(self.position)
         legal_moves = move_gen.generate_legal_moves()
+
         for move in legal_moves:
             if move.start_square == move_made.start_square and move.end_square == move_made.end_square:
                 check_move.append(move)
@@ -50,6 +51,23 @@ class GameEngine:
 
             else:
                 self.position.make_move(move_made)
+            
+            move_gen = MoveGenerator(self.position)
+            legal_moves = move_gen.generate_legal_moves()
+            if len(legal_moves) == 0:
+                if self.position.white_to_move:
+                    if move_gen.is_square_in_check(self.position.king_w_pos, 'b'):
+                        self.mate = True
+                    else:
+                        self.stalemate = True
+
+                else:
+                    if move_gen.is_square_in_check(self.position.king_b_pos, 'w'):
+                        self.mate = True
+                    else:
+                        self.stalemate = True
+
+            
 
 
 
