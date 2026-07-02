@@ -152,15 +152,31 @@ class Position:
                 undo.promotion = piece
                 if move.promotion_piece == 'Q':
                     self.boardstate[move.end_square] = Queen(piece.color)
+                    if piece.color == 'w':
+                        self.abs_piece_value += self.boardstate[move.end_square].value
+                    else:
+                        self.abs_piece_value -= self.boardstate[move.end_square].value
                 
                 if move.promotion_piece == 'R':
                     self.boardstate[move.end_square] = Rook(piece.color, 'l')
+                    if piece.color == 'w':
+                        self.abs_piece_value += self.boardstate[move.end_square].value
+                    else:
+                        self.abs_piece_value -= self.boardstate[move.end_square].value
 
                 if move.promotion_piece == 'K':
                     self.boardstate[move.end_square] = Knight(piece.color)
+                    if piece.color == 'w':
+                        self.abs_piece_value += self.boardstate[move.end_square].value
+                    else:
+                        self.abs_piece_value -= self.boardstate[move.end_square].value
 
                 if move.promotion_piece == 'B':
                     self.boardstate[move.end_square] = Bishop(piece.color)
+                    if piece.color == 'w':
+                        self.abs_piece_value += self.boardstate[move.end_square].value
+                    else:
+                        self.abs_piece_value -= self.boardstate[move.end_square].value
 
                 if piece.color == 'w':
                     self.add_pawn_value -= 0.6
@@ -170,12 +186,17 @@ class Position:
             elif move.en_passant == True:
                 row_end, col_end = move.end_square
                 if row_end == 2:
+                    self.abs_piece_value += self.boardstate[3, col_end].value
+                    self.add_pawn_value += 0.1 * 3 - 0.1
                     undo.ep_captured_piece = self.boardstate[3, col_end]
                     self.boardstate[3, col_end] = self.empty
                     undo.ep_captured_square = (3, col_end)
+                    
 
 
                 else:
+                    self.abs_piece_value -= self.boardstate[4, col_end].value
+                    self.add_pawn_value += 0.1 * 4 - 0.1
                     undo.ep_captured_piece = self.boardstate[4, col_end]
                     self.boardstate[4, col_end] = self.empty
                     undo.ep_captured_square = (4, col_end)
