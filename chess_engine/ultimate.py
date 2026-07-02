@@ -41,7 +41,7 @@ class Ultimate:
                 if maxEval < eval:
                     maxEval = eval
                     best_move.clear()
-                    best_move.insert(0, move)
+                    best_move.append(move)
 
                 alpha = max(alpha, eval)
                 if beta <= alpha:
@@ -58,7 +58,7 @@ class Ultimate:
                 if minEval > eval:
                     minEval = eval
                     best_move.clear()
-                    best_move.insert(0, move)
+                    best_move.append(move)
                 beta = min(beta, eval)
                 if beta <= alpha:
                     break

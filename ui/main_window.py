@@ -58,7 +58,7 @@ class EngineWorker(QObject):
 
         self.engine = engine
         self.position = position
-        self.depth = 0
+        self.depth = 3
 
     def run(self):
         t1 = time.time()
@@ -257,15 +257,6 @@ class Computer_Game(QMainWindow):
     def new_game(self):
         self.GameController.gameEngine.position = copy.deepcopy(self.GameController.position)
         self.board_widget.board_reset()
-
-
-
-
-    
-    
-
-
-
 
 
     def analysis_finished(self, value):

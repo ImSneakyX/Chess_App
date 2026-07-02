@@ -28,8 +28,12 @@ class GameEngine:
 
         if len(check_move) >= 1:
             if check_move[0].promotion_piece != None:
-                self.legal = True
-                self.promotion = True
+                if move_made.promotion_piece != None:
+                    self.legal = True
+                    self.promotion = False
+                else:
+                    self.legal = True
+                    self.promotion = True
 
             else:
                 self.legal = True
@@ -43,7 +47,6 @@ class GameEngine:
             if check_move[0].en_passant == True:
                 move_made.en_passant = True
                 self.position.make_move(move_made)
-                print(self.position.boardstate, 'EP')
 
             else:
                 self.position.make_move(move_made)
