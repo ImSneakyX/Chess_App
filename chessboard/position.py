@@ -250,6 +250,21 @@ class Position:
 
         directions =  [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
 
+        directions_knight = [(-2, 1), (-2, -1), (-1, -2), (1,-2), (2,-1), (2,1), (1,2), (-1, 2)]
+
+        for dr, dc in directions_knight:
+
+            r = king_row + dr
+            c = king_col + dc
+            if not (0 <= r < 8 and 0 <= c < 8) == True:
+                continue
+            piece = self.boardstate[(r, c)]
+            
+            if piece.name == 'Knight' and piece.color == enemy:
+
+                self.checkers.append((r, c, dr, dc))
+
+
         for dr, dc in directions:
 
             possible_pin = None
