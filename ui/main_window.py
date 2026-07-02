@@ -58,13 +58,13 @@ class EngineWorker(QObject):
 
         self.engine = engine
         self.position = position
-        self.depth = 0
+        self.depth = 3
 
     def run(self):
         t1 = time.time()
         value, best_move = self.engine.minimax(self.position, self.depth, -100000, 100000)
         t2 = time.time()
-        print(f'GUI Update: {t2-t1:.5f} sek')
+        print(f'Minimax time: {t2-t1:.5f} sek')
         self.finished.emit(value)
         self.best_move.emit(best_move)
 

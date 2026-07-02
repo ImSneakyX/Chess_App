@@ -58,6 +58,7 @@ class ChessBoard(QWidget):
             
 
     def process_move(self, move):
+        t1 = time.time()
         self.end_square = move.end_square
         self.engine.check_move(move)
 
@@ -79,6 +80,9 @@ class ChessBoard(QWidget):
         if self.engine.stalemate == True:
             dialog_stalemate = DialogRemisPatt(self)
             QTimer.singleShot(1500, lambda: self.mate_dialog(dialog_stalemate))
+        t2 = time.time()
+
+        print(f'GUI Update: {t2 - t1:.5f} sek')
 
             
     def mate_dialog(self, dialog):
