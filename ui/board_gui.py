@@ -17,6 +17,8 @@ class ChessBoard(QWidget):
     move_signal = pyqtSignal(object)
     arrow_signal = pyqtSignal(list)
     delete_signal = pyqtSignal()
+    new_game_signal = pyqtSignal()
+    menu_signal = pyqtSignal()
     def __init__(self, engine, parent = None):
         super().__init__(parent)
 
@@ -77,16 +79,29 @@ class ChessBoard(QWidget):
         if self.engine.mate == True:
             if self.engine.position.white_to_move == False:
                 mate_dialog_win = DialogWinMate(self)
-                QTimer.singleShot(1500, lambda: mate_dialog_win.exec_())
+                QTimer.singleShot(1500, lambda: self.mate_dialog(mate_dialog_win))
+                        
             else:
                 mate_dialog_lose = DialogLoseMate('w', self)
-                QTimer.singleShot(1500, lambda: mate_dialog_lose.exec_())
+                QTimer.singleShot(1500, lambda: self.mate_dialog(mate_dialog_lose))
+
 
 
         if self.engine.stalemate == True:
             dialog_stalemate = DialogRemisPatt(self)
-            QTimer.singleShot(1500, lambda: dialog_stalemate.exec_())
+            QTimer.singleShot(1500, lambda: self.mate_dialog(dialog_stalemate))
+
             
+    def mate_dialog(self, dialog):
+
+        dialog.exec_()
+        match dialog.action:
+            case 'play again':
+                self.new_game_signal.emit()
+
+            case 'menu':
+                self.menu_signal.emit()
+
 
 
         

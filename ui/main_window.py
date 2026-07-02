@@ -91,6 +91,8 @@ class ChessGame(QMainWindow):
         self.board_widget.arrow_signal.connect(self.get_arrow_signal)
         self.board_widget.delete_signal.connect(self.delete_arrows)
         self.board_widget.move_signal.connect(self.update_evalbar)
+        self.board_widget.new_game_signal.connect(self.new_game)
+        self.board_widget.menu_signal.connect(self.back_to_menu)
         self.board_widget.setGeometry(20, 20, self.width() // 2, 3 * self.height() // 4)
 
         self.overlay = ArrowOverlay(self.arrows, self.board_widget)
@@ -217,6 +219,8 @@ class Computer_Game(QMainWindow):
         self.board_widget.arrow_signal.connect(self.get_arrow_signal)
         self.board_widget.delete_signal.connect(self.delete_arrows)
         self.board_widget.move_signal.connect(self.update_evalbar)
+        self.board_widget.new_game_signal.connect(self.new_game)
+        self.board_widget.menu_signal.connect(self.back_to_menu)
         self.board_widget.setGeometry(20, 20, self.width() // 2, 3 * self.height() // 4)
 
         self.overlay = ArrowOverlay(self.arrows, self.board_widget)
