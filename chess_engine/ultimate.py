@@ -28,7 +28,7 @@ class Ultimate:
         move_gen = MoveGenerator(position)
         
         moves = move_gen.generate_legal_moves()
-        best_move = None
+        best_move = 10
         if position.white_to_move == True:
 
             maxEval = -100000
@@ -38,7 +38,7 @@ class Ultimate:
                 eval, _ = self.minimax(position, depth-1, alpha, beta)
 
                 position.unmake_move(move, undo)
-                if maxEval < eval:
+                if maxEval <= eval:
                     maxEval = eval
                     best_move = move
 
@@ -54,7 +54,7 @@ class Ultimate:
                 undo = position.make_move(move)
                 eval, _ = self.minimax(position, depth-1, alpha, beta)
                 position.unmake_move(move, undo)
-                if minEval > eval:
+                if minEval >= eval:
                     minEval = eval
                     best_move = move
                 beta = min(beta, eval)
