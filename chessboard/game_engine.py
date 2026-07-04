@@ -21,6 +21,7 @@ class GameEngine:
     def check_move(self, move_made):
 
         check_move = []
+        self.promotion = False
         move_gen = MoveGenerator(self.position)
         legal_moves = move_gen.generate_legal_moves()
 
@@ -34,11 +35,8 @@ class GameEngine:
                     self.legal = True
                 else:
                     self.legal = True
-                    promote_dialog = Promote('w' if self.position.white_to_move else 'b')
+                    self.promotion = True
 
-                    promote_dialog.selected_piece.connect(lambda piece: setattr(move_made, 'promotion_piece', piece))
-            
-                    promote_dialog.exec_()
 
             else:
                 self.legal = True
@@ -70,6 +68,49 @@ class GameEngine:
                         self.mate = True
                     else:
                         self.stalemate = True
+
+    def promote_pawns(self, piece, square_of_promotion):
+
+   
+        if piece == 'Q':
+
+            self.position.boardstate[square_of_promotion] = Queen('w' if self.position.white_to_move == False else 'b')
+            if self.position.white_to_move == False: 
+                self.position.abs_piece_value += self.position.boardstate[square_of_promotion].value
+
+            else:
+                self.position.abs_piece_value -= self.position.boardstate[square_of_promotion].value
+
+                
+        if piece == 'R':
+            self.position.boardstate[square_of_promotion] = Rook('w' if self.position.white_to_move == False else 'b', 'l')
+            if self.position.white_to_move == False: 
+                self.position.abs_piece_value += self.position.boardstate[square_of_promotion].value
+            else:
+                self.position.abs_piece_value -= self.position.boardstate[square_of_promotion].value
+
+        if piece == 'K':
+            self.position.boardstate[square_of_promotion] = Knight('w' if self.position.white_to_move == False else 'b')
+            if self.position.white_to_move == False:
+                self.position.abs_piece_value += self.position.boardstate[square_of_promotion].value
+            else:
+                self.position.abs_piece_value -= self.position.boardstate[square_of_promotion].value
+
+        if piece == 'B':
+            self.position.boardstate[square_of_promotion] = Bishop('w' if self.position.white_to_move == False else 'b')
+            if self.position.white_to_move == False: 
+                self.position.abs_piece_value += self.position.boardstate[square_of_promotion].value
+            else:
+                self.position.abs_piece_value -= self.position.boardstate[square_of_promotion].value
+
+        if self.position.white_to_move == False:
+            self.position.add_pawn_value -= 0.6
+            self.position.abs_piece_value -= 1
+
+        else: 
+            self.position.add_pawn_value += 0.6
+            self.position.abs_piece_value += 1
+
 
             
 class MoveGenerator:
