@@ -190,7 +190,10 @@ class ChessGame(QMainWindow):
         self.resign_button.setGeometry(40+ self.board_widget.width(), 40+ self.board_widget.height(), self.board_widget.width()//4, self.board_widget.width()//16)
 
 
-        self.eval_bar.resize(self.board_widget.width() // 24, self.board_widget.height())
+        self.eval_bar.setGeometry(40 + size, 20, size // 24, size)
+        setattr(self.eval_bar, 'height', size)
+        setattr(self.eval_bar, 'width', size // 24)
+
 
         if self.resign_button_pressed == True:
 
@@ -237,7 +240,7 @@ class Computer_Game(QMainWindow):
 
 
         self.eval_bar = EvalBar(self.board_widget.width() // 24, self.board_widget.height(), self)
-        self.eval_bar.move(7*self.width() // 8, 20)
+        self.eval_bar.move(40 + self.width() // 2, 20)
         self.eval_bar.resize(self.board_widget.width() // 24, self.board_widget.height())
 
 
@@ -320,7 +323,10 @@ class Computer_Game(QMainWindow):
         self.resign_button.setGeometry(40+ self.board_widget.width(), 40+ self.board_widget.height(), self.board_widget.width()//4, self.board_widget.width()//16)
 
 
-        self.eval_bar.resize(self.board_widget.width() // 24, self.board_widget.height())
+        self.eval_bar.setGeometry(40 + size, 20, size // 24, size)
+        setattr(self.eval_bar, 'height', size)
+        setattr(self.eval_bar, 'width', size // 24)
+
 
         if self.resign_button_pressed == True:
 
