@@ -52,7 +52,7 @@ class Launcher(QMainWindow):
 
 class EngineWorker(QObject):
     finished = pyqtSignal(float)
-    best_move = pyqtSignal(list)
+    best_move = pyqtSignal(object)
     def __init__(self, engine, position):
         super().__init__()
 
@@ -284,9 +284,10 @@ class Computer_Game(QMainWindow):
             self.thread.finished.connect(self.thread.deleteLater)
             self.thread.start()
 
+
     def opponent(self, best_move):
 
-            self.board_widget.process_move(best_move[0])
+            self.board_widget.process_move(best_move)
             
 
 

@@ -59,7 +59,6 @@ class ChessBoard(QWidget):
 
     def process_move(self, move):
         t1 = time.time()
-        self.end_square = move.end_square
         self.engine.check_move(move)
 
         if self.engine.legal == True:
@@ -106,9 +105,9 @@ class ChessBoard(QWidget):
                 if alte_figur.color != neue_figur.color:
                     self.squares[(i,j)].piece = self.engine.position.boardstate[(i,j)]
                     self.squares[(i,j)].set_piece()
-
-  
-        self.move_signal.emit(self.engine.position)
+        print(self.engine.mate, self.engine.stalemate)
+        if self.engine.mate == False and self.engine.stalemate == False:
+            self.move_signal.emit(self.engine.position)
 
 
     def board_reset(self):
