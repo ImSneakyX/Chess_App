@@ -69,10 +69,16 @@ class ChessBoard(QWidget):
 
         elif self.engine.legal == True and self.engine.promotion == True:
 
-            promote_dialog = Promote(self.engine.position.boardstate[move.end_square].color, self)
+            promote_dialog = Promote(self.engine.position.boardstate[move.end_square].color, self.width() // 8, self)
 
             promote_dialog.selected_piece.connect(self.process_promotion)
-            
+            local_point = QPoint(0, 0)
+            global_pos = self.squares[move.end_square].mapToGlobal(local_point)
+            if self.engine.position.boardstate[move.end_square].color == 'w':
+
+                promote_dialog.move(global_pos.x(), global_pos.y())
+            else:
+                promote_dialog.move(global_pos.x(), global_pos.y() - 3 * (self.height() // 8))
             promote_dialog.exec_()
             
 

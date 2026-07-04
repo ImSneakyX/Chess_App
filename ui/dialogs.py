@@ -30,17 +30,15 @@ class MainWindow(QMainWindow):
         d.exec_()
 
 class PromotionSquares(QPushButton):
-    def __init__(self, piece = None, parent = None):
+    def __init__(self, square_size, piece = None, parent = None):
         super().__init__(parent)
         self.piece = piece
-
-        self.setFixedSize(64, 64)
-        self.setIconSize(QSize(60, 60))
+        self.setFixedSize(square_size, square_size)
+        self.setIconSize(QSize(int(self.width() * (15/16)), int(self.height() * (15/16))))
         self.setAcceptDrops(True)
    
 
         self.setStyleSheet('background-color: white; border: none;')
-
         self.set_piece()
 
     
@@ -60,19 +58,37 @@ class PromotionSquares(QPushButton):
 
 class Promote(QDialog):
     selected_piece = pyqtSignal(str)
-    def __init__(self, color, parent = None):
+    def __init__(self, color, square_size, parent = None):
         super().__init__(parent)
         self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
 
-        promote_knight = PromotionSquares(Knight(color), self) 
-        promote_knight.setGeometry(0, 64, 64, 64)
-        promote_bishop = PromotionSquares(Bishop(color), self) 
-        promote_bishop.setGeometry(0, 128, 64, 64)
-        promote_rook = PromotionSquares(Rook(color, 'l'), self)
-        promote_rook.setGeometry(0, 192, 64, 64) 
-        promote_queen = PromotionSquares(Queen(color), self)
-        promote_queen.setGeometry(0, 0, 64, 64) 
+        self.grid = QVBoxLayout()
+        self.grid.setSpacing(0)
+        self.grid.setContentsMargins(0, 0, 0, 0)
+
+        if color == 'w':
+            promote_queen = PromotionSquares(square_size, Queen(color), self)
+            self.grid.addWidget(promote_queen)
+            promote_rook = PromotionSquares(square_size, Rook(color, 'l'), self)
+            self.grid.addWidget(promote_rook) 
+            promote_bishop = PromotionSquares(square_size, Bishop(color), self) 
+            self.grid.addWidget(promote_bishop)
+            promote_knight = PromotionSquares(square_size, Knight(color), self) 
+            self.grid.addWidget(promote_knight)
+
+        else:
+            promote_knight = PromotionSquares(square_size, Knight(color), self) 
+            self.grid.addWidget(promote_knight)
+            promote_bishop = PromotionSquares(square_size, Bishop(color), self) 
+            self.grid.addWidget(promote_bishop)
+            promote_rook = PromotionSquares(square_size, Rook(color, 'l'), self)
+            self.grid.addWidget(promote_rook)
+            promote_queen = PromotionSquares(square_size, Queen(color), self)
+            self.grid.addWidget(promote_queen)
+
+
+        self.setLayout(self.grid)
 
         promote_knight.clicked.connect(lambda: self.signal_piece_to_main('K'))
         promote_bishop.clicked.connect(lambda: self.signal_piece_to_main('B'))
