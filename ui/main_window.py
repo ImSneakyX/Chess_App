@@ -58,7 +58,7 @@ class EngineWorker(QObject):
 
         self.engine = engine
         self.position = position
-        self.depth = 4
+        self.depth = 3
 
     def run(self):
         t1 = time.time()
@@ -132,6 +132,8 @@ class ChessGame(QMainWindow):
 
     def new_game(self):
         self.GameController.gameEngine.position = copy.deepcopy(self.GameController.position)
+        self.GameController.gameEngine.mate = False
+        self.GameController.gameEngine.stalemate = False
         self.board_widget.board_reset()
 
 
@@ -260,6 +262,8 @@ class Computer_Game(QMainWindow):
 
     def new_game(self):
         self.GameController.gameEngine.position = copy.deepcopy(self.GameController.position)
+        self.GameController.gameEngine.mate = False
+        self.GameController.gameEngine.stalemate = False
         self.board_widget.board_reset()
 
 

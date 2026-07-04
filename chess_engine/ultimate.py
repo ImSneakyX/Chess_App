@@ -38,14 +38,19 @@ class Ultimate:
                 eval, _ = self.minimax(position, depth-1, alpha, beta)
 
                 position.unmake_move(move, undo)
-                if maxEval <= eval:
+                
+                if maxEval < eval:
                     maxEval = eval
                     best_move = move
 
                 alpha = max(alpha, eval)
                 if beta <= alpha:
                     break
-            
+            if maxEval == -100000:
+                if len(moves) != 0:
+                    best_move = moves[0]
+                else:
+                    best_move = None
             
             return maxEval, best_move
         else:
@@ -54,12 +59,17 @@ class Ultimate:
                 undo = position.make_move(move)
                 eval, _ = self.minimax(position, depth-1, alpha, beta)
                 position.unmake_move(move, undo)
-                if minEval >= eval:
+                if minEval > eval:
                     minEval = eval
                     best_move = move
                 beta = min(beta, eval)
                 if beta <= alpha:
                     break
+            if minEval == 100000:
+                if len(moves) != 0:
+                    best_move = moves[0]
+                else:
+                    best_move = None
             return minEval, best_move
         
 
