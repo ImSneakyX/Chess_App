@@ -60,10 +60,16 @@ class ChessSquare(QPushButton):
             self.setStyleSheet('''ChessSquare {background-color: #d7dbe0; border: none;}
                                
                                ChessSquare[highlight='true'] {background: #bd4242;}
+
+                               ChessSquare[highlight_last_move='true'] {background: #b3ab40;}
+
+                               ChessSquare[highlight='true'][highlight_last_move='true'] {background: #bd4242;}
                                ''')
         else:
             self.setStyleSheet('''ChessSquare {background-color: #8c6e5a; border: none;}
                                ChessSquare[highlight='true'] {background: #bf2c2c;}
+                               ChessSquare[highlight_last_move='true'] {background: #8c862e;}
+                               ChessSquare[highlight='true'][highlight_last_move='true'] {background: #bf2c2c;}
                                ''')
         self.set_piece()
 
@@ -114,6 +120,7 @@ class ChessSquare(QPushButton):
 
                 drag.exec_(Qt.MoveAction)
                 self.set_piece()
+
     
 
 
@@ -141,7 +148,6 @@ class ChessSquare(QPushButton):
         source_widget = e.source()
         move = Move(source_widget.square, self.square)
         self.move_made.emit(move)
-
         e.accept()
 
     def resizeEvent(self, e):

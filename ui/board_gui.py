@@ -33,6 +33,8 @@ class ChessBoard(QWidget):
 
         self.squares = {}
         self.arrows = []
+        self.last_start = None
+        self.last_end = None
 
         for i in range(8):
             for j in range(8):
@@ -63,7 +65,7 @@ class ChessBoard(QWidget):
         self.engine.check_move(move)
 
         if self.engine.legal == True and self.engine.promotion == False:
-            self.update_board()
+            self.update_board(move)
             
 
 
@@ -113,7 +115,7 @@ class ChessBoard(QWidget):
 
 
 
-    def update_board(self):
+    def update_board(self, move):
         for i in range(8):
             for j in range(8):
                 neue_figur = self.engine.position.boardstate[(i,j)]
@@ -122,7 +124,28 @@ class ChessBoard(QWidget):
                 if alte_figur.color != neue_figur.color:
                     self.squares[(i,j)].piece = self.engine.position.boardstate[(i,j)]
                     self.squares[(i,j)].set_piece()
-        print(self.engine.mate, self.engine.stalemate)
+
+        if self.last_start:
+            self.squares[self.last_start].setProperty('highlight_last_move', False)
+            self.squares[self.last_start].style().unpolish(self.squares[self.last_start])
+            self.squares[self.last_start].style().polish(self.squares[self.last_start])
+        if self.last_end:
+            self.squares[self.last_end].setProperty('highlight_last_move', False)
+            self.squares[self.last_end].style().unpolish(self.squares[self.last_end])
+            self.squares[self.last_end].style().polish(self.squares[self.last_end])
+        
+
+        self.squares[move.start_square].setProperty('highlight_last_move', True)
+        self.squares[move.end_square].setProperty('highlight_last_move', True)
+
+        self.squares[move.start_square].style().unpolish(self.squares[move.start_square])
+        self.squares[move.start_square].style().polish(self.squares[move.start_square])
+
+        self.squares[move.end_square].style().unpolish(self.squares[move.end_square])
+        self.squares[move.end_square].style().polish(self.squares[move.end_square])
+
+        self.last_start = move.start_square
+        self.last_end = move.end_square
         if self.engine.mate == False and self.engine.stalemate == False:
             self.move_signal.emit(self.engine.position)
 
@@ -141,6 +164,15 @@ class ChessBoard(QWidget):
                 if alte_figur != neue_figur:
                     self.squares[(i,j)].piece = self.engine.position.boardstate[(i,j)]
                     self.squares[(i,j)].set_piece()
+                    
+        if self.last_start:
+            self.squares[self.last_start].setProperty('highlight_last_move', False)
+            self.squares[self.last_start].style().unpolish(self.squares[self.last_start])
+            self.squares[self.last_start].style().polish(self.squares[self.last_start])
+        if self.last_end:
+            self.squares[self.last_end].setProperty('highlight_last_move', False)
+            self.squares[self.last_end].style().unpolish(self.squares[self.last_end])
+            self.squares[self.last_end].style().polish(self.squares[self.last_end])
 
         self.move_signal.emit(self.engine.position)
 
