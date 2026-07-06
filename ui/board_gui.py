@@ -14,7 +14,7 @@ from math import sin, cos, pi, atan2
 
 class ChessBoard(QWidget):
 
-    move_signal = pyqtSignal(object)
+    move_signal = pyqtSignal(object, object)
     arrow_signal = pyqtSignal(list)
     delete_signal = pyqtSignal()
     new_game_signal = pyqtSignal()
@@ -146,8 +146,10 @@ class ChessBoard(QWidget):
 
         self.last_start = move.start_square
         self.last_end = move.end_square
+
         if self.engine.mate == False and self.engine.stalemate == False:
-            self.move_signal.emit(self.engine.position)
+            self.move_signal.emit(self.engine.position, move)
+
 
     def process_promotion(self, promotion_piece):
         self.engine.promote_pawns(promotion_piece, self.end_square)
@@ -302,29 +304,70 @@ class MoveTable(QTableWidget):
     def __init__(self, moves, parent = None):
         super().__init__(parent)
 
-        self.setStyleSheet(''' MoveTable {background-color: #3b3a38;} ''')
+        self.moves = moves
+
+        self.setStyleSheet(''' MoveTable {background-color: #f0f2f0;} ''')
         self.setColumnCount(2)
         self.setHorizontalHeaderLabels(['White', 'Black'])
         self.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
 
-        rows = (len(moves) + 1) // 2
+        rows = (len(self.moves) + 1) // 2
         self.setRowCount(rows)
 
         for i in range(rows):
-            self.setItem(i, 0, QTableWidgetItem(str(i+1)))
 
             white = 2*i
             black = 2*i + 1
 
-            if white < len(moves):
-                self.setItem(i, 1, QTableWidgetItem(moves[white]))
+            if white < len(self.moves):
+                self.setItem(i, 0, QTableWidgetItem(self.moves[white]))
 
-            if black < len(moves):
-                self.setItem(i, 2, QTableWidgetItem(moves[black]))
+            if black < len(self.moves):
+                self.setItem(i, 1, QTableWidgetItem(self.moves[black]))
 
         self.cellClicked.connect(self.cell_clicked)
 
     def cell_clicked(self):
 
         pass
+
+
+    def add_move(self, move):
+
+        
+        self.moves.append(self.move_to_san(move))
+
+        index = len(self.moves) - 1
+        row = index // 2
+        if row >= self.rowCount():
+            self.insertRow(row)
+
+        column = index % 2
+        self.setItem(row, column, QTableWidgetItem(move))
+
+    def move_to_san(self, move):
+
+        row_name = [[0]*8 for _ in range(8)]
+        col_name = [[0]*8 for _ in range(8)]
+        self.notation = [[0]*8 for _ in range(8)]
+
+        rows = ['1', '2', '3', '4', '5', '6', '7', '8']
+        cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+
+        for idx, name in enumerate(rows):
+            row_name[-idx-1] = name
+
+        for idx, name in enumerate(cols):
+                col_name[:,idx] = name 
+        
+        for row, i in enumerate(self.notation):
+            for col, j in enumerate(i):
+                self.notation[row, col] = ''.join((col_name[row, col], row_name[row, col]))
+
+        return self.notation
+    
+        return str()
+
+    
+        
