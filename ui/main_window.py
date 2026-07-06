@@ -224,6 +224,7 @@ class Computer_Game(QMainWindow):
         self.board_widget.arrow_signal.connect(self.get_arrow_signal)
         self.board_widget.delete_signal.connect(self.delete_arrows)
         self.board_widget.move_signal.connect(self.update_evalbar)
+        self.board_widget.table_signal.connect(self.update_moveTable)
         self.board_widget.new_game_signal.connect(self.new_game)
         self.board_widget.menu_signal.connect(self.back_to_menu)
         self.board_widget.setGeometry(self.width() // 4, 20, self.width() // 2, 3 * self.height() // 4)
@@ -249,7 +250,9 @@ class Computer_Game(QMainWindow):
 
 
 
+    def update_moveTable(self, move, piece_moved, capture, check, castle_short, castle_long, mate):
 
+        self.move_table.add_move(move, piece_moved, capture, check, castle_short, castle_long, mate)
 
 
     def resign(self):
@@ -284,9 +287,8 @@ class Computer_Game(QMainWindow):
 
 
 
-    def update_evalbar(self, position, move):
+    def update_evalbar(self, position):
         if self.GameController.gameEngine.position.white_to_move == False:
-            self.move_table.add_move(f'')
             self.thread = QThread()
             self.worker = EngineWorker(self.GameController.ultimate, copy.deepcopy(position))
             self.worker.moveToThread(self.thread)

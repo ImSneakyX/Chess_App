@@ -14,11 +14,12 @@ from math import sin, cos, pi, atan2
 
 class ChessBoard(QWidget):
 
-    move_signal = pyqtSignal(object, object)
+    move_signal = pyqtSignal(object)
     arrow_signal = pyqtSignal(list)
     delete_signal = pyqtSignal()
     new_game_signal = pyqtSignal()
     menu_signal = pyqtSignal()
+    table_signal = pyqtSignal(object, object, bool, bool, bool, bool, bool)
     def __init__(self, engine, parent = None):
         super().__init__(parent)
 
@@ -73,7 +74,7 @@ class ChessBoard(QWidget):
 
             promote_dialog = Promote(self.engine.position.boardstate[move.end_square].color, self.width() // 8, self)
 
-            promote_dialog.selected_piece.connect(self.process_promotion)
+            promote_dialog.selected_piece.connect(lambda promotion_piece: self.process_promotion(promotion_piece, move))
             local_point = QPoint(0, 0)
             global_pos = self.squares[move.end_square].mapToGlobal(local_point)
             if self.engine.position.boardstate[move.end_square].color == 'w':
@@ -148,12 +149,14 @@ class ChessBoard(QWidget):
         self.last_end = move.end_square
 
         if self.engine.mate == False and self.engine.stalemate == False:
-            self.move_signal.emit(self.engine.position, move)
+            self.move_signal.emit(self.engine.position)
+            self.table_signal.emit(move, self.engine.position.boardstate[move.end_square], self.engine.capture, self.engine.check, self.engine.castle_short, 
+                                   self.engine.castle_long, self.engine.mate)
 
 
-    def process_promotion(self, promotion_piece):
+    def process_promotion(self, promotion_piece, move):
         self.engine.promote_pawns(promotion_piece, self.end_square)
-        self.update_board()
+        self.update_board(move)
 
 
 
@@ -333,10 +336,10 @@ class MoveTable(QTableWidget):
         pass
 
 
-    def add_move(self, move):
+    def add_move(self, move, piece_moved, capture, check, castling_short, castling_long, mate):
 
-        
-        self.moves.append(self.move_to_san(move))
+        new_move = self.move_to_san(move, piece_moved, capture, check, castling_short, castling_long, mate)
+        self.moves.append(new_move)
 
         index = len(self.moves) - 1
         row = index // 2
@@ -344,30 +347,59 @@ class MoveTable(QTableWidget):
             self.insertRow(row)
 
         column = index % 2
-        self.setItem(row, column, QTableWidgetItem(move))
+        self.setItem(row, column, QTableWidgetItem(new_move))
 
-    def move_to_san(self, move):
+    def move_to_san(self, move, piece_moved, capture, check, castling_short, castling_long, mate):
 
-        row_name = [[0]*8 for _ in range(8)]
-        col_name = [[0]*8 for _ in range(8)]
-        self.notation = [[0]*8 for _ in range(8)]
+        notation = [[0]*8 for _ in range(8)]
 
-        rows = ['1', '2', '3', '4', '5', '6', '7', '8']
-        cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+        rows = '12345678'
+        cols = 'abcdefgh'
 
-        for idx, name in enumerate(rows):
-            row_name[-idx-1] = name
 
-        for idx, name in enumerate(cols):
-                col_name[:,idx] = name 
-        
-        for row, i in enumerate(self.notation):
-            for col, j in enumerate(i):
-                self.notation[row, col] = ''.join((col_name[row, col], row_name[row, col]))
+        for row in range(8):
+            for col in range(8):
+                notation[row][col] = f'{cols[col]}{rows[7-row]}'
 
-        return self.notation
+        if castling_short:
+            san_move = '0-0'
+        elif castling_long:
+            san_move = '0-0-0'
+
+        else: 
+            if capture:
+                capture_string = 'x'
+            else:
+                capture_string = ''
+
+            if piece_moved.name == 'Pawn':
+                piece_letter = ''
+            elif piece_moved.name == 'Knight':
+                piece_letter = 'N'
+            elif piece_moved.name == 'Bishop':
+                piece_letter = 'B'
+            elif piece_moved.name == 'Rook':
+                piece_letter = 'R'
+            elif piece_moved.name == 'Queen':
+                piece_letter = 'Q'
+            elif piece_moved.name == 'King':
+                piece_letter = 'K'
+
+            if check and not mate:
+                check_string = '+'
+            else: 
+                check_string = ''
+            if mate:
+                mate_string = '#'
+            else:
+                mate_string = ''
+
+
+            san_move = ''.join((piece_letter, capture_string, notation[move.end_square[0]][move.end_square[1]], check_string, mate_string))
+
+        return san_move
     
-        return str()
+  
 
     
         

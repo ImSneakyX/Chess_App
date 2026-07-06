@@ -14,6 +14,10 @@ class GameEngine:
         self.position = position
         self.legal = None
         self.promotion = False
+        self.capture = False
+        self.check = False
+        self.castle_long = False
+        self.castle_short = False
         
         self.mate = False
         self.stalemate = False
@@ -22,6 +26,10 @@ class GameEngine:
 
         check_move = []
         self.promotion = False
+        self.capture = False
+        self.check = False
+        self.castle_long = False
+        self.castle_short = False
         move_gen = MoveGenerator(self.position)
         legal_moves = move_gen.generate_legal_moves()
 
@@ -40,6 +48,19 @@ class GameEngine:
 
             else:
                 self.legal = True
+                if self.position.boardstate[move_made.start_square].name == 'King':
+                    if move_made.start_square[1] == 4 and move_made.end_square[1] == 6:
+                        self.castle_short = True
+                elif move_made.start_square[1] == 4 and move_made.end_square[1] == 2:
+                    self.castle_long = True
+
+                if self.position.white_to_move:
+                    if self.position.boardstate[move_made.end_square].color == 'b':
+                        self.capture = True
+    
+                else:
+                    if self.position.boardstate[move_made.end_square].color == 'w':
+                        self.capture = True
 
 
         else:
@@ -55,6 +76,13 @@ class GameEngine:
                 self.position.make_move(move_made)
             
             move_gen = MoveGenerator(self.position)
+            if self.position.white_to_move:
+                if move_gen.is_square_in_check(self.position.king_w_pos, 'b'):
+                    self.check = True
+            else:
+                if move_gen.is_square_in_check(self.position.king_b_pos, 'w'):
+                    self.check = True
+                
             legal_moves = move_gen.generate_legal_moves()
             if len(legal_moves) == 0:
                 if self.position.white_to_move:
