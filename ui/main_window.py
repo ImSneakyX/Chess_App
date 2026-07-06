@@ -243,7 +243,14 @@ class Computer_Game(QMainWindow):
         self.eval_bar.move(20 + self.width() // 4 + self.width() // 2, 20)
         self.eval_bar.resize(self.board_widget.width() // 24, self.board_widget.height())
 
-        self.move_table = MoveTable(None, self)
+        self.move_table = MoveTable([
+    "e4",
+    "e5",
+    "Nf3",
+    "Nc6",
+    "Bb5",
+    "a6"
+], self)
         self.move_table.setGeometry(40 + self.width() // 4 + self.width() // 2 + self.width() // 24, 20, self.width() // 6, 3 * self.height() // 4)
 
 

@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from PyQt5.QtWidgets import QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
+from PyQt5.QtWidgets import QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog, QTableWidget, QTableWidgetItem, QHeaderView
 from PyQt5.QtGui import QPen, QPainter, QPolygon, QBrush, QColor
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QPoint
 from chessboard.board import Board
@@ -297,9 +297,34 @@ class EvalBar(QWidget):
 
             
 
-class MoveTable(QPushButton):
+class MoveTable(QTableWidget):
 
     def __init__(self, moves, parent = None):
         super().__init__(parent)
 
-        self.setStyleSheet(''' MoveTable {background-color: red;} ''')
+        self.setStyleSheet(''' MoveTable {background-color: #3b3a38;} ''')
+        self.setColumnCount(2)
+        self.setHorizontalHeaderLabels(['White', 'Black'])
+        self.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        self.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+
+        rows = (len(moves) + 1) // 2
+        self.setRowCount(rows)
+
+        for i in range(rows):
+            self.setItem(i, 0, QTableWidgetItem(str(i+1)))
+
+            white = 2*i
+            black = 2*i + 1
+
+            if white < len(moves):
+                self.setItem(i, 1, QTableWidgetItem(moves[white]))
+
+            if black < len(moves):
+                self.setItem(i, 2, QTableWidgetItem(moves[black]))
+
+        self.cellClicked.connect(self.cell_clicked)
+
+    def cell_clicked(self):
+
+        pass
