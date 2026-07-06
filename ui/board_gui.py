@@ -297,3 +297,9 @@ class EvalBar(QWidget):
 
             
 
+class MoveTable(QPushButton):
+
+    def __init__(self, moves, parent = None):
+        super().__init__(parent)
+
+        self.setStyleSheet(''' MoveTable {background-color: red;} ''')

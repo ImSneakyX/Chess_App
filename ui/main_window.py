@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog
 from PyQt5.QtGui import QIcon, QFont, QPixmap, QPen, QPainter
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QPoint, QSize, QObject, QThread
-from ui.board_gui import ChessBoard, ArrowOverlay, EvalBar
+from ui.board_gui import ChessBoard, ArrowOverlay, EvalBar, MoveTable
 from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt, Confirmation
 from chessboard.game_controller import GameController
 import time
@@ -93,7 +93,7 @@ class ChessGame(QMainWindow):
         self.board_widget.move_signal.connect(self.update_evalbar)
         self.board_widget.new_game_signal.connect(self.new_game)
         self.board_widget.menu_signal.connect(self.back_to_menu)
-        self.board_widget.setGeometry(20, 20, self.width() // 2, 3 * self.height() // 4)
+        self.board_widget.setGeometry(self.width() // 3, 20, self.width() // 2, 3 * self.height() // 4)
 
         self.overlay = ArrowOverlay(self.arrows, self.board_widget)
         self.overlay.setGeometry(0, 0, self.board_widget.width(), self.board_widget.height())
@@ -107,7 +107,7 @@ class ChessGame(QMainWindow):
 
 
         self.eval_bar = EvalBar(self.board_widget.width() // 24, self.board_widget.height(), self)
-        self.eval_bar.move(7*self.width() // 8, 20)
+        self.eval_bar.move(40 + self.width() // 2, 20)
         self.eval_bar.resize(self.board_widget.width() // 24, self.board_widget.height())
 
 
@@ -226,13 +226,13 @@ class Computer_Game(QMainWindow):
         self.board_widget.move_signal.connect(self.update_evalbar)
         self.board_widget.new_game_signal.connect(self.new_game)
         self.board_widget.menu_signal.connect(self.back_to_menu)
-        self.board_widget.setGeometry(20, 20, self.width() // 2, 3 * self.height() // 4)
+        self.board_widget.setGeometry(self.width() // 4, 20, self.width() // 2, 3 * self.height() // 4)
 
         self.overlay = ArrowOverlay(self.arrows, self.board_widget)
         self.overlay.setGeometry(0, 0, self.board_widget.width(), self.board_widget.height())
 
         self.resign_button = QPushButton(self)
-        self.resign_button.setGeometry(40+ self.board_widget.width(), 40+ self.board_widget.height(), self.board_widget.width()//4, self.board_widget.width()//16)
+        self.resign_button.setGeometry(20 + self.width() // 4 + self.board_widget.width(), 40+ self.board_widget.height(), self.board_widget.width()//4, self.board_widget.width()//16)
         self.resign_button.setText('RESIGN')
         self.resign_button.setStyleSheet(f''' QPushButton {{border: none; font-family: Arial; font-weight: bold; font-size: 15px; color: white; background-color: #f54242;}}
                                          QPushButton:hover {{background-color: #ff7a7a}}''')
@@ -240,8 +240,14 @@ class Computer_Game(QMainWindow):
 
 
         self.eval_bar = EvalBar(self.board_widget.width() // 24, self.board_widget.height(), self)
-        self.eval_bar.move(40 + self.width() // 2, 20)
+        self.eval_bar.move(20 + self.width() // 4 + self.width() // 2, 20)
         self.eval_bar.resize(self.board_widget.width() // 24, self.board_widget.height())
+
+        self.move_table = MoveTable(None, self)
+        self.move_table.setGeometry(40 + self.width() // 4 + self.width() // 2 + self.width() // 24, 20, self.width() // 6, 3 * self.height() // 4)
+
+
+
 
 
 
@@ -316,16 +322,19 @@ class Computer_Game(QMainWindow):
 
         size = min(self.width() // 2, 3 * self.height() // 4)
         self.board_widget.resize(size, size)
+        self.board_widget.move(self.width() // 4, 20)
 
         self.overlay.resize(self.board_widget.size())
         self.overlay.show()
 
-        self.resign_button.setGeometry(40+ self.board_widget.width(), 40+ self.board_widget.height(), self.board_widget.width()//4, self.board_widget.width()//16)
+        self.resign_button.setGeometry(20 + self.width() // 4 + self.board_widget.width(), 40+ self.board_widget.height(), self.board_widget.width()//4, self.board_widget.width()//16)
 
 
-        self.eval_bar.setGeometry(40 + size, 20, size // 24, size)
+        self.eval_bar.setGeometry(20 + self.width() // 4 + size, 20, size // 24, size)
         setattr(self.eval_bar, 'height', size)
         setattr(self.eval_bar, 'width', size // 24)
+
+        self.move_table.setGeometry(40 + self.width() // 4 + size + size // 24, 20, self.width() // 6, size)
 
 
         if self.resign_button_pressed == True:
