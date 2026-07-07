@@ -146,98 +146,22 @@ class GameEngine:
                 else:
                     self.stalemate = True
 
-    def disambiguation(self, moved_piece, end_square):
+    def disambiguation(self, moved_piece, start_square, end_square):
 
-        row, col = end_square
         board = self.position_old.boardstate
-        enemy = 'b' if self.position_old.white_to_move else 'w'
-        disambiguation_square = []
+        disambiguation_moves = MoveGenerator(self.position_old)
+        moves = disambiguation_moves.generate_legal_moves()
+        disamb_list = []
+        for m in moves:
+            piece = board[m.start_square]
+            if piece.name == moved_piece.name:
+                if m.end_square == end_square and m.start_square != start_square:
+                    disamb_list.append(m)
+
+
         
-        directions_rook =  [(1, 0), (0,-1), (-1,0), (0, 1)]
-        directions_bishop = [(1, 1), (1, -1), (-1,-1), (-1,1)]
-        directions_queen =  [(1, 1), (1, 0), (1, -1), (0,-1), (-1,-1), (-1,0), (-1,1), (0, 1)]
 
-        directions_knight = [(-2, 1), (-2, -1), (-1, -2), (1,-2), (2,-1), (2,1), (1,2), (-1, 2)]
-
-        if moved_piece.name == 'Rook':
-            for dr, dc in directions_rook:
-
-                r = row + dr
-                c = col + dc
-
-                while 0 <= r < 8 and 0 <= c < 8:
-
-                    piece = board[(r, c)]
-
-                    if piece.name == 'empty':
-                        r += dr
-                        c += dc
-                        continue
-                
-                    if piece.color == enemy:
-                        break
-                    elif piece.name == 'Rook':
-                        disambiguation_square.append((r, c))
-                    else: 
-                        break
-
-        if moved_piece.name == 'Bishop':
-            for dr, dc in directions_bishop:
-
-                r = row + dr
-                c = col + dc
-
-                while 0 <= r < 8 and 0 <= c < 8:
-
-                    piece = board[(r, c)]
-
-                    if piece.name == 'empty':
-                        r += dr
-                        c += dc
-                        continue
-                
-                    if piece.color == enemy:
-                        break
-                    elif piece.name == 'Bishop':
-                        disambiguation_square.append((r, c))
-                    else: 
-                        break
-
-        if moved_piece.name == 'Knight':
-            for dr, dc in directions_knight:
-
-                r = row + dr
-                c = col + dc
-                if not (0 <= r < 8 and 0 <= c < 8) == True:
-                    continue
-                piece = board[(r, c)]
-                if piece.name == 'Knight' and piece.color != enemy:
-                    disambiguation_square.append((r, c))
-
-        if moved_piece.name == 'Queen':
-            for dr, dc in directions_queen:
-
-                r = row + dr
-                c = col + dc
-
-                while 0 <= r < 8 and 0 <= c < 8:
-
-                    piece = board[(r, c)]
-
-                    if piece.name == 'empty':
-                        r += dr
-                        c += dc
-                        continue
-                
-                    if piece.color == enemy:
-                        break
-                    elif piece.name == 'Queen':
-                        disambiguation_square.append((r, c))
-                    else: 
-                        break
-                
-
-        return disambiguation_square
+        return disamb_list
 
 
 

@@ -63,10 +63,11 @@ class ChessBoard(QWidget):
         self.end_square = move.end_square
         self.engine.check_move(move)
 
+
         if self.engine.legal == True and self.engine.promotion == False:
             self.update_board(move)
-            
 
+        
 
         elif self.engine.legal == True and self.engine.promotion == True:
 
@@ -101,6 +102,7 @@ class ChessBoard(QWidget):
                     self.squares[(i,j)].piece = self.engine.position.boardstate[(i,j)]
                     self.squares[(i,j)].set_piece()
 
+
         if self.last_start:
             self.squares[self.last_start].setProperty('highlight_last_move', False)
             self.squares[self.last_start].style().unpolish(self.squares[self.last_start])
@@ -123,6 +125,8 @@ class ChessBoard(QWidget):
         self.last_start = move.start_square
         self.last_end = move.end_square
 
+  
+
         if move.promotion_piece:
             promotion_piece_signal = move.promotion_piece
         else:
@@ -130,11 +134,12 @@ class ChessBoard(QWidget):
 
 
         piece_moved = self.engine.position.boardstate[move.end_square]
-        self.table_signal.emit(move, piece_moved, self.engine.disambiguation(piece_moved, move.end_square), self.engine.capture, self.engine.check, self.engine.castle_short, 
+        self.table_signal.emit(move, piece_moved, self.engine.disambiguation(piece_moved, move.start_square, move.end_square), self.engine.capture, self.engine.check, self.engine.castle_short, 
             self.engine.castle_long, self.engine.mate, promotion_piece_signal)
 
         if self.engine.mate == False and self.engine.stalemate == False:
             self.move_signal.emit(self.engine.position)
+
 
 
 
@@ -353,27 +358,26 @@ class MoveTable(QTableWidget):
             san_move = '0-0-0'
 
         else: 
-  
-            if len(disambiguation) <= 1:
-                disambiguation_string = ''
-            elif len(disambiguation) > 1:
-                for r, c in disambiguation:
-                    same_row = ''
-                    same_col = ''
-                    if move.start_square != (r, c):
-                        print(r, row_start)
-                        if row_start == r:
-                            same_row = notation[row_start][0]
-                            same_row = same_row[0]
-                            
-                            print('2')
-                        elif col_start == c:
-                            same_col = notation[0][col_start]
-                            same_col = same_col[1]
+            disambiguation_string = ''
+            if len(disambiguation) == 1:
+                for moves in disambiguation:
+                    dif_row = ''
+                    dif_col = ''
+                    r, c = moves.start_square
+                    if col_start != c:
+                        dif_col = notation[0][col_start]
+                        dif_col = dif_col[0]
+                        print(f'{dif_col}')
 
-                            print('3')
+                    elif row_start != r:
+                        dif_row = notation[row_start][0]
+                        dif_row = dif_row[1]
 
-                    disambiguation_string = f'{same_row}{same_col}'
+                    disambiguation_string = f'{dif_col}{dif_row}'
+
+                print(disambiguation_string)
+
+                
 
             if capture:
                 capture_string = 'x'

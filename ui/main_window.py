@@ -58,7 +58,7 @@ class EngineWorker(QObject):
 
         self.engine = engine
         self.position = position
-        self.depth = 3
+        self.depth = 5
 
     def run(self):
         t1 = time.time()
@@ -219,6 +219,7 @@ class Computer_Game(QMainWindow):
 
 
         self.GameController = GameController()
+        self.computer_thinking = False
 
         self.board_widget = ChessBoard(self.GameController.gameEngine, self)
         self.board_widget.arrow_signal.connect(self.get_arrow_signal)
@@ -311,7 +312,8 @@ class Computer_Game(QMainWindow):
 
 
     def update_evalbar(self, position):
-        if self.GameController.gameEngine.position.white_to_move == False:
+        if self.GameController.gameEngine.position.white_to_move == False and self.computer_thinking == False:
+            self.computer_thinking = True
             self.thread = QThread()
             self.worker = EngineWorker(self.GameController.ultimate, copy.deepcopy(position))
             self.worker.moveToThread(self.thread)
@@ -327,6 +329,8 @@ class Computer_Game(QMainWindow):
     def opponent(self, best_move):
 
             self.board_widget.process_move(best_move)
+            self.computer_thinking = False
+            
             
 
 
