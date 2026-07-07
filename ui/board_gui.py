@@ -17,8 +17,6 @@ class ChessBoard(QWidget):
     move_signal = pyqtSignal(object)
     arrow_signal = pyqtSignal(list)
     delete_signal = pyqtSignal()
-    new_game_signal = pyqtSignal()
-    menu_signal = pyqtSignal()
     table_signal = pyqtSignal(object, object, bool, bool, bool, bool, bool, str)
     def __init__(self, engine, parent = None):
         super().__init__(parent)
@@ -85,34 +83,11 @@ class ChessBoard(QWidget):
             promote_dialog.exec_()
             
 
-        if self.engine.mate == True:
-            if self.engine.position.white_to_move == False:
-                mate_dialog_win = DialogWinMate(self)
-                QTimer.singleShot(1500, lambda: self.mate_dialog(mate_dialog_win))
-                        
-            else:
-                mate_dialog_lose = DialogLoseMate('w', self)
-                QTimer.singleShot(1500, lambda: self.mate_dialog(mate_dialog_lose))
 
-
-
-        if self.engine.stalemate == True:
-            dialog_stalemate = DialogRemisPatt(self)
-            QTimer.singleShot(1500, lambda: self.mate_dialog(dialog_stalemate))
         t2 = time.time()
 
         print(f'GUI Update: {t2 - t1:.5f} sek')
 
-            
-    def mate_dialog(self, dialog):
-
-        dialog.exec_()
-        match dialog.action:
-            case 'play again':
-                self.new_game_signal.emit()
-
-            case 'menu':
-                self.menu_signal.emit()
 
 
 
@@ -153,14 +128,17 @@ class ChessBoard(QWidget):
         else:
             promotion_piece_signal = promotion_piece
 
+        self.table_signal.emit(move, self.engine.position.boardstate[move.end_square], self.engine.capture, self.engine.check, self.engine.castle_short, 
+            self.engine.castle_long, self.engine.mate, promotion_piece_signal)
+
         if self.engine.mate == False and self.engine.stalemate == False:
             self.move_signal.emit(self.engine.position)
-            self.table_signal.emit(move, self.engine.position.boardstate[move.end_square], self.engine.capture, self.engine.check, self.engine.castle_short, 
-                                   self.engine.castle_long, self.engine.mate, promotion_piece_signal)
+
 
 
     def process_promotion(self, promotion_piece, move):
         self.engine.promote_pawns(promotion_piece, self.end_square)
+        self.engine.check_for_mate()
         self.update_board(move, promotion_piece)
 
 

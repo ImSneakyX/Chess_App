@@ -223,10 +223,8 @@ class Computer_Game(QMainWindow):
         self.board_widget = ChessBoard(self.GameController.gameEngine, self)
         self.board_widget.arrow_signal.connect(self.get_arrow_signal)
         self.board_widget.delete_signal.connect(self.delete_arrows)
-        self.board_widget.move_signal.connect(self.update_evalbar)
         self.board_widget.table_signal.connect(self.update_moveTable)
-        self.board_widget.new_game_signal.connect(self.new_game)
-        self.board_widget.menu_signal.connect(self.back_to_menu)
+        self.board_widget.move_signal.connect(self.update_evalbar)
         self.board_widget.setGeometry(self.width() // 4, 20, self.width() // 2, 3 * self.height() // 4)
 
         self.overlay = ArrowOverlay(self.arrows, self.board_widget)
@@ -253,6 +251,31 @@ class Computer_Game(QMainWindow):
     def update_moveTable(self, move, piece_moved, capture, check, castle_short, castle_long, mate, promotion_piece):
 
         self.move_table.add_move(move, piece_moved, capture, check, castle_short, castle_long, mate, promotion_piece)
+        if self.board_widget.engine.mate == True:
+            if self.board_widget.engine.position.white_to_move == False:
+                mate_dialog_win = DialogWinMate(self)
+                QTimer.singleShot(1500, lambda: self.mate_dialog(mate_dialog_win))
+                        
+            else:
+                mate_dialog_lose = DialogLoseMate('w', self)
+                QTimer.singleShot(1500, lambda: self.mate_dialog(mate_dialog_lose))
+
+
+
+        if self.board_widget.engine.stalemate == True:
+            dialog_stalemate = DialogRemisPatt(self)
+            QTimer.singleShot(1500, lambda: self.mate_dialog(dialog_stalemate))
+
+    def mate_dialog(self, dialog):
+
+        dialog.exec_()
+        match dialog.action:
+            case 'play again':
+                self.new_game()
+
+            case 'menu':
+                self.back_to_menu()
+
 
 
     def resign(self):

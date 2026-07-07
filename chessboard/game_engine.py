@@ -51,8 +51,8 @@ class GameEngine:
                 if self.position.boardstate[move_made.start_square].name == 'King':
                     if move_made.start_square[1] == 4 and move_made.end_square[1] == 6:
                         self.castle_short = True
-                elif move_made.start_square[1] == 4 and move_made.end_square[1] == 2:
-                    self.castle_long = True
+                    elif move_made.start_square[1] == 4 and move_made.end_square[1] == 2:
+                        self.castle_long = True
 
                 if self.position.white_to_move:
                     if self.position.boardstate[move_made.end_square].color == 'b':
@@ -74,28 +74,8 @@ class GameEngine:
 
             else:
                 self.position.make_move(move_made)
-            
-            move_gen = MoveGenerator(self.position)
-            if self.position.white_to_move:
-                if move_gen.is_square_in_check(self.position.king_w_pos, 'b'):
-                    self.check = True
-            else:
-                if move_gen.is_square_in_check(self.position.king_b_pos, 'w'):
-                    self.check = True
-                
-            legal_moves = move_gen.generate_legal_moves()
-            if len(legal_moves) == 0:
-                if self.position.white_to_move:
-                    if move_gen.is_square_in_check(self.position.king_w_pos, 'b'):
-                        self.mate = True
-                    else:
-                        self.stalemate = True
 
-                else:
-                    if move_gen.is_square_in_check(self.position.king_b_pos, 'w'):
-                        self.mate = True
-                    else:
-                        self.stalemate = True
+        self.check_for_mate()
 
     def promote_pawns(self, piece, square_of_promotion):
 
@@ -138,6 +118,30 @@ class GameEngine:
         else: 
             self.position.add_pawn_value += 0.6
             self.position.abs_piece_value += 1
+
+    def check_for_mate(self):
+
+        move_gen = MoveGenerator(self.position)
+        if self.position.white_to_move:
+            if move_gen.is_square_in_check(self.position.king_w_pos, 'b'):
+                self.check = True
+        else:
+            if move_gen.is_square_in_check(self.position.king_b_pos, 'w'):
+                self.check = True
+                
+        legal_moves = move_gen.generate_legal_moves()
+        if len(legal_moves) == 0:
+            if self.position.white_to_move:
+                if move_gen.is_square_in_check(self.position.king_w_pos, 'b'):
+                    self.mate = True
+                else:
+                    self.stalemate = True
+
+            else:
+                if move_gen.is_square_in_check(self.position.king_b_pos, 'w'):
+                    self.mate = True
+                else:
+                    self.stalemate = True
 
 
             
