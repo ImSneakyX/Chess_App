@@ -144,6 +144,7 @@ class ChessBoard(QWidget):
 
 
     def process_promotion(self, promotion_piece, move):
+        print(promotion_piece)
         self.engine.promote_pawns(promotion_piece, self.end_square)
         self.engine.check_for_mate()
         self.update_board(move, promotion_piece)
@@ -360,22 +361,36 @@ class MoveTable(QTableWidget):
         else: 
             disambiguation_string = ''
             if len(disambiguation) == 1:
+                dif_col = ''
+                dif_row = ''
                 for moves in disambiguation:
-                    dif_row = ''
-                    dif_col = ''
                     r, c = moves.start_square
                     if col_start != c:
                         dif_col = notation[0][col_start]
                         dif_col = dif_col[0]
-                        print(f'{dif_col}')
 
                     elif row_start != r:
                         dif_row = notation[row_start][0]
                         dif_row = dif_row[1]
 
-                    disambiguation_string = f'{dif_col}{dif_row}'
 
-                print(disambiguation_string)
+                disambiguation_string = f'{dif_col}{dif_row}'
+
+            if len(disambiguation) > 1:
+                dif_col = ''
+                dif_row = ''
+                for moves in disambiguation:
+                    r, c = moves.start_square
+                    if col_start != c:
+                        dif_col = notation[0][col_start]
+                        dif_col = dif_col[0]
+
+                    elif row_start != r:
+                        dif_row = notation[row_start][0]
+                        dif_row = dif_row[1]
+
+
+                disambiguation_string = f'{dif_col}{dif_row}'
 
                 
 
