@@ -250,9 +250,9 @@ class Computer_Game(QMainWindow):
 
 
 
-    def update_moveTable(self, move, piece_moved, capture, check, castle_short, castle_long, mate):
+    def update_moveTable(self, move, piece_moved, capture, check, castle_short, castle_long, mate, promotion_piece):
 
-        self.move_table.add_move(move, piece_moved, capture, check, castle_short, castle_long, mate)
+        self.move_table.add_move(move, piece_moved, capture, check, castle_short, castle_long, mate, promotion_piece)
 
 
     def resign(self):

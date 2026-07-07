@@ -19,7 +19,7 @@ class ChessBoard(QWidget):
     delete_signal = pyqtSignal()
     new_game_signal = pyqtSignal()
     menu_signal = pyqtSignal()
-    table_signal = pyqtSignal(object, object, bool, bool, bool, bool, bool)
+    table_signal = pyqtSignal(object, object, bool, bool, bool, bool, bool, str)
     def __init__(self, engine, parent = None):
         super().__init__(parent)
 
@@ -116,7 +116,7 @@ class ChessBoard(QWidget):
 
 
 
-    def update_board(self, move):
+    def update_board(self, move, promotion_piece = None):
         for i in range(8):
             for j in range(8):
                 neue_figur = self.engine.position.boardstate[(i,j)]
@@ -148,15 +148,20 @@ class ChessBoard(QWidget):
         self.last_start = move.start_square
         self.last_end = move.end_square
 
+        if move.promotion_piece:
+            promotion_piece_signal = move.promotion_piece
+        else:
+            promotion_piece_signal = promotion_piece
+
         if self.engine.mate == False and self.engine.stalemate == False:
             self.move_signal.emit(self.engine.position)
             self.table_signal.emit(move, self.engine.position.boardstate[move.end_square], self.engine.capture, self.engine.check, self.engine.castle_short, 
-                                   self.engine.castle_long, self.engine.mate)
+                                   self.engine.castle_long, self.engine.mate, promotion_piece_signal)
 
 
     def process_promotion(self, promotion_piece, move):
         self.engine.promote_pawns(promotion_piece, self.end_square)
-        self.update_board(move)
+        self.update_board(move, promotion_piece)
 
 
 
@@ -336,9 +341,9 @@ class MoveTable(QTableWidget):
         pass
 
 
-    def add_move(self, move, piece_moved, capture, check, castling_short, castling_long, mate):
+    def add_move(self, move, piece_moved, capture, check, castling_short, castling_long, mate, promotion_piece):
 
-        new_move = self.move_to_san(move, piece_moved, capture, check, castling_short, castling_long, mate)
+        new_move = self.move_to_san(move, piece_moved, capture, check, castling_short, castling_long, mate, promotion_piece)
         self.moves.append(new_move)
 
         index = len(self.moves) - 1
@@ -349,7 +354,7 @@ class MoveTable(QTableWidget):
         column = index % 2
         self.setItem(row, column, QTableWidgetItem(new_move))
 
-    def move_to_san(self, move, piece_moved, capture, check, castling_short, castling_long, mate):
+    def move_to_san(self, move, piece_moved, capture, check, castling_short, castling_long, mate, promotion_piece):
 
         notation = [[0]*8 for _ in range(8)]
 
@@ -372,7 +377,10 @@ class MoveTable(QTableWidget):
             else:
                 capture_string = ''
 
-            if piece_moved.name == 'Pawn':
+            if piece_moved.name == 'Pawn' and capture:
+                pawn_origin = notation[move.start_square[0]][move.start_square[1]]
+                piece_letter = f'{pawn_origin[0]}'
+            elif piece_moved.name == 'Pawn':
                 piece_letter = ''
             elif piece_moved.name == 'Knight':
                 piece_letter = 'N'
@@ -385,6 +393,16 @@ class MoveTable(QTableWidget):
             elif piece_moved.name == 'King':
                 piece_letter = 'K'
 
+            if promotion_piece:
+                promotion_string = f'={promotion_piece}'
+                if capture:
+                    pawn_origin = notation[move.start_square[0]][move.start_square[1]]
+                    piece_letter = f'{pawn_origin[0]}'
+                else:
+                    piece_letter = ''
+
+            else: 
+                promotion_string = ''
             if check and not mate:
                 check_string = '+'
             else: 
@@ -395,7 +413,7 @@ class MoveTable(QTableWidget):
                 mate_string = ''
 
 
-            san_move = ''.join((piece_letter, capture_string, notation[move.end_square[0]][move.end_square[1]], check_string, mate_string))
+            san_move = ''.join((piece_letter, capture_string, notation[move.end_square[0]][move.end_square[1]], promotion_string, check_string, mate_string))
 
         return san_move
     

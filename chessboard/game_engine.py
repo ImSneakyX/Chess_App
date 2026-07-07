@@ -117,7 +117,7 @@ class GameEngine:
             else:
                 self.position.abs_piece_value -= self.position.boardstate[square_of_promotion].value
 
-        if piece == 'K':
+        if piece == 'N':
             self.position.boardstate[square_of_promotion] = Knight('w' if self.position.white_to_move == False else 'b')
             if self.position.white_to_move == False:
                 self.position.abs_piece_value += self.position.boardstate[square_of_promotion].value
@@ -164,7 +164,7 @@ class MoveGenerator:
                             moves, moves_vision = piece.get_legal_moves(board, (i, j))
                             for m in moves: 
                                 if m[0] == 0:
-                                    promotion_pieces = ['Q', 'R', 'K', 'B']
+                                    promotion_pieces = ['Q', 'R', 'N', 'B']
                                     for piece in promotion_pieces:
                                         move = Move((i, j), m, piece)
                                         pseudo_moves.append(move)
@@ -222,7 +222,7 @@ class MoveGenerator:
                                 moves, moves_vision = piece.get_legal_moves(board, (i, j))
                                 for m in moves: 
                                     if m[0] == 7:
-                                        promotion_pieces = ['Q', 'R', 'K', 'B']
+                                        promotion_pieces = ['Q', 'R', 'N', 'B']
                                         for piece in promotion_pieces:
                                             move = Move((i, j), m, piece)
                                             pseudo_moves.append(move)

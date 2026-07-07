@@ -168,7 +168,7 @@ class Position:
                     else:
                         self.abs_piece_value -= self.boardstate[move.end_square].value
 
-                if move.promotion_piece == 'K':
+                if move.promotion_piece == 'N':
                     self.boardstate[move.end_square] = Knight(piece.color)
                     if piece.color == 'w':
                         self.abs_piece_value += self.boardstate[move.end_square].value
