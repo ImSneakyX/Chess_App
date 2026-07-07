@@ -90,7 +90,7 @@ class Promote(QDialog):
 
         self.setLayout(self.grid)
 
-        promote_knight.clicked.connect(lambda: self.signal_piece_to_main('K'))
+        promote_knight.clicked.connect(lambda: self.signal_piece_to_main('N'))
         promote_bishop.clicked.connect(lambda: self.signal_piece_to_main('B'))
         promote_rook.clicked.connect(lambda: self.signal_piece_to_main('R'))
         promote_queen.clicked.connect(lambda: self.signal_piece_to_main('Q'))
