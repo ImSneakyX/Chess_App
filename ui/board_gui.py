@@ -17,7 +17,7 @@ class ChessBoard(QWidget):
     move_signal = pyqtSignal(object)
     arrow_signal = pyqtSignal(list)
     delete_signal = pyqtSignal()
-    table_signal = pyqtSignal(object, object, bool, bool, bool, bool, bool, str)
+    table_signal = pyqtSignal(object, object, list, bool, bool, bool, bool, bool, str)
     def __init__(self, engine, parent = None):
         super().__init__(parent)
 
@@ -128,7 +128,9 @@ class ChessBoard(QWidget):
         else:
             promotion_piece_signal = promotion_piece
 
-        self.table_signal.emit(move, self.engine.position.boardstate[move.end_square], self.engine.capture, self.engine.check, self.engine.castle_short, 
+
+        piece_moved = self.engine.position.boardstate[move.end_square]
+        self.table_signal.emit(move, piece_moved, self.engine.disambiguation(piece_moved, move.end_square), self.engine.capture, self.engine.check, self.engine.castle_short, 
             self.engine.castle_long, self.engine.mate, promotion_piece_signal)
 
         if self.engine.mate == False and self.engine.stalemate == False:
@@ -319,9 +321,9 @@ class MoveTable(QTableWidget):
         pass
 
 
-    def add_move(self, move, piece_moved, capture, check, castling_short, castling_long, mate, promotion_piece):
+    def add_move(self, move, piece_moved, disambiguation, capture, check, castling_short, castling_long, mate, promotion_piece):
 
-        new_move = self.move_to_san(move, piece_moved, capture, check, castling_short, castling_long, mate, promotion_piece)
+        new_move = self.move_to_san(move, piece_moved, disambiguation, capture, check, castling_short, castling_long, mate, promotion_piece)
         self.moves.append(new_move)
 
         index = len(self.moves) - 1
@@ -332,13 +334,14 @@ class MoveTable(QTableWidget):
         column = index % 2
         self.setItem(row, column, QTableWidgetItem(new_move))
 
-    def move_to_san(self, move, piece_moved, capture, check, castling_short, castling_long, mate, promotion_piece):
+    def move_to_san(self, move, piece_moved, disambiguation, capture, check, castling_short, castling_long, mate, promotion_piece):
 
         notation = [[0]*8 for _ in range(8)]
 
         rows = '12345678'
         cols = 'abcdefgh'
-
+        row_start = move.start_square[0]
+        col_start = move.start_square[1]
 
         for row in range(8):
             for col in range(8):
@@ -350,13 +353,35 @@ class MoveTable(QTableWidget):
             san_move = '0-0-0'
 
         else: 
+  
+            if len(disambiguation) <= 1:
+                disambiguation_string = ''
+            elif len(disambiguation) > 1:
+                for r, c in disambiguation:
+                    same_row = ''
+                    same_col = ''
+                    if move.start_square != (r, c):
+                        print(r, row_start)
+                        if row_start == r:
+                            same_row = notation[row_start][0]
+                            same_row = same_row[0]
+                            
+                            print('2')
+                        elif col_start == c:
+                            same_col = notation[0][col_start]
+                            same_col = same_col[1]
+
+                            print('3')
+
+                    disambiguation_string = f'{same_row}{same_col}'
+
             if capture:
                 capture_string = 'x'
             else:
                 capture_string = ''
 
             if piece_moved.name == 'Pawn' and capture:
-                pawn_origin = notation[move.start_square[0]][move.start_square[1]]
+                pawn_origin = notation[row_start][col_start]
                 piece_letter = f'{pawn_origin[0]}'
             elif piece_moved.name == 'Pawn':
                 piece_letter = ''
@@ -374,7 +399,7 @@ class MoveTable(QTableWidget):
             if promotion_piece:
                 promotion_string = f'={promotion_piece}'
                 if capture:
-                    pawn_origin = notation[move.start_square[0]][move.start_square[1]]
+                    pawn_origin = notation[row_start][col_start]
                     piece_letter = f'{pawn_origin[0]}'
                 else:
                     piece_letter = ''
@@ -385,13 +410,14 @@ class MoveTable(QTableWidget):
                 check_string = '+'
             else: 
                 check_string = ''
-            if mate:
-                mate_string = '#'
-            else:
-                mate_string = ''
+ 
+            san_move = ''.join((piece_letter, disambiguation_string, capture_string, notation[move.end_square[0]][move.end_square[1]], promotion_string, check_string))
 
-
-            san_move = ''.join((piece_letter, capture_string, notation[move.end_square[0]][move.end_square[1]], promotion_string, check_string, mate_string))
+        if mate:
+            mate_string = '#'
+        else:
+            mate_string = ''
+        san_move = ''.join((san_move, mate_string))
 
         return san_move
     

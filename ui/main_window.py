@@ -248,9 +248,9 @@ class Computer_Game(QMainWindow):
 
 
 
-    def update_moveTable(self, move, piece_moved, capture, check, castle_short, castle_long, mate, promotion_piece):
+    def update_moveTable(self, move, piece_moved, disambiguation, capture, check, castle_short, castle_long, mate, promotion_piece):
 
-        self.move_table.add_move(move, piece_moved, capture, check, castle_short, castle_long, mate, promotion_piece)
+        self.move_table.add_move(move, piece_moved, disambiguation, capture, check, castle_short, castle_long, mate, promotion_piece)
         if self.board_widget.engine.mate == True:
             if self.board_widget.engine.position.white_to_move == False:
                 mate_dialog_win = DialogWinMate(self)
