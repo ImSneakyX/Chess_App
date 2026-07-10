@@ -360,37 +360,47 @@ class MoveTable(QTableWidget):
 
         else: 
             disambiguation_string = ''
-            if len(disambiguation) == 1:
+            if len(disambiguation) >= 1:
                 dif_col = ''
                 dif_row = ''
+                row_list = []
+                col_list = []
                 for moves in disambiguation:
                     r, c = moves.start_square
-                    if col_start != c:
+                    row_list.append(r)
+                    col_list.append(c)
+                bool_list_row = []
+                bool_list_col = []
+                for c_e in col_list:
+                    if c_e != col_start:
+                        bool_list_col.append(True)
+                    else:
+                        bool_list_col.append(False)
+
+                if all(bool_list_col):
+                        dif_col = notation[0][col_start]
+                        dif_col = dif_col[0]
+                else: 
+                    for r_e in row_list:
+                        if r_e != row_start:
+                            bool_list_row.append(True)
+                        else: 
+                            bool_list_row.append(False)
+                    if all(bool_list_row):
+
+                        dif_row = notation[row_start][0]
+                        dif_row = dif_row[1]
+                    else: 
+                        dif_row = notation[row_start][0]
+                        dif_row = dif_row[1]
                         dif_col = notation[0][col_start]
                         dif_col = dif_col[0]
 
-                    elif row_start != r:
-                        dif_row = notation[row_start][0]
-                        dif_row = dif_row[1]
 
 
                 disambiguation_string = f'{dif_col}{dif_row}'
 
-            if len(disambiguation) > 1:
-                dif_col = ''
-                dif_row = ''
-                for moves in disambiguation:
-                    r, c = moves.start_square
-                    if col_start != c:
-                        dif_col = notation[0][col_start]
-                        dif_col = dif_col[0]
 
-                    elif row_start != r:
-                        dif_row = notation[row_start][0]
-                        dif_row = dif_row[1]
-
-
-                disambiguation_string = f'{dif_col}{dif_row}'
 
                 
 
