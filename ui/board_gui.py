@@ -60,12 +60,15 @@ class ChessBoard(QWidget):
 
     def process_move(self, move):
         t1 = time.time()
+        print('1')
         self.end_square = move.end_square
         self.engine.check_move(move)
 
 
         if self.engine.legal == True and self.engine.promotion == False:
+            print('2')
             self.update_board(move)
+            print('3')
 
         
 
@@ -84,7 +87,7 @@ class ChessBoard(QWidget):
             promote_dialog.exec_()
             
 
-
+        print('§')
         t2 = time.time()
 
         print(f'GUI Update: {t2 - t1:.5f} sek')
@@ -101,7 +104,7 @@ class ChessBoard(QWidget):
                 if alte_figur.color != neue_figur.color:
                     self.squares[(i,j)].piece = self.engine.position.boardstate[(i,j)]
                     self.squares[(i,j)].set_piece()
-
+        print('4')
 
         if self.last_start:
             self.squares[self.last_start].setProperty('highlight_last_move', False)
@@ -124,6 +127,7 @@ class ChessBoard(QWidget):
 
         self.last_start = move.start_square
         self.last_end = move.end_square
+        print('5')
 
   
 
@@ -132,13 +136,17 @@ class ChessBoard(QWidget):
         else:
             promotion_piece_signal = promotion_piece
 
+        print('6')
 
         piece_moved = self.engine.position.boardstate[move.end_square]
         self.table_signal.emit(move, piece_moved, self.engine.disambiguation(piece_moved, move.start_square, move.end_square), self.engine.capture, self.engine.check, self.engine.castle_short, 
             self.engine.castle_long, self.engine.mate, promotion_piece_signal)
+        print('7')
 
         if self.engine.mate == False and self.engine.stalemate == False:
             self.move_signal.emit(self.engine.position)
+        print('8')
+
 
 
 
