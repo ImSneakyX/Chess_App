@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog, QFrame
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog, QFrame, QButtonGroup
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 from PyQt5.QtCore import Qt, QSize, pyqtSignal
 from ui.drag_drop import ChessSquare
@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
 
 
     def show_dialog(self):
-        d = DialogLoseTime(self)
+        d = BotSelection()
         d.exec_()
 
 class PromotionSquares(QPushButton):
@@ -399,6 +399,133 @@ class Confirmation(QWidget):
 
             case 'menu':
                 self.menu_signal.emit()
+
+class BotSelection(QDialog):
+
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        bg_color = '#2b2b2b'
+        bg_color_hover = "#3E3D3D"
+
+        self.action = None
+
+        self.frame = QFrame(self)
+        self.frame.setGeometry(0, 0, 600, 600)
+        self.frame.setStyleSheet('background-color: #1e1e1f; border-radius: 20px;')
+
+        self.label_top = QLabel(self)
+        self.label_top.setText('Game Settings')
+        self.label_top.setStyleSheet(f'background-color: {bg_color}; border-top-right-radius: 20px; border-top-left-radius: 20px; color: white; font-family: Arial; font-weight: bold; font-size: 26px;')
+        self.label_top.setGeometry(0, 0, 600, 100)
+        self.label_top.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+
+        self.button_close = QPushButton(self)
+        self.button_close.setGeometry(self.label_top.width() - 40, 0, 40, 40)
+        cross = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'cross.png')
+        cross_hover = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'cross_hover.png')
+        cross = cross.replace('\\', '/')
+        cross_hover = cross_hover.replace('\\', '/')
+        self.button_close.setStyleSheet(f'''
+                QPushButton {{background-color: transparent; border-top-right-radius: 20px; border: none; 
+                            image: url({cross}); padding: 5px;}}
+                QPushButton:hover {{image: url({cross_hover});
+                }}''')
+        self.button_close.clicked.connect(self.close)
+
+
+        self.white_opp = QPushButton(self)
+        self.white_opp.setGeometry(25, self.frame.y() + ((5 * self.frame.height()) // 8)-15, 150, 150)
+        self.white_opp.setStyleSheet(f'''
+                                        QPushButton {{border-radius: 20px; background-color: #c6d1c2; border: 2px solid transparent;}}
+                                        QPushButton:hover {{background-color: #e8f5e4;}}
+                                        QPushButton:checked {{border: 8px solid #30751d;}}
+                                         ''')
+        self.white_opp.setCheckable(True)
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        image_path = os.path.join(base_path, 'Images', 'King_w.png')
+        pixmap = QPixmap(image_path)
+        pixmap = pixmap.scaled(250, 250, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        pixmap.setDevicePixelRatio(2.0)
+        icon = QIcon(pixmap)
+        self.white_opp.setIconSize(QSize(int(self.white_opp.width() * (15/16)), int(self.white_opp.height() * (15/16))))
+        self.white_opp.setIcon(icon)
+        self.white_opp.clicked.connect(self.color_selection_w)
+
+        self.random = QPushButton(self)
+        self.random.setGeometry(225, self.frame.y() + ((5 * self.frame.height()) // 8)-15, 150, 150)
+        self.random.setStyleSheet(f'''
+                                         QPushButton {{border-radius: 20px; background-color: #c6d1c2; border: 2px solid transparent;}}
+                                         QPushButton:hover {{background-color: #e8f5e4;}}
+                                         QPushButton:checked {{border: 8px solid #30751d;}}
+                                         ''')
+        self.random.setCheckable(True)
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        image_path = os.path.join(base_path, 'Images', 'King_w_b.png')
+        pixmap = QPixmap(image_path)
+        pixmap = pixmap.scaled(250, 250, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        pixmap.setDevicePixelRatio(2.0)
+        icon = QIcon(pixmap)
+        self.random.setIconSize(QSize(int(self.random.width() * (15/16)), int(self.random.height() * (15/16))))
+        self.random.setIcon(icon)
+        self.random.clicked.connect(self.color_selection_r)
+
+        self.black_opp = QPushButton(self)
+        self.black_opp.setGeometry(425, self.frame.y() + ((5 * self.frame.height()) // 8)-15, 150, 150)
+        self.black_opp.setStyleSheet(f'''
+                                        QPushButton {{border-radius: 20px; background-color: #c6d1c2; border: 2px solid transparent;}}
+                                        QPushButton:hover {{background-color: #e8f5e4;}}
+                                        QPushButton:checked {{border: 8px solid #30751d;}}
+                                         ''')
+        self.black_opp.setCheckable(True)
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        image_path = os.path.join(base_path, 'Images', 'King_b.png')
+        pixmap = QPixmap(image_path)
+        pixmap = pixmap.scaled(250, 250, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        pixmap.setDevicePixelRatio(2.0)
+        icon = QIcon(pixmap)
+        self.black_opp.setIconSize(QSize(int(self.black_opp.width() * (15/16)), int(self.black_opp.height() * (15/16))))
+        self.black_opp.setIcon(icon)
+        self.black_opp.clicked.connect(self.color_selection_b)
+
+        self.opp_group = QButtonGroup(self)
+        self.opp_group.setExclusive(True)
+        self.opp_group.addButton(self.white_opp)
+        self.opp_group.addButton(self.black_opp)
+        self.opp_group.addButton(self.random)
+
+
+        self.start_game = QPushButton(self)
+        self.start_game.setGeometry(25, 525, 550, 50)
+        self.start_game.setText('Start Game')
+        self.start_game.setStyleSheet(f'''
+                                         QPushButton {{font-family: Arial; font-size: 18px; border-radius: 15px; background-color: #3e732e; color: white;}}
+                                         QPushButton:hover {{background-color: #61ba47;}}
+                                         ''')
+        self.start_game.clicked.connect(self.start)
+
+    def showEvent(self, event):
+        self.button_close.raise_()
+        super().showEvent(event)
+    
+    def close(self):
+        self.accept()
+
+
+    def start(self):
+        pass 
+
+    def color_selection_w(self):
+        self.action = 'white'
+
+    def color_selection_r(self):
+        self.action = 'random'
+
+        
+    def color_selection_b(self):
+        self.action = 'black'
 
 
 
