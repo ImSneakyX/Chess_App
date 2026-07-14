@@ -435,8 +435,31 @@ class BotSelection(QDialog):
                 }}''')
         self.button_close.clicked.connect(self.close)
 
+
+        self.label_bob = QLabel(self)
+        self.label_bob.setText('Bob (500)')
+        self.label_bob.setGeometry(13, 245, 175, 25)
+        self.label_bob.setStyleSheet(f'color: white; font-family: Arial; font-weight: bold; font-size: 20px;')
+        self.label_bob.setAttribute(Qt.WA_TranslucentBackground)
+        self.label_bob.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.label_guy = QLabel(self)
+        self.label_guy.setText('Luap (2000)')
+        self.label_guy.setGeometry(213, 245, 175, 25)
+        self.label_guy.setStyleSheet(f'color: white; font-family: Arial; font-weight: bold; font-size: 20px;')
+        self.label_guy.setAttribute(Qt.WA_TranslucentBackground)
+        self.label_guy.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.label_ultimate = QLabel(self)
+        self.label_ultimate.setText('Ultimate (3000)')
+        self.label_ultimate.setGeometry(413, 245, 175, 25)
+        self.label_ultimate.setStyleSheet(f'color: white; font-family: Arial; font-weight: bold; font-size: 20px;')
+        self.label_ultimate.setAttribute(Qt.WA_TranslucentBackground)
+        self.label_ultimate.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+
         self.bob = QPushButton(self)
-        self.bob.setGeometry(25, 190, 150, 150)
+        self.bob.setGeometry(13, 275, 175, 175)
         self.bob.setStyleSheet(f'''
                                         QPushButton {{border-radius: 20px; background-color: #c6d1c2; border: 2px solid transparent;}}
                                         QPushButton:hover {{background-color: #e8f5e4;}}
@@ -449,13 +472,30 @@ class BotSelection(QDialog):
         pixmap = pixmap.scaled(250, 250, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
         pixmap.setDevicePixelRatio(2.0)
         icon = QIcon(pixmap)
-        self.bob.setIconSize(QSize(int(self.bob.width() * (15/16)), int(self.bob.height() * (15/16))))
+        self.bob.setIconSize(QSize(int(self.bob.width() * (14/16)), int(self.bob.height() * (14/16))))
         self.bob.setIcon(icon)
         self.bob.clicked.connect(self.color_selection_w)
 
+        self.guy = QPushButton(self)
+        self.guy.setGeometry(213, 275, 175, 175)
+        self.guy.setStyleSheet(f'''
+                                        QPushButton {{border-radius: 20px; background-color: #c6d1c2; border: 2px solid transparent;}}
+                                        QPushButton:hover {{background-color: #e8f5e4;}}
+                                        QPushButton:checked {{border: 8px solid #30751d;}}
+                                         ''')
+        self.guy.setCheckable(True)
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        image_path = os.path.join(base_path, 'Images', 'Guy.png')
+        pixmap = QPixmap(image_path)
+        pixmap = pixmap.scaled(250, 200, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        pixmap.setDevicePixelRatio(2.0)
+        icon = QIcon(pixmap)
+        self.guy.setIconSize(QSize(int(self.guy.width()), int(self.guy.height())))
+        self.guy.setIcon(icon)
+        self.guy.clicked.connect(self.color_selection_b)
         
         self.ultimate = QPushButton(self)
-        self.ultimate.setGeometry(425, 190, 150, 150)
+        self.ultimate.setGeometry(413, 275, 175, 175)
         self.ultimate.setStyleSheet(f'''
                                         QPushButton {{border-radius: 20px; background-color: #c6d1c2; border: 2px solid transparent;}}
                                         QPushButton:hover {{background-color: #e8f5e4;}}
@@ -465,20 +505,28 @@ class BotSelection(QDialog):
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         image_path = os.path.join(base_path, 'Images', 'ultimate.png')
         pixmap = QPixmap(image_path)
-        pixmap = pixmap.scaled(250, 250, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        pixmap = pixmap.scaled(250, 200, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
         pixmap.setDevicePixelRatio(2.0)
         icon = QIcon(pixmap)
-        self.ultimate.setIconSize(QSize(int(self.ultimate.width() * (15/16)), int(self.ultimate.height() * (15/16))))
+        self.ultimate.setIconSize(QSize(int(self.ultimate.width()), int(self.ultimate.height())))
         self.ultimate.setIcon(icon)
         self.ultimate.clicked.connect(self.color_selection_b)
 
+        self.group_bot = QButtonGroup(self)
+        self.group_bot.setExclusive(True)
+        self.group_bot.addButton(self.bob)
+        self.group_bot.addButton(self.guy)
+        self.group_bot.addButton(self.ultimate)
+
+
+
 
         self.white_opp = QPushButton(self)
-        self.white_opp.setGeometry(25, self.frame.y() + ((5 * self.frame.height()) // 8)-15, 150, 150)
+        self.white_opp.setGeometry(395, 465, 50, 50)
         self.white_opp.setStyleSheet(f'''
-                                        QPushButton {{border-radius: 20px; background-color: #c6d1c2; border: 2px solid transparent;}}
+                                        QPushButton {{border-radius: 5px; background-color: #c6d1c2; border: 2px solid transparent;}}
                                         QPushButton:hover {{background-color: #e8f5e4;}}
-                                        QPushButton:checked {{border: 8px solid #30751d;}}
+                                        QPushButton:checked {{border: 4px solid #30751d;}}
                                          ''')
         self.white_opp.setCheckable(True)
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -492,11 +540,11 @@ class BotSelection(QDialog):
         self.white_opp.clicked.connect(self.color_selection_w)
 
         self.random = QPushButton(self)
-        self.random.setGeometry(225, self.frame.y() + ((5 * self.frame.height()) // 8)-15, 150, 150)
+        self.random.setGeometry(460, 465, 50, 50)
         self.random.setStyleSheet(f'''
-                                         QPushButton {{border-radius: 20px; background-color: #c6d1c2; border: 2px solid transparent;}}
+                                         QPushButton {{border-radius: 5px; background-color: #c6d1c2; border: 2px solid transparent;}}
                                          QPushButton:hover {{background-color: #e8f5e4;}}
-                                         QPushButton:checked {{border: 8px solid #30751d;}}
+                                         QPushButton:checked {{border: 4px solid #30751d;}}
                                          ''')
         self.random.setCheckable(True)
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -510,11 +558,11 @@ class BotSelection(QDialog):
         self.random.clicked.connect(self.color_selection_r)
 
         self.black_opp = QPushButton(self)
-        self.black_opp.setGeometry(425, self.frame.y() + ((5 * self.frame.height()) // 8)-15, 150, 150)
+        self.black_opp.setGeometry(525, 465, 50, 50)
         self.black_opp.setStyleSheet(f'''
-                                        QPushButton {{border-radius: 20px; background-color: #c6d1c2; border: 2px solid transparent;}}
+                                        QPushButton {{border-radius: 5px; background-color: #c6d1c2; border: 2px solid transparent;}}
                                         QPushButton:hover {{background-color: #e8f5e4;}}
-                                        QPushButton:checked {{border: 8px solid #30751d;}}
+                                        QPushButton:checked {{border: 4px solid #30751d;}}
                                          ''')
         self.black_opp.setCheckable(True)
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
