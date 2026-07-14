@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog, QFrame, QButtonGroup
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog, QFrame, QButtonGroup, QCheckBox
 from PyQt5.QtGui import QIcon, QFont, QPixmap
 from PyQt5.QtCore import Qt, QSize, pyqtSignal
 from ui.drag_drop import ChessSquare
@@ -417,7 +417,7 @@ class BotSelection(QDialog):
 
         self.label_top = QLabel(self)
         self.label_top.setText('Game Settings')
-        self.label_top.setStyleSheet(f'background-color: {bg_color}; border-top-right-radius: 20px; border-top-left-radius: 20px; color: white; font-family: Arial; font-weight: bold; font-size: 26px;')
+        self.label_top.setStyleSheet(f'background-color: {bg_color}; border-top-right-radius: 20px; border-top-left-radius: 20px; color: white; font-family: Arial; font-weight: bold; font-size: 40px;')
         self.label_top.setGeometry(0, 0, 600, 100)
         self.label_top.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
@@ -582,6 +582,9 @@ class BotSelection(QDialog):
         self.opp_group.addButton(self.random)
 
 
+        self.eval_bar_switch = ToggleSwitch(self)
+        self.eval_bar_switch.setGeometry(100, 100, 200, 200)
+
         self.start_game = QPushButton(self)
         self.start_game.setGeometry(25, 525, 550, 50)
         self.start_game.setText('Start Game')
@@ -614,7 +617,18 @@ class BotSelection(QDialog):
 
 
 
+class ToggleSwitch(QCheckBox):
 
+    def __init__(self, parent = None):
+        super().__init__(parent)
+
+        self.setStyleSheet(f'''
+                           QCheckBox {{spacing: 10px; font-size: 16px;}}
+                           QCheckBox::indicator {{width: 50px; height: 26px; border-radius: 13px; background-color: green;}}
+                           QCheckBox::indicator:hover {{background-color: blue;}}
+                           QCheckBox::indicator:checked {{background-color: red}}
+                           QCheckBox::indicator:checked:hover {{background-color: white}}
+                           ''')
 
 
 
