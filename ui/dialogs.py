@@ -453,6 +453,25 @@ class BotSelection(QDialog):
         self.bob.setIcon(icon)
         self.bob.clicked.connect(self.color_selection_w)
 
+        
+        self.ultimate = QPushButton(self)
+        self.ultimate.setGeometry(425, 190, 150, 150)
+        self.ultimate.setStyleSheet(f'''
+                                        QPushButton {{border-radius: 20px; background-color: #c6d1c2; border: 2px solid transparent;}}
+                                        QPushButton:hover {{background-color: #e8f5e4;}}
+                                        QPushButton:checked {{border: 8px solid #30751d;}}
+                                         ''')
+        self.ultimate.setCheckable(True)
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        image_path = os.path.join(base_path, 'Images', 'ultimate.png')
+        pixmap = QPixmap(image_path)
+        pixmap = pixmap.scaled(250, 250, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        pixmap.setDevicePixelRatio(2.0)
+        icon = QIcon(pixmap)
+        self.ultimate.setIconSize(QSize(int(self.ultimate.width() * (15/16)), int(self.ultimate.height() * (15/16))))
+        self.ultimate.setIcon(icon)
+        self.ultimate.clicked.connect(self.color_selection_b)
+
 
         self.white_opp = QPushButton(self)
         self.white_opp.setGeometry(25, self.frame.y() + ((5 * self.frame.height()) // 8)-15, 150, 150)
@@ -481,7 +500,7 @@ class BotSelection(QDialog):
                                          ''')
         self.random.setCheckable(True)
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        image_path = os.path.join(base_path, 'Images', 'test_king.png')
+        image_path = os.path.join(base_path, 'Images', 'King_random.png')
         pixmap = QPixmap(image_path)
         pixmap = pixmap.scaled(250, 250, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
         pixmap.setDevicePixelRatio(2.0)
