@@ -435,6 +435,24 @@ class BotSelection(QDialog):
                 }}''')
         self.button_close.clicked.connect(self.close)
 
+        self.bob = QPushButton(self)
+        self.bob.setGeometry(25, 190, 150, 150)
+        self.bob.setStyleSheet(f'''
+                                        QPushButton {{border-radius: 20px; background-color: #c6d1c2; border: 2px solid transparent;}}
+                                        QPushButton:hover {{background-color: #e8f5e4;}}
+                                        QPushButton:checked {{border: 8px solid #30751d;}}
+                                         ''')
+        self.bob.setCheckable(True)
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        image_path = os.path.join(base_path, 'Images', 'bob.png')
+        pixmap = QPixmap(image_path)
+        pixmap = pixmap.scaled(250, 250, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        pixmap.setDevicePixelRatio(2.0)
+        icon = QIcon(pixmap)
+        self.bob.setIconSize(QSize(int(self.bob.width() * (15/16)), int(self.bob.height() * (15/16))))
+        self.bob.setIcon(icon)
+        self.bob.clicked.connect(self.color_selection_w)
+
 
         self.white_opp = QPushButton(self)
         self.white_opp.setGeometry(25, self.frame.y() + ((5 * self.frame.height()) // 8)-15, 150, 150)
