@@ -481,7 +481,7 @@ class BotSelection(QDialog):
                                          ''')
         self.random.setCheckable(True)
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        image_path = os.path.join(base_path, 'Images', 'King_w_b.png')
+        image_path = os.path.join(base_path, 'Images', 'test_king.png')
         pixmap = QPixmap(image_path)
         pixmap = pixmap.scaled(250, 250, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
         pixmap.setDevicePixelRatio(2.0)
