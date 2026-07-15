@@ -2,8 +2,8 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QPushButton, QDialog, QFrame, QButtonGroup, QCheckBox
-from PyQt5.QtGui import QIcon, QFont, QPixmap
-from PyQt5.QtCore import Qt, QSize, pyqtSignal
+from PyQt5.QtGui import QIcon, QFont, QPixmap, QPainter, QBrush, QColor
+from PyQt5.QtCore import Qt, QSize, pyqtSignal, QPropertyAnimation, QPointF, QRectF, pyqtProperty 
 from ui.drag_drop import ChessSquare
 from chessboard.pieces import Knight, Queen, Bishop, Rook
 
@@ -617,18 +617,19 @@ class BotSelection(QDialog):
 
 
 
-class ToggleSwitch(QCheckBox):
+class ToggleSwitch(QWidget):
 
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self.setStyleSheet(f'''
-                           QCheckBox {{spacing: 10px; font-size: 16px;}}
-                           QCheckBox::indicator {{width: 50px; height: 26px; border-radius: 13px; background-color: green;}}
-                           QCheckBox::indicator:hover {{background-color: blue;}}
-                           QCheckBox::indicator:checked {{background-color: red}}
-                           QCheckBox::indicator:checked:hover {{background-color: white}}
-                           ''')
+        self.setFixedSize(60, 32)
+
+
+
+    def paintEvent(self, event):
+
+        p = QPainter()
+
 
 
 
