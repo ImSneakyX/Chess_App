@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLay
 from PyQt5.QtGui import QIcon, QFont, QPixmap, QPen, QPainter
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer, QPoint, QSize, QObject, QThread
 from ui.board_gui import ChessBoard, ArrowOverlay, EvalBar, MoveTable
-from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt, Confirmation
+from ui.dialogs import Promote, DialogWinMate, DialogLoseMate, DialogRemisPatt, Confirmation, BotSelection
 from chessboard.game_controller import GameController
 import time
 from time import perf_counter_ns
@@ -44,10 +44,11 @@ class Launcher(QMainWindow):
         self.hide()
 
     def computer(self):
-        self.window = Computer_Game()
-        self.window.launcher_signal.connect(lambda: self.show())
-        self.window.show()
-        self.hide()
+        self.settings = BotSelection(self)
+        self.computer_opp = Computer_Game()
+        self.settings.start_game_signal.connect(lambda: self.computer_opp.show())
+        self.settings.show()
+        
 
 
 class EngineWorker(QObject):

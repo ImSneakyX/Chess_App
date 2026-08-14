@@ -6,6 +6,7 @@ from PyQt5.QtGui import QIcon, QFont, QPixmap, QPainter, QBrush, QColor
 from PyQt5.QtCore import Qt, QSize, pyqtSignal, QPropertyAnimation, QPointF, QRectF, pyqtProperty 
 from ui.drag_drop import ChessSquare
 from chessboard.pieces import Knight, Queen, Bishop, Rook
+from ui.new_widgets import ToggleSwitch
 
 
 class MainWindow(QMainWindow):
@@ -401,7 +402,7 @@ class Confirmation(QWidget):
                 self.menu_signal.emit()
 
 class BotSelection(QDialog):
-
+    start_game_signal = pyqtSignal(dict)
     def __init__(self, parent = None):
         super().__init__(parent)
         self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
@@ -409,7 +410,8 @@ class BotSelection(QDialog):
         bg_color = '#2b2b2b'
         bg_color_hover = "#3E3D3D"
 
-        self.action = None
+        self.bot = 'bob'
+        self.color = 'white'
 
         self.frame = QFrame(self)
         self.frame.setGeometry(0, 0, 600, 600)
@@ -474,7 +476,7 @@ class BotSelection(QDialog):
         icon = QIcon(pixmap)
         self.bob.setIconSize(QSize(int(self.bob.width() * (14/16)), int(self.bob.height() * (14/16))))
         self.bob.setIcon(icon)
-        self.bob.clicked.connect(self.color_selection_w)
+        self.bob.clicked.connect(self.bob_clicked)
 
         self.guy = QPushButton(self)
         self.guy.setGeometry(213, 275, 175, 175)
@@ -492,7 +494,7 @@ class BotSelection(QDialog):
         icon = QIcon(pixmap)
         self.guy.setIconSize(QSize(int(self.guy.width()), int(self.guy.height())))
         self.guy.setIcon(icon)
-        self.guy.clicked.connect(self.color_selection_b)
+        self.guy.clicked.connect(self.guy_clicked)
         
         self.ultimate = QPushButton(self)
         self.ultimate.setGeometry(413, 275, 175, 175)
@@ -510,7 +512,7 @@ class BotSelection(QDialog):
         icon = QIcon(pixmap)
         self.ultimate.setIconSize(QSize(int(self.ultimate.width()), int(self.ultimate.height())))
         self.ultimate.setIcon(icon)
-        self.ultimate.clicked.connect(self.color_selection_b)
+        self.ultimate.clicked.connect(self.ultimate_clicked)
 
         self.group_bot = QButtonGroup(self)
         self.group_bot.setExclusive(True)
@@ -519,7 +521,25 @@ class BotSelection(QDialog):
         self.group_bot.addButton(self.ultimate)
 
 
+        self.toggle_eval = ToggleSwitch(self)
+        self.toggle_eval.move(25, 474)
 
+        self.label_eval = QLabel(self)
+        self.label_eval.setGeometry(85, 465, 100, 50)
+        self.label_eval.setText('Eval Bar')
+        self.label_eval.setStyleSheet(f'color: white; font-family: Arial; font-weight: bold; font-size: 20px;')
+        self.label_eval.setAttribute(Qt.WA_TranslucentBackground)
+        self.label_eval.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.toggle_move_back = ToggleSwitch(self)
+        self.toggle_move_back.move(200, 474)
+
+        self.label_move_back = QLabel(self)
+        self.label_move_back.setGeometry(260, 465, 130, 50)
+        self.label_move_back.setText('Move Back')
+        self.label_move_back.setStyleSheet(f'color: white; font-family: Arial; font-weight: bold; font-size: 20px;')
+        self.label_move_back.setAttribute(Qt.WA_TranslucentBackground)
+        self.label_move_back.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.white_opp = QPushButton(self)
         self.white_opp.setGeometry(395, 465, 50, 50)
@@ -581,10 +601,6 @@ class BotSelection(QDialog):
         self.opp_group.addButton(self.black_opp)
         self.opp_group.addButton(self.random)
 
-
-        self.eval_bar_switch = ToggleSwitch(self)
-        self.eval_bar_switch.setGeometry(100, 100, 200, 200)
-
         self.start_game = QPushButton(self)
         self.start_game.setGeometry(25, 525, 550, 50)
         self.start_game.setText('Start Game')
@@ -603,33 +619,29 @@ class BotSelection(QDialog):
 
 
     def start(self):
-        pass 
+        settings = {'bot' : self.bot,
+                    'color' : self.color}
+        self.start_game_signal.emit(settings)
+        self.accept()
 
     def color_selection_w(self):
-        self.action = 'white'
+        self.color = 'white'
 
     def color_selection_r(self):
-        self.action = 'random'
+        self.color = 'random'
 
         
     def color_selection_b(self):
-        self.action = 'black'
+        self.color = 'black'
 
+    def ultimate_clicked(self):
+        self.bot = 'ultimate'
 
+    def bob_clicked(self):
+        self.bot = 'bob'
 
-class ToggleSwitch(QWidget):
-
-    def __init__(self, parent = None):
-        super().__init__(parent)
-
-        self.setFixedSize(60, 32)
-
-
-
-    def paintEvent(self, event):
-
-        p = QPainter()
-
+    def guy_clicked(self):
+        self.clicked = 'guy'
 
 
 
