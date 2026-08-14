@@ -213,7 +213,8 @@ class Computer_Game(QMainWindow):
         self.setWindowTitle('Schach')
         self.setGeometry(350, 450, 1024, 683)
         self.central_widget = QWidget()
-        self.central_widget.setStyleSheet(f'background-color: #28292b;')
+        self.bg_color = '#28292b'
+        self.central_widget.setStyleSheet(f'background-color: {self.bg_color};')
         self.setCentralWidget(self.central_widget)
         self.setMinimumSize(600, 350)
 
@@ -245,6 +246,8 @@ class Computer_Game(QMainWindow):
 
         self.move_table = MoveTable([], self)
         self.move_table.setGeometry(40 + self.width() // 4 + self.width() // 2 + self.width() // 24, 20, self.width() // 6, 3 * self.height() // 4)
+        bg_color_mt = "#666666"
+        self.move_table.setStyleSheet(f'background: {bg_color_mt}; color: white;')
 
 
 

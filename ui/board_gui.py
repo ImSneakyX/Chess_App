@@ -310,8 +310,8 @@ class MoveTable(QTableWidget):
         super().__init__(parent)
 
         self.moves = moves
-
-        self.setStyleSheet(''' MoveTable {background-color: #f0f2f0;} ''')
+        
+        bg_color = "#4A4343"
         self.setColumnCount(2)
         self.setHorizontalHeaderLabels(['White', 'Black'])
         self.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
