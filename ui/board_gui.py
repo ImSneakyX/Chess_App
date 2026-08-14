@@ -108,23 +108,26 @@ class ChessBoard(QWidget):
 
         if self.last_start:
             self.squares[self.last_start].setProperty('highlight_last_move', False)
+            print('4.1')
             self.squares[self.last_start].style().unpolish(self.squares[self.last_start])
             self.squares[self.last_start].style().polish(self.squares[self.last_start])
         if self.last_end:
+            print('4.2')
             self.squares[self.last_end].setProperty('highlight_last_move', False)
             self.squares[self.last_end].style().unpolish(self.squares[self.last_end])
             self.squares[self.last_end].style().polish(self.squares[self.last_end])
-        
+        print('4,5')
 
         self.squares[move.start_square].setProperty('highlight_last_move', True)
         self.squares[move.end_square].setProperty('highlight_last_move', True)
+        print('4.6')
 
         self.squares[move.start_square].style().unpolish(self.squares[move.start_square])
         self.squares[move.start_square].style().polish(self.squares[move.start_square])
-
+        print('4.7')
         self.squares[move.end_square].style().unpolish(self.squares[move.end_square])
         self.squares[move.end_square].style().polish(self.squares[move.end_square])
-
+        print('4.8')
         self.last_start = move.start_square
         self.last_end = move.end_square
         print('5')
