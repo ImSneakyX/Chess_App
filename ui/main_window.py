@@ -240,6 +240,19 @@ class Computer_Game(QMainWindow):
                                          QPushButton:hover {{background-color: #ff7a7a}}''')
         self.resign_button.clicked.connect(self.resign)
 
+        self.turn_board_button = QPushButton(self)
+        self.turn_board_button.setGeometry(self.width() // 4 - self.board_widget.width() // 16, 20, self.board_widget.width() // 16, self.board_widget.width() // 16)
+        cross = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'Arrows_turn.png')
+        cross_hover = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Images', 'Arrows_turn_hover.png')
+        cross = cross.replace('\\', '/')
+        cross_hover = cross_hover.replace('\\', '/')
+        self.turn_board_button.setStyleSheet(f'''
+                QPushButton {{background-color: transparent; border-top-right-radius: 20px; border: none; 
+                            image: url({cross}); padding: 5px;}}
+                QPushButton:hover {{image: url({cross_hover});
+                }}''')
+        self.turn_board_button.clicked.connect(self.turn_board)
+
 
         self.eval_bar = EvalBar(self.board_widget.width() // 24, self.board_widget.height(), self)
         self.eval_bar.move(20 + self.width() // 4 + self.width() // 2, 20)
@@ -251,7 +264,8 @@ class Computer_Game(QMainWindow):
         self.move_table.setStyleSheet(f'background: {bg_color_mt}; color: white;')
 
 
-
+    def turn_board(self):
+        pass
 
     def update_moveTable(self, move, piece_moved, disambiguation, capture, check, castle_short, castle_long, mate, promotion_piece):
 
@@ -362,7 +376,7 @@ class Computer_Game(QMainWindow):
         self.overlay.show()
 
         self.resign_button.setGeometry(20 + self.width() // 4 + self.board_widget.width(), 40+ self.board_widget.height(), self.board_widget.width()//4, self.board_widget.width()//16)
-
+        self.turn_board_button.setGeometry(self.width() // 4 - self.board_widget.width() // 16, 20, self.board_widget.width() // 16, self.board_widget.width() // 16)
 
         self.eval_bar.setGeometry(20 + self.width() // 4 + size, 20, size // 24, size)
         setattr(self.eval_bar, 'height', size)
