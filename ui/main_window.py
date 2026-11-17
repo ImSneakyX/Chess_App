@@ -39,9 +39,12 @@ class Launcher(QMainWindow):
 
     def game(self):
         self.window = ChessGame()
-        self.window.launcher_signal.connect(lambda: self.show())
+        self.window.launcher_signal.connect(lambda: self.show()) #for going back to the launcher after the game 
+        print('test')
         self.window.show()
+        print('test1')
         self.hide()
+        print('test2')
 
     def computer(self):
         self.settings = BotSelection(self)

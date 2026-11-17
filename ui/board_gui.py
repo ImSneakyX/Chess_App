@@ -47,7 +47,6 @@ class ChessBoard(QWidget):
 
         self.setLayout(self.grid)
 
-
     def clear(self):
 
         for sq in self.squares.values():
