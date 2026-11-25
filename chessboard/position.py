@@ -381,6 +381,9 @@ class Position:
                 r += dr
                 c += dc
 
+    def to_bitstring(boardstate):
+        
+
 
 
 

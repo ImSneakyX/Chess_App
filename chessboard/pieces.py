@@ -12,6 +12,7 @@ class Piece:
 class Pawn(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Pawn', 1, color)
+        self.number = 1 + 6 if color == 'b' else 1
         self.moved_two_steps = None
 
     def get_legal_moves(self, boardstate, start_square):
@@ -81,6 +82,7 @@ class Pawn(Piece):
 class Knight(Piece):
     def __init__(self,color):
         Piece.__init__(self, 'Knight', 3, color)
+        self.number = 2 + 6 if color == 'b' else 2
 
     def get_legal_moves(self, boardstate, start_square):
         
@@ -102,6 +104,7 @@ class Knight(Piece):
 class Bishop(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Bishop', 3, color)
+        self.number = 3 + 6 if color == 'b' else 3
 
     def get_legal_moves(self, boardstate, start_square):
         
@@ -169,6 +172,7 @@ class Rook(Piece):
     def __init__(self, color, side):
         Piece.__init__(self, 'Rook', 5, color)
         self.side = side
+        self.number = 4 + 6 if color == 'b' else 4
 
     def get_legal_moves(self, boardstate, start_square):
         moves = []
@@ -239,6 +243,7 @@ class Rook(Piece):
 class Queen(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'Queen', 9, color)
+        self.number = 5 + 6 if color == 'b' else 5
 
     def get_legal_moves(self, boardstate, start_square):
         moves = []
@@ -356,6 +361,7 @@ class Queen(Piece):
 class King(Piece):
     def __init__(self, color):
         Piece.__init__(self, 'King', 100, color)
+        self.number = 6 + 6 if color == 'b' else 6
         
 
     def get_legal_moves(self, boardstate, start_square, c_castling, g_castling):

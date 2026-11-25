@@ -5,6 +5,7 @@ from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 from chessboard.board import Board
 from chessboard.game_engine import MoveGenerator
 import time
+from collections import defaultdict
 
 
 
@@ -82,7 +83,9 @@ class Ultimate:
     
 
 
-
+class HashTable:
+    def __init__(self):
+        self.table = defaultdict(list)
 
 if __name__ == '__main__':
     board = Board()

@@ -3,6 +3,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
+import random
 from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
 
 class Board:
@@ -202,6 +203,21 @@ class Board:
                     self.start_pos[i, j] = self.empty
 
         return self.start_pos
+
+class ZobristHash:
+    def __init__(self):
+        self.table = [[0]*12 for _ in range(64)]
+        for i in range(64):
+            for j in range(12):
+                self.table[i][j] = random.getrandbits(64)
+        self.black_to_move = random.getrandbits(64)
+        self.castling_keys = [random.getrandbits(64) for _ in range(4)]
+        self.enpassent = [random.getrandbits(64) for _ in range(8)]
+
+    def hash(pos):
+        h = 0
+        if is_black_turn(pos.white_to_move):
+            h
 
 
 
