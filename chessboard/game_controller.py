@@ -16,7 +16,7 @@ class GameController:
 
 
         self.board = Board()
-        start_pos = self.board.start_position()
+        start_pos = self.board.alt_start_pos()
         abs_piece_value, add_pawn_value = self.board.abs_piece_value()
 
         self.position = Position(start_pos, self.board.king_w_start, self.board.king_b_start, True, True, True, True, True, abs_piece_value, add_pawn_value)

@@ -151,7 +151,57 @@ class Board:
         abs_value = sum_value_white - sum_value_black
 
         return abs_value, round(add_pawn_value, 1)
-    
+
+    def alt_start_pos(self):
+        self.start_pos = self.board.copy()
+        #Bauern
+        self.start_pos[1,:] = self.pawn_b
+        self.start_pos[-2,:] = self.pawn_w
+        
+        #Türme
+
+        self.start_pos[0,0] = self.rook_b_r
+        self.start_pos[0, -1] = self.rook_b_l
+
+        self.start_pos[-1, 0] = self.rook_w_l
+        self.start_pos[-1, -1] = self.rook_w_r
+
+        #Springer
+
+        row = [0,0]
+        col = [1, -2]
+        self.start_pos[row, col] = self.knight_b
+
+        row = [-1, -1]
+        col = [1, -2]
+        self.start_pos[row, col] = self.knight_w
+
+        #Läufer
+        row = [0,0]
+        col = [2, -3]
+        self.start_pos[row, col] = self.bishop_b
+
+        row = [-1, -1]
+        col = [2, -3]
+        self.start_pos[row, col] = self.bishop_w
+
+        #Dame
+        self.start_pos[0, 3] = self.queen_b
+        #self.start_pos[-1,3] = self.queen_w
+
+        #König
+        self.start_pos[0, 4] = self.king_b
+        self.start_pos[-1,4] = self.king_w
+        self.king_b_start = (0 ,4)
+        self.king_w_start = (7, 4)
+
+        #leere Felder
+        for i in range(8):
+            for j in range(8):
+                if self.start_pos[i, j] == 0:
+                    self.start_pos[i, j] = self.empty
+
+        return self.start_pos
 
 
 
