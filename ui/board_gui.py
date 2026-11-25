@@ -22,9 +22,7 @@ class ChessBoard(QWidget):
         super().__init__(parent)
 
         self.engine = engine
-
-        self.brett = Board()
-        self.start_pos = self.brett.start_position()
+        self.start_pos = self.engine.position.boardstate
 
         self.grid = QGridLayout()
         self.grid.setSpacing(0)
