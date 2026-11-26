@@ -62,11 +62,13 @@ class EngineWorker(QObject):
 
         self.engine = engine
         self.position = position
-        self.depth = 7
+        self.depth = 5
 
     def run(self):
+        self.engine.hash_table.clear()
         t1 = time.time()
         value, best_move = self.engine.minimax(self.position, self.depth, -100000, 100000)
+        print(len(self.engine.hash_table))
         t2 = time.time()
         print(f'Minimax time: {t2-t1:.5f} sek')
         self.finished.emit(value)

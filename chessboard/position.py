@@ -204,7 +204,7 @@ class Position:
 
                 else:
                     self.abs_piece_value -= self.boardstate[4, col_end].value
-                    self.add_pawn_value += 0.1 * 4 - 0.1
+                    self.add_pawn_value += 0.1 * 4 - 0.6
                     undo.ep_captured_piece = self.boardstate[4, col_end]
                     self.boardstate[4, col_end] = self.empty
                     undo.ep_captured_square = (4, col_end)

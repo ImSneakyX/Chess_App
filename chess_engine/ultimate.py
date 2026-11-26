@@ -16,20 +16,21 @@ class Ultimate:
         self.played_moves = []
         self.calculations = 0
         self.best_move = None
-        self.hash_table = defaultdict(float)
+        self.hash_table = defaultdict(list)
         self.hash_function = ZobristHash()
 
 
     
     def minimax(self, position, depth, alpha, beta):
         key = self.hash_function.hash(position)
+        key = key ^ depth
         if key in self.hash_table:
-            return self.hash_table[key], None
+            return self.hash_table[key][0], self.hash_table[key][1]
         if depth == 0 or self.game_over:
             self.calculations += 1
             static_eval = self.static_evaluation(position)
-            self.hash_table[key] = static_eval
-            
+            self.hash_table[key].append(static_eval)
+            self.hash_table[key].append(None)
             return static_eval, None
         
         move_gen = MoveGenerator(position)
@@ -58,7 +59,8 @@ class Ultimate:
                     best_move = moves[0]
                 else:
                     best_move = None
-            
+            #self.hash_table[key].append(maxEval)
+            #self.hash_table[key].append(best_move)
             return maxEval, best_move
         else:
             minEval = 100000
@@ -77,6 +79,8 @@ class Ultimate:
                     best_move = moves[0]
                 else:
                     best_move = None
+            #self.hash_table[key].append(minEval)
+            #self.hash_table[key].append(best_move)
             return minEval, best_move
         
 
