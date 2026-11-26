@@ -216,7 +216,7 @@ class ZobristHash:
 
     def hash(self, pos):
         h = 0
-        boardstate = pos.boardstate
+        boardstate = pos.boardstate.flatten()
         if not pos.white_to_move:
             h = h ^ self.black_to_move
 
@@ -237,11 +237,10 @@ class ZobristHash:
             h = h ^ self.enpassent[col]
 
 
-        for i in range(8):
-            for j in range(8):
-                if not isinstance(boardstate[i, j], Empty):
-                    k = boardstate[i, j].number
-                    h = h ^ self.table[i][k-1]
+        for i in range(64):
+            if not isinstance(boardstate[i], Empty):
+                j = boardstate[i].number
+                h = h ^ self.table[i][j-1]
 
         return h
 
