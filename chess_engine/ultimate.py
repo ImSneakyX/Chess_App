@@ -22,6 +22,7 @@ class Ultimate:
 
     
     def minimax(self, position, depth, alpha, beta):
+        
         key = self.hash_function.hash(position)
         key = key ^ depth
         if key in self.hash_table:
@@ -59,8 +60,8 @@ class Ultimate:
                     best_move = moves[0]
                 else:
                     best_move = None
-            #self.hash_table[key].append(maxEval)
-            #self.hash_table[key].append(best_move)
+            self.hash_table[key].append(maxEval)
+            self.hash_table[key].append(best_move)
             return maxEval, best_move
         else:
             minEval = 100000
@@ -79,8 +80,8 @@ class Ultimate:
                     best_move = moves[0]
                 else:
                     best_move = None
-            #self.hash_table[key].append(minEval)
-            #self.hash_table[key].append(best_move)
+            self.hash_table[key].append(minEval)
+            self.hash_table[key].append(best_move)
             return minEval, best_move
         
 
