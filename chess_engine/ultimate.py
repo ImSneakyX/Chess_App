@@ -2,7 +2,7 @@ import sys
 import os 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chessboard.pieces import Pawn, Rook, Knight, Queen, King, Bishop, Empty
-from chessboard.board import Board
+from chessboard.board import Board, ZobristHash
 from chessboard.game_engine import MoveGenerator
 import time
 from collections import defaultdict
@@ -16,15 +16,21 @@ class Ultimate:
         self.played_moves = []
         self.calculations = 0
         self.best_move = None
-
+        self.hash_table = defaultdict(float)
+        self.hash_function = ZobristHash()
 
 
     
     def minimax(self, position, depth, alpha, beta):
+        key = self.hash_function.hash(position)
+        if key in self.hash_table:
+            return self.hash_table[key], None
         if depth == 0 or self.game_over:
             self.calculations += 1
+            static_eval = self.static_evaluation(position)
+            self.hash_table[key] = static_eval
             
-            return self.static_evaluation(position), None
+            return static_eval, None
         
         move_gen = MoveGenerator(position)
         
@@ -83,9 +89,6 @@ class Ultimate:
     
 
 
-class HashTable:
-    def __init__(self):
-        self.table = defaultdict(list)
 
 if __name__ == '__main__':
     board = Board()

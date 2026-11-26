@@ -214,10 +214,37 @@ class ZobristHash:
         self.castling_keys = [random.getrandbits(64) for _ in range(4)]
         self.enpassent = [random.getrandbits(64) for _ in range(8)]
 
-    def hash(pos):
+    def hash(self, pos):
         h = 0
-        if is_black_turn(pos.white_to_move):
-            h
+        boardstate = pos.boardstate.flatten()
+        if not pos.white_to_move:
+            h = h ^ self.black_to_move
+
+        if pos.white_castle_c:
+            h = h ^ self.castling_keys[0]
+
+        if pos.white_castle_g:
+            h = h ^ self.castling_keys[1]
+
+        if pos.black_castle_c:
+            h = h ^ self.castling_keys[2]
+
+        if pos.black_castle_g:
+            h = h ^ self.castling_keys[3]
+
+        if pos.en_passant_square:
+            row, col = pos.en_passant_square
+            h = h ^ self.enpassent[col]
+
+
+        for i in range(64):
+            if not isinstance(boardstate[i], Empty):
+                j = boardstate[i].number
+                h = h ^ self.table[i][j-1]
+
+        return h
+
+
 
 
 
